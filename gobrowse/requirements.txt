@@ -1,0 +1,13 @@
+# conda create -n wo_retrieve_env -c conda-forge -c defaults python=3.12
+
+rank-bm25==0.2.2
+numpy==1.26.4
+tqdm==4.67.1
+sentence_transformers==5.0.0
+fastapi==0.118.0
+uvicorn==0.35.0
+beartype==0.12.0
+
+faiss-cpu==1.9.0
+# Optional: Use faiss-gpu instead of faiss-cpu for GPU acceleration
+# conda install -c conda-forge faiss-gpu==1.9.0
