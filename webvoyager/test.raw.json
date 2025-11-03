@@ -1,0 +1,2582 @@
+[
+  {
+    "sites": [
+      "allrecipes"
+    ],
+    "task_id": "Allrecipes--10",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.allrecipes.com/",
+    "geolocation": null,
+    "intent": "Find The Most Popular Recipes of the 1960s, noting the recipe name, preparation time and total time of the second recipe in this collection.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'Swedish Meatballs I', prep time 25 mins, total time 1 hour 25 mins"
+      }
+    }
+  },
+  {
+    "sites": [
+      "allrecipes"
+    ],
+    "task_id": "Allrecipes--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.allrecipes.com/",
+    "geolocation": null,
+    "intent": "Find the Easy Vegetarian Spinach Lasagna recipe on Allrecipes and tell me what the latest review says.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Easy to make and very delicious"
+      }
+    }
+  },
+  {
+    "sites": [
+      "allrecipes"
+    ],
+    "task_id": "Allrecipes--3",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.allrecipes.com/",
+    "geolocation": null,
+    "intent": "Locate a recipe for vegan chocolate chip cookies with over 60 reviews and a rating of at least 4.5 stars on Allrecipes.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'Vegan Chocolate Chip, Oatmeal, and Nut Cookies', 4.9 star, 67 viewers (> 60)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "allrecipes"
+    ],
+    "task_id": "Allrecipes--40",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.allrecipes.com/",
+    "geolocation": null,
+    "intent": "Browse the about us section of Allrecipes for a brief introduction to The Allrecipes Allstars.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "The Allrecipes Allstars: Social media influencers, registered dietitians, grillmasters, and more seasoned home cooks make up our enthusiastic squad of 100+ brand ambassadors. This diverse, food-loving crew spans the U.S. geographically and represents many different cultures, ethnicities, and family makeups. Since 2011, the Allstars have created tens of thousands of original recipes, photos, and reviews plus shared their cooking expertise via flat and video content on our website, social media, plus more marketing channels."
+      }
+    }
+  },
+  {
+    "sites": [
+      "amazon"
+    ],
+    "task_id": "Amazon--16",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.amazon.com/",
+    "geolocation": null,
+    "intent": "Find the Return Policy for Mens Rhinestone Skull Graphic Shirt on Amazon. Color: Black, Size: XX-Large. If Free return is avaliable, tell me how to return this item.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "FREE Returns, 1. Go to Your Orders to start the return; 2. Print the return shipping label; 3. Ship it!"
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--12",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "What Apple Repair ways are mentioned on apple website, answer 2 of them.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Any 2 of 'Send your product to Apple', 'Find an Apple Authorized Service Provider', 'Visit a Genius at an Apple Store', 'Independent Repair Providers', 'Self Service Repair'"
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "Search Apple for the accessory Smart Folio for iPad and check the closest pickup availability next to zip code 90038.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Apple Tower Theatre"
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "Check if there are trade-in offers for the latest model of iPhone.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "There are trade-in offers."
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--19",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "On Apple's website, what is the slogan for the Mac and what is the slogan for the Macbook pro.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "If you can dream it, Mac can do it; Mind-blowing. Head-turning"
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "On the Apple website, find out if the Mac Mini can be configured with a GPU larger than 16-core.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Yes. Mac mini Apple M2 Pro chip, Configurable to: 19-core GPU"
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--31",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "On Apple's website, what is the slogan for the latest Apple Watch Series.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Smarter. Brighter. Mightier."
+      }
+    }
+  },
+  {
+    "sites": [
+      "apple"
+    ],
+    "task_id": "Apple--37",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.apple.com/",
+    "geolocation": null,
+    "intent": "Compare the color options of iPhone 13 Pro, iPhone 14 Pro and iPhone 15 Pro.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "iPhone 13 pro: Alpine Green, Silver, Gold, Graphite, Sierra Blue; iPhone 14 pro: Deep Purple, Gold, Silver, Space Black; iPhone 15 pro: Natural Titanium, Blue Titanium, White Titanium, Black Titanium"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--10",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Visit ArXiv Help on how to withdraw an article if the submission is not yet announced.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "If your submission has not yet become publicly available you may delete or delay it. To do either of these things go to your user page and select either the Delete or Unsubmit icon."
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--11",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "For Non-English submissions, do I need to provide a multi-language abstract, if need, answer the separator between the multiple abstracts.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "-----"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--12",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Find store in arXiv Help, tell me how many styles of arXiv Logo Shirt are available?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "3"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--14",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "On ArXiv, how many articles have 'SimCSE' in the article and are originally announced in October 2023?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "3"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Find the paper 'GPT-4 Technical Report', when was v3 submitted?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Mon, 27 Mar 2023 17:46:54 UTC"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Download the paper 'Dense Passage Retrieval for Open-Domain Question Answering'. How many formulas are in the article and which one is the loss function?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "2 formulas, the second one is loss function"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--25",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Browse the ArXiv store and let me know how many different types of merchandise are available.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "6, arXiv Logo Shirt, arXiv Logo Mug, arXiv is Open Science, Gift cards, arXiv Morning Mug, arXiv Forever"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--27",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "On ArXiv, what categories does Economics include, and what are their abbreviations?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Econometrics (econ.EM), General Economics (econ.GN), and Theoretical Economics (econ.TH)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--30",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Look up the submission guidelines on ArXiv for submitting a paper and tell me the formats for figures.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Accepted figure formats: PostScript (PS, EPS) — requires LaTeX processing; JPEG, GIF, PNG or PDF figures — requires PDFLaTeX processing"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--31",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Search ArXiv for papers with 'Graph Neural Networks' in the abstract that were submitted between Jan 1, 2024, and Jan 3, 2024, and determine how many of these papers have more than five authors.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "7 papers"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--36",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Search 'CVPR 2023' and 'CVPR2023' through journal ref on ArXiv to see how many results there are respectively.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'CVPR 2023': 48 results; 'CVPR2023': 9 results"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--37",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Find the names of people in ArXiv's Leadership Team.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Ramin Zabih, Yoav Artzi, Stephanie Orphan, Steinn Sigurdsson, and Charles Frankston."
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--39",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Search the title 'GPT-4 Technical Report' and access this paper through HTML format. Read the paper on this page and tell me what is 'one of the main goals of developing such models' mentioned in the Introduction.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "One of the main goals of developing such models is to improve their ability to understand and generate natural language text, particularly in more complex and nuanced scenarios."
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--41",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Find the button to share arxiv non-profit store and follow the QR code to share the shop. Then add arXiv Forever short sleeve (XL) to your cart.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "QR code image, Action: add to chart"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--42",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "Find an article published between 1 January 2000 and 1 January 2005 that requires Support Vector Machines in the title and its Journey ref is ACL Workshop.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'Using a Support-Vector Machine for Japanese-to-English Translation of Tense, Aspect, and Modality'"
+      }
+    }
+  },
+  {
+    "sites": [
+      "arxiv"
+    ],
+    "task_id": "ArXiv--6",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://arxiv.org/",
+    "geolocation": null,
+    "intent": "How many figures and tables are in the paper \"On the Sentence Embeddings from Pre-trained Language Models\"?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "2 Figures, 8 Tables."
+      }
+    }
+  },
+  {
+    "sites": [
+      "bbc news"
+    ],
+    "task_id": "BBC_News--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.bbc.com/news/",
+    "geolocation": null,
+    "intent": "Find the Market Data section on BBC News and tell me which company the data comes from.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Business - Market Data, Source: Morningstar"
+      }
+    }
+  },
+  {
+    "sites": [
+      "bbc news"
+    ],
+    "task_id": "BBC_News--5",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.bbc.com/news/",
+    "geolocation": null,
+    "intent": "Find the article \"What is climate change? A really simple guide\" and use it to answer what human activities are causing climate change.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "This recent climate change has been caused by human activity, mainly the widespread use of fossil fuels - coal, oil and gas - in homes, factories and transport."
+      }
+    }
+  },
+  {
+    "sites": [
+      "booking"
+    ],
+    "task_id": "Booking--33",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.booking.com/",
+    "geolocation": null,
+    "intent": "Find the Customer Service on the Booking website, browse the questions about cancellation, and tell me 'how do I know whether my booking has been cancelled'.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "After you cancel a booking with us, you should get an email confirming the cancellation. Make sure to check your inbox and spam/junk mail folders. If you don’t receive an email within 24 hours, contact the property to confirm they got your cancellation."
+      }
+    }
+  },
+  {
+    "sites": [
+      "booking"
+    ],
+    "task_id": "Booking--41",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.booking.com/",
+    "geolocation": null,
+    "intent": "Browse Booking's homepage to find out which company it belongs to.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Booking Holdings Inc."
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--0",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Look up the pronunciation and definition of the word \"sustainability\" on the Cambridge Dictionary.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "UK: /səˌsteɪ.nəˈbɪl.ə.ti/, US: /səˌsteɪ.nəˈbɪl.ə.t̬i/; the quality of being able to continue over a period of time"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "How many meanings of \"unblemished\" are given in Cambridge Dictionary? Please browse the page and give the number directly.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "2"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Search for \"to behave well\" in Cambridge Dictionary's Thesaurus and see which synonyms the dictionary gives.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "behaves themselves; be on their best behaviour"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--19",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Try a Cambridge Dictionary translation and tell me which company provided the translation.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Microsoft"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--21",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Search for the word \"ephemeral\" on Cambridge Dictionary and find its translation into Spanish.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "efímero"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--26",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Search for the word \"nostalgia\" in the Cambridge Dictionary and report the translation of this word into Chinese.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "怀旧"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Search for \"feel giddy\" in Cambridge Dictionary's Thesaurus and list the synonyms the dictionary provides.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Synonyms: feel dizzy; whirl; spin; reel"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--42",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Convert the Cambridge Dictionary homepage from English (UK) to Deutsch.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Action: Click English (UK), change language to: Deutsch"
+      }
+    }
+  },
+  {
+    "sites": [
+      "cambridge dictionary"
+    ],
+    "task_id": "Cambridge_Dictionary--6",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://dictionary.cambridge.org/",
+    "geolocation": null,
+    "intent": "Search for the word \"sustainability\" on the Cambridge Dictionary, what is the translation of sustainability into Chinese and French in the dictionary.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "可持续性; durabilité , viabilité"
+      }
+    }
+  },
+  {
+    "sites": [
+      "coursera"
+    ],
+    "task_id": "Coursera--38",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.coursera.org/",
+    "geolocation": null,
+    "intent": "Browse Coursera, which universities and companies from Australia are partners of Coursera? List all of them.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Macquarie University; The University of Melbourne; The University of Sydney; University of Western Australia; UNSW Sydney (The University of New South Wales)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "coursera"
+    ],
+    "task_id": "Coursera--39",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.coursera.org/",
+    "geolocation": null,
+    "intent": "Find the Space Safety course offered by TUM on Coursera. How many videos are there in module 2? What is the name of each video?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "6 videos; Introduction; Space Debris; Mitigation; Measurements; Protection; Atmospheric Re-entry"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--11",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "How many NBA teams are there and list all the teams with 'New' in their name.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "30; New York Knicks; New Orleans Pelicans"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--15",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Check the scores of the NBA games played on December 25, 2023.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "(US Time) Bucks vs Knicks, 122 - 129; Warriors vs Nuggets, 114 - 120; Celtics vs Lakers, 126 - 115; 76ers vs Heat, 113 - 119; Mavericks vs Suns, 128 - 114"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Check out the NBA Basketball Power Index 2023-24 to see which teams are in first place and which are in last place.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Boston Celtics; San Antonio Spurs"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "How many sports leagues can you choose from on the ESPN home page?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "31 (in ESPN America)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--19",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Who has the highest salary in Boston Celtics Roster 2023-24?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Jrue Holiday"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--27",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Search on ESPN for how many teams have 'Golden' in their name and how many of them are in the NHL.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "30 teams in search results, 1 team Vegas Golden Knights (NHL)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "How many MLB teams are there and list all the teams with 'City' in their name.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "30 teams in search results, Kansas City Royals"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--31",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Who has the heaviest weight among infielders in the New York Yankees Roster 2023-24?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Carlos Rodon, 255 lbs"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--41",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Find out which four teams the NFC North contains in the NFL on ESPN.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Chicago Bears, Detroit Lions, Green Bay Packers, and Minnesota Vikings"
+      }
+    }
+  },
+  {
+    "sites": [
+      "espn"
+    ],
+    "task_id": "ESPN--9",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.espn.com/",
+    "geolocation": null,
+    "intent": "Search on ESPN for how many teams have Los Angeles in their name and how many of them are NBA.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "10 teams have Los Angeles in their name; 2 teams are NBA"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--1",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Tell me one bus stop that is nearest to the intersection of main street and Amherst street in Altavista.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'Amherst and 7th' or 'Main Street Middle'"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--21",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Identify the nearest bus stop to the corner of Elm Street and Oak Street in Massachusetts.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Elm Street & Oak Street, 18 Bay St, Amesbury, MA 01913"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--26",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Search for Los Angeles on Google Map, try to print the map as PDF and summarize the information on the map.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "<Action>, print PDF"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Find the search settings for Google Map, what options are shown on that page?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Privacy & Safety: Activity, Content, More options; Other settings"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--31",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "First search New York's Central Park Zoo on Google Map, and then find the way to share the map. What is the generated sharing link?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "share link, https://maps.app.goo.gl/Bnp4Q67dTHoFZ4Lx8"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--33",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Check out Denver International Airport's information and tell me: 1) which level has the least proportion in reviews; 2) what are its Accessibility and Amenities.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "star 2 has the least proportion; Accessibility: Assistive hearing loop; Wheelchair accessible entrance; Wheelchair accessible parking lot; Wheelchair accessible restroom; Wheelchair accessible seating; Amenities: Baggage storage; Wi-Fi; Free Wi-Fi"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--7",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Find bus stops in Alanson, MI",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Alanson, MI (EZ-Mart) Bus Stop"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--8",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Find a place to climb within 2 miles of zip code 90028.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Hollywood Boulders"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google map"
+    ],
+    "task_id": "Google_Map--9",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/maps/",
+    "geolocation": null,
+    "intent": "Find the art gallery that is nearest to Los Angeles Hindu Temple.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "'Honor Fraser Gallery' or 'Walter Maciel Gallery'."
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--0",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find the initial release date for Guardians of the Galaxy Vol. 3 the movie.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "May 5, 2023"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--12",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find the year that Tom Brady had the most touchdowns in a single seasson.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "2007"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--14",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find the retired players the year before last named James Smith and tell me which club he has been a member of from 2020–2021.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Yeovil Town"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--15",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Please try to log in to twitter with email: webagenttest@testmail.com and password: test123456. Let me know if the login was successful.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Not successful"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Tell me the names of Trump's kids",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Ivanka Trump, Barron Trump, Donald Trump Jr., Tiffany Trump, Eric Trump"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "When and where the most recent World Cup was held, and which team was the winner?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Qatar; November 20 to December 18, 2022; Argentina"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--19",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "What are the first 7 bits of the SHA of the Bert's latest commit on GitHub, and what exactly was changed in that commit.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "eedf571, Smaller BERT Models"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--20",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find the release date for the latest \"Fast & Furious\" movie.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "April 4, 2025"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--21",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Show a list of the top 5 highest-grossing animated movies, sorted by box office earnings.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "The Lion King (2019); Frozen II (2019); The Super Mario Bros. Movie (2023); Frozen (2013); Incredibles 2 (2018)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--24",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "What is the name of the star system closest to the Solar System, and what are the discovered planets in it?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Alpha Centauri star system; Proxima Centauri b, Proxima Centauri c, and Proxima Centauri d"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Check the IMDb and Metacritic scores of the movie \"Inception.\"",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "IMDb score 8.8, Metacritic score 74%."
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--29",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find out the current world record for the men's 100m sprint.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "9.58s held by Usain Bolt of Jamaica"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--3",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Show me a list of comedy movies, sorted by user ratings. Show me the Top 5 movies.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Life Is Beautiful, Back to the Future, The Intouchables, City Lights, Modern Times"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--31",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Discover which year Cristiano Ronaldo scored the most goals in a single season.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "2014-15 season"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--40",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Look up the elevation of Mount Kilimanjaro on Google Search.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "19,341 feet (5,895 meters)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "google search"
+    ],
+    "task_id": "Google_Search--7",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.google.com/",
+    "geolocation": null,
+    "intent": "Find the software requirements for iPhones that support AirDrop's ability to continue transmitting over the web when out of range.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "IOS 17.1"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--10",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Open space: argilla/notux-chat-ui and interact with it by asking it 'which team trained you'. What is its answer.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Mistral AI team"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--13",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Search for LLaMA in the huggingface doc, what type is the spaces_between_special_tokens parameter in LlamaTokenizer and what is its default value.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "bool, defaults to False"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--14",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "How much is the Pro account of Hugging face for a month and what are the features?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "$9/month; Pro Account: Get a PRO badge on your profile, Early access to new features, Unlock Inference for PROs, Higher tier for AutoTrain"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--18",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Look up TRL's forward modelling in the hugging face documentation on how to add a margin to a loss.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "As in the Llama 2 paper, you can add a margin to the loss by adding a margin column to the dataset. The reward collator will automatically pass it through and the loss will be computed accordingly."
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--20",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Locate a pre-trained natural language processing model on Hugging Face that specializes in named entity recognition (NER), confirm that the model was last updated in 2022 and has 1M+ downloads.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "ckiplab/bert-base-chinese-ner"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--21",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Look up the tour about how to use the 'pipeline' feature in the Hugging Face Transformers library for sentiment analysis, and identify the default model it uses.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "from transformers import pipeline \\n classifier = pipeline(\"sentiment-analysis\") \\n classifier(\"We are very happy to show you the 🤗 Transformers library.\") ... distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--24",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Search for a model on Hugging Face with an Apache-2.0 license that has received the highest number of likes.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "mistralai/Mixtral-8x7B-Instruct-v0.1"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--25",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "In the Hugging Face documentation, find the tutorial on loading adapters with PEFT, tell me how to load in 8bit or 4bit.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Add the load_in_8bit or load_in_4bit parameters to from_pretrained() and set device_map=\"auto\" to effectively distribute the model to your hardware. (Or use code)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--27",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Determine the most downloaded dataset related to Text Retrieval in NLP on Hugging Face.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "nlphuji/mscoco_2014_5k_test_image_text_retrieval"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--30",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Identify the most downloaded English-Chinese (en-zh) machine translation model on Huggingface and report its latest performance metrics and usage guidelines.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Helsinki-NLP/opus-mt-en-zh; testset, BLEU, chr-F: Tatoeba-test.eng.zho, 31.4, 0.268"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--32",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "On the Hugging Face website, search for the model 'GPT-J-6B' and find the 'temperature' parameter in its settings. What is the default value of this parameter?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "\"temperature\": 1.0"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--38",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Investigate the 'transformers' library in the Hugging Face documentation, focusing on how to add new tokens to a tokenizer.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "use add_tokens method"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--41",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "What is the current Text-to-3D model with the highest number of downloads and tell me are there Spaces that use the model.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "openai/shap-e; there are Spaces like hysts/Shap-E ..."
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--42",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Check the Dataset Viewer for ai2lumos/lumos_complex_qa_plan_onetime on Hugging face. what is the content corresponding to user in the first message?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "content: Please provide a reasonable subgoal-based plan to solve the given task.\\nTask: What was the opening date of the museum dedicated to the war that, after it occurred, Boston became one of the wealthiest international ports?; Initial Environment Description: None."
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--6",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Find the model sentence-transformers/all-MiniLM-L6-v2 and use the Inference API on the webpage to get the similarity of the following two sentences: 'Tomorrow is Sunday', 'Eat a burger on Sunday'.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "0.550"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--7",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Which is the most downloaded audio related dataset on Hugging face currently.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "autumnjohnson/ceti_audio"
+      }
+    }
+  },
+  {
+    "sites": [
+      "huggingface"
+    ],
+    "task_id": "Huggingface--9",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://huggingface.co/",
+    "geolocation": null,
+    "intent": "Find the most download machine translation model on Huggingface which focuses on English and Japanese (en-ja) and report the evaluation metrics stated for it.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Helsinki-NLP/opus-mt-ja-en; BLEU 41.7\t; chr-F 0.589"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--0",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "derivative of x^2 when x=5.6",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "11.2"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--10",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Give the geomagnetic field on June 20, 2023 in Oslo.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "geomagnetic field, total 51.5 uT;"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--11",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Show the electrical resistivity of UNS A92024 and UNS G10800 at 20 degrees Celsius.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "UNS A92024: 4.9×10^-6 Ω cm (ohm centimeters) (at 20 °C); UNS G10800: 1.8×10^-5 Ω cm (ohm centimeters)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--12",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Which character in unicode 8900 to 8920 looks like a snowflake",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "8902 (U+22C6)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--15",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Show the blood relationship fraction between you and your father's mother's sister's son.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "3.125%"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--17",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Show the average price of movie ticket in Providence, Nashville, Boise in 2023.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Providence $13.81; Nashville $12.65; Boise $12.65"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--2",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate 3^71 and retain 5 significant figures in scientific notation.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "7.5095 * 10^33"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--20",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Compute the integral of 3e^(2x) from x=0 to x=5.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "approximately 33038"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--21",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate (1+0.1*i)^8 + (1−0.2*i)^8  where i is a complex number.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "approximately 0.717183 - 0.425258 i"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--22",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Determine the area of a regular hexagon with a side length of 7 cm.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "127.306 cm^2 or 147 \\sqrt(3) / 2"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--23",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate the population growth rate of Canada from 2020 to 2023 using Wolfram Alpha.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "mean population growth rate of Canada from 2020 to 2023 is 0.9998% per year"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--24",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Solve the differential equation y''(t) - 2y'(t) + 10y(t) = 0 and display its general solution.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "y(t) = c1 e^t sin(3t) + c2 e^t cos(3t)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--25",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate the final position and velocity of a projectile launched at 45 degrees with an initial speed of 30 m/s after 3 seconds.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "if g=9.81; x = 63.64m, y = 19.49m; Vx = 21.21 m/s, Vy = -8.22 m/s"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--27",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Display the thermal conductivity of Copper (Cu) and Aluminum (Al) at 25 degrees Celsius.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "401.2 W/(m K); 236.9 W/(m K)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--28",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Identify the character in Unicode range 9632 to 9650 that represents a hollow parallelogram.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "9649 or U+25B1"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--3",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Let g(x) be the integral of x^2 cos(2x). Write the expression of g(x).",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "1/4 (2 x cos(2 x) + (-1 + 2 x^2) sin(2 x)) + Constant"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--32",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Print all prime numbers between 1000 and 1200 using Wolfram alpha.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, 1087, 1091, 1093, 1097, 1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171, 1181, 1187, 1193."
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--33",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Identify the electrical energy output of a hydroelectric power plant named Itaipu Dam in 2023 using Wolfram Alpha.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "89.5 TWh (terawatt hours)"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--34",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate the mass of Jupiter compared to Earth using Wolfram Alpha. Also, find the length of one day on Jupiter.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "317.8 times that of Earth, and the length of one day on Jupiter is approximately 9.925 hours"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--35",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Calculate the determinant of a 6x6 Hilbert matrix.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "1/186313420339200000"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--36",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Determine the convergence or divergence of the series Σ (n=1 to ∞) of 1/(n^3 + 1).",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "converges"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--37",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "How many days are there between February 12, 2024 and August 9, 2050?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "9675"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--38",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Compute the length of a curve defined by y = 2x^3 - 3x^2 + 4x - 5 from x = 0 to x = 3.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "around 39.2"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--39",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Use Wolfram alpha to write the expression of the ellipse x^2 + 3 y^2 = 4 rotated 33 degrees counterclockwise.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "x^2(\\sin(\frac{2π}{15}) - 2) + 2xy \\cos(\frac{2π}{15}) + 4 = y^2(2 + \\sin(\frac{2π}{15}))"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--4",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Pack 24 circles in a circle radius r. Compare Densest known packing and Square packing. Then tell me the radius of the inner circles.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "Densest known packing: 0.176939r; Square packing: 0.163961r"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--40",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Approximate amount of fat burned by a 28yo, 172cm tall, 70kg woman running for 30min at a pace of 6min/mile.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "around 0.078 kg"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--41",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "What is the approximate Heart Rate Reserve of a 50 year old man who has a heart rate of 60bpm at rest.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "110 bpm"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--42",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "What is the raw memory of a 100.2\" * 123.5\" true colour picture at 72 ppi?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "192 MB"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--43",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "A polyominoes of order 6 means you have 6 identical squares to combine different shapes (2-sided). How many combinations are there? Looking at all the shapes in the result, how many of them have only 2 rows in total?",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "35; 12"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--45",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "A 175cm tall, 85kg, 40yo man climbs 2500 steps at about 18cm per step and 40 steps per minute. summarise the Metabolic properties.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "energy expenditure | 2720 kJ (kilojoules); average energy expenditure per step | 1.1 kJ/step (kilojoules per step); fat burned | 0.0842 kg (kilograms); oxygen consumption | 129.9 L (liters); metabolic equivalent | 7 metabolic equivalents"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--5",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Show the solution of y\"(z) + sin(y(z)) = 0 from wolframalpha.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "y(z) = ± 2 am(1/2 sqrt((c_1 + 2) (z + c_2)^2), 4/(c_1 + 2)), am(x, m) is the Jacobi amplitude function"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--6",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Simplify x^5-20x^4+163x^3-676x^2+1424x-1209 so that it has fewer items.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "7 + 3 (-4 + x)^3 + (-4 + x)^5"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--7",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Give the final angle and final length after 6s of a Spring pendulum with spring equilibrium length=0.12m, initial length=0.24m, initial angle=80deg, mass=1kg, spring constant=120 N/m .",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "-73.26° from vertical; 0.252 m"
+      }
+    }
+  },
+  {
+    "sites": [
+      "wolfram alpha"
+    ],
+    "task_id": "Wolfram_Alpha--9",
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.wolframalpha.com/",
+    "geolocation": null,
+    "intent": "Annual energy production of Diablo Canyon 2 in 2010.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": [
+        "string_match"
+      ],
+      "reference_answers": {
+        "fuzzy_match": "9752 GW h/yr (gigawatt hours per year)"
+      }
+    }
+  }
+]

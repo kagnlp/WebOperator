@@ -47,10 +47,10 @@ class GenericWebArenaTask(AbstractBrowserTask):
             )
 
         # read the list of all webarena task configs
-        import webarena
+        import webvoyager
 
         all_configs_str = importlib.resources.files(
-            webarena).joinpath("webvoyager.test.json").read_text(encoding="utf-8")
+            webvoyager).joinpath("test.raw.json").read_text(encoding="utf-8")
 
         # load all task configs to JSON
         all_configs = json.loads(all_configs_str)
