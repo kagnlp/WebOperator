@@ -98,7 +98,9 @@ class RecoveryAssistant:
                             "code": "stop('reCAPTCHA detected in the page. Please resolve it manually and reply to continue.')",
                             "thought": "Current page has reCAPTCHA, which should be resolved manually. Returning to user.",
                             "type": "stop",
-                            "args": {},
+                            "args": {
+                                 "text": "reCAPTCHA detected in the page. Please resolve it manually and reply to continue."    
+                            },
                             "selected_element": None,
                         },
                         "ReCAPTCHA page.",

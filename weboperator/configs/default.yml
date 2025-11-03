@@ -1,0 +1,57 @@
+# BrowserGym Experiment Configuration
+# Environment Configuration
+env:
+  task_type: "openended"
+  max_steps: 100
+  headless: false
+
+experiment:
+  results_dir: "./results/openended/gpt-oss-20b"
+  
+# Agent Configuration
+agent:
+  mode: "evaluation"
+  allow_unauthorized_page: true
+  # checkpoint: "last"
+  # checkpoint: "tree copy.json"
+
+# Model Configuration
+models:
+  action_model:
+    type: "OpenRouterModel"
+    model_name: "openai/gpt-oss-20b:free"
+
+# Components Configuration
+components:
+  action_validator:
+    allow_invalid_page: false
+
+  observation_processor:
+    optimized: true
+    truncate_error_message: true
+  
+  recovery_assistant:
+    recover_from_invalid_page: true
+    recover_from_captcha: true
+
+  action_generator:
+    full_action_space:
+      - "click"
+      - "fill"
+      - "select_option"
+      - "goto"
+      - "go_back"
+      - "scroll"
+      - "new_tab"
+      - "tab_focus"
+      - "tab_close"
+      # - "note"
+      - "stop"
+    action_space_type: "adaptive" # fixed
+    candidates:
+      - name: "simple_action_generator"
+        model: "action_model"
+        history_length: 5
+        max_retry: 5
+        rephraser: false
+        retriever: false

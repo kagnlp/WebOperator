@@ -1,25 +1,10 @@
-black[jupyter]==24.2.0
-blacken-docs
-pre-commit
-tenacity
 -e ./browsergym/core # local package
--e ./browsergym/miniwob # local package
 -e ./browsergym/webarena # local package
 -e ./browsergym/webvoyager # local package
--e ./browsergym/visualwebarena # local package
 -e ./browsergym/experiments # local package
--e ./browsergym/assistantbench # local package
-browsergym-workarena
-weblinx_browsergym
-# WebOperator dependencies
 openai==1.97.1
-rank_bm25==0.2.2
-sentence_transformers
-tabulate
-dotenv
-beartype
-nltk
-tabulate
-faiss-cpu
-transformers==4.54.0
-bitsandbytes==0.46.1
+tabulate==0.9.0
+python-dotenv==1.1.1
+beartype==0.12.0
+nltk==3.9.1
+pyyaml==6.0.2

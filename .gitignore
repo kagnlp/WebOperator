@@ -9,7 +9,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+myenv
 # Distribution / packaging
 .Python
 build/
@@ -165,6 +165,9 @@ dataset_hash.txt
 
 *results/
 *.pkl.gz
-webarena/**/*.png
+*.png
 
 .vscode
+paper/
+
+*_io_log.txt

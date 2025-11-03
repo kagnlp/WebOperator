@@ -557,6 +557,8 @@ class TreeSearchAgent(Agent):
         action = ActionProcessor.postprocess(action, obs["axtree_object"])
 
         self.log()
+        
+        print(f"Executing action code: {action['code']}")
         return action["code"], {}
 
 

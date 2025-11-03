@@ -84,16 +84,16 @@ while True:
 env.close()
 ```
 
-## Evaluation
+<!-- ## Evaluation -->
 
-### WebArena 
+<!-- ### WebArena 
 
 ```bash
 python run.py --config weboperator/configs/wa-gpt-oss-20b.yml
-# OR using docker
-docker compose run --user $(id -u) weboperator --config weboperator/configs/wa-gpt-oss-20b.yml
-```
+``` -->
 
+<!-- # OR using docker
+docker compose run --user $(id -u) weboperator --config weboperator/configs/wa-gpt-oss-20b.yml -->
 <!-- 
 - conda env create -f dev/environment.yaml
 - pip install --upgrade playwright==1.54.0 && playwright install chromium --with-deps

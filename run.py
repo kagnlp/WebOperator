@@ -1,15 +1,10 @@
 import os
-
 os.environ["PLAYWRIGHT_SKIP_BROWSER_VALIDATION"] = "1"
 from dotenv import load_dotenv
-
 load_dotenv(override=True)
 import yaml
 from weboperator.tree_search_agent import TreeSearchAgentArgs
 from browsergym.experiments import EnvArgs, ExpArgs
-
-from browsergym.experiments.benchmark.configs import DEFAULT_BENCHMARKS
-from browsergym.experiments.benchmark import Benchmark
 from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
 import warnings
 import json
@@ -157,7 +152,6 @@ if __name__ == "__main__":
 
     # Setup benchmark
     elif mode == "evaluation":
-        benchmark: Benchmark = DEFAULT_BENCHMARKS[config["env"]["task_type"]]()
         while len(task_configs) > 0:
             AccessControl.reset()  # Fresh Start for each task
 

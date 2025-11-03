@@ -459,8 +459,7 @@ class ExpArgs:
                     self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
                 )
                 logger.debug(f"Step info saved.")
-                
-                _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                # _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
                 logger.debug(f"Chat info sent.")
 
                 if action is None:
