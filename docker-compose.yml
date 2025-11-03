@@ -1,0 +1,10 @@
+services:
+  weboperator:
+    image: mahirlabibdihan/weboperator:latest
+    build: .
+    working_dir: /app
+    # Bind mount current directory
+    volumes:
+      - .:/app
+    # Keep container alive for dev; overridden by ENTRYPOINT + args
+    command: tail -f /dev/null
