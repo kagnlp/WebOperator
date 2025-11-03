@@ -638,6 +638,7 @@ def _aggregate_episode_stats(episode_info: list[StepInfo]):
 
 
 def _is_debugging():
+    return True
     """Tells you if your code is currently running in debug mode."""
     return sys.gettrace() is not None
 
