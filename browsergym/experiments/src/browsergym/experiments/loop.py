@@ -16,7 +16,6 @@ from dataclasses import asdict, dataclass, field, is_dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-from logger import RenderHelper
 from browsergym.core.env import BrowserEnv
 import gymnasium as gym
 import numpy as np

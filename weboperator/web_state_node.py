@@ -1,4 +1,4 @@
-from logger import image_to_jpg_base64_url, jpg_base64_url_to_image
+from weboperator.html_renderer import image_to_jpg_base64_url, jpg_base64_url_to_image
 
 
 class WebStateNode:

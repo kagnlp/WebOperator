@@ -2,6 +2,7 @@ import os
 os.environ["PLAYWRIGHT_SKIP_BROWSER_VALIDATION"] = "1"
 from dotenv import load_dotenv
 load_dotenv(override=True)
+
 import yaml
 from weboperator.tree_search_agent import TreeSearchAgentArgs
 from browsergym.experiments import EnvArgs, ExpArgs
@@ -101,6 +102,16 @@ if __name__ == "__main__":
     # Load configuration from YAML file
     config = load_config(args.config)
 
+    # if config["env"]["sites"]:
+    #     if "shopping_admin" in config["env"]["sites"]:
+    #         os.environ["WA_SHOPPING_ADMIN"] = config["env"]["sites"]["shopping_admin"]
+    #     if "shopping" in config["env"]["sites"]:
+    #         os.environ["WA_SHOPPING"] = config["env"]["sites"]["shopping"]
+    #     if "reddit" in config["env"]["sites"]:
+    #         os.environ["WA_REDDIT"] = config["env"]["sites"]["reddit"]
+    #     if "gitlab" in config["env"]["sites"]:
+    #         os.environ["WA_GITLAB"] = config["env"]["sites"]["gitlab"]
+    
     if config["env"]["task_type"] != "openended":
         # Get configuration values
         dataset_path = config["experiment"].get("dataset_path", "webarena/test.raw.json")
@@ -199,7 +210,9 @@ if __name__ == "__main__":
 
             if config["env"]["task_type"] == "webarena":
                 for site in task_config["sites"]:
-                    AccessControl.login(get_wa_site_url(site))
+                    AccessControl.authorize(get_wa_site_url(site))
+                    if site in ["reddit", "shopping", "shopping_admin"]:
+                        AccessControl.authenticate(get_wa_site_url(site))
 
             if config["env"]["task_type"] == "webarena":
                 before_task_start(task_id, task_config["sites"])

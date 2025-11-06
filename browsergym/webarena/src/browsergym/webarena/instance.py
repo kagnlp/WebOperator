@@ -53,6 +53,7 @@ class WebArenaInstance:
             "wikipedia": WIKIPEDIA,
             "map": MAP,
         }
+
         self.home_url = HOMEPAGE
 
         self.credentials = ACCOUNTS

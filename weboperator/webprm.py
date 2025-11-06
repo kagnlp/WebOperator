@@ -273,11 +273,11 @@ Action {step_num}: {action["code"]}
             for line in f:
                 try:
                     item = json.loads(line)
-                    if item["intent"] == goal and item["start_url"] == start_url:
+                    if item["intent"] == goal: # and item["start_url"] == start_url:
                         existing_checklist = item["checklist"]
                         break
-                except json.JSONDecodeError:
-                    print("Malformed line in checklist cache, skipping...")
+                except json.JSONDecodeError as e:
+                    print(f"Malformed line in checklist cache, skipping... {e}")
                     continue  # skip malformed lines if any
 
         if existing_checklist:

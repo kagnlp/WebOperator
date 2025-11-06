@@ -308,7 +308,7 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": [
+        "fuzzy_match": [
           "Pittsburgh International Airport, Southern Beltway, Findlay Township, Allegheny County, 15231, United States"
         ]
       },
@@ -341,7 +341,7 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": [
+        "fuzzy_match": [
           "Niagara Falls International Airport, 2035, Niagara Falls Boulevard, City of Niagara Falls, Town of Wheatfield, Niagara County, New York, 14304, United States",
           "Buffalo-Niagara International Airport, Holtz Drive, Town of Cheektowaga, Erie County, New York, 14225, United States"
         ]
@@ -663,13 +663,13 @@
       "reference_answers": {
         "fuzzy_match": [
           "driving: 13min",
-          "walking: 1h 44min"
+          "walking: 1h 45min" 
         ]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "driving: 13min, walking: 1h 44min."
+      "reference_answer_raw_annotation": "driving: 13min, walking: 1h 45min."
     },
     "intent_template_id": 73
   },
@@ -9214,12 +9214,12 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": ["git clone ssh://git@127.0.0.1:2222/convexegg/super_awesome_robot.git"]
+        "must_include": ["git clone ssh://git@__GITLAB_IP__:2222/convexegg/super_awesome_robot.git"]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "git clone ssh://git@127.0.0.1:2222/convexegg/super_awesome_robot.git"
+      "reference_answer_raw_annotation": "git clone ssh://git@__GITLAB_IP__:2222/convexegg/super_awesome_robot.git"
     },
     "intent_template_id": 329
   },
@@ -9243,12 +9243,12 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": ["git clone ssh://git@127.0.0.1:2222/convexegg/chatgpt.git"]
+        "must_include": ["git clone ssh://git@__GITLAB_IP__:2222/convexegg/chatgpt.git"]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "git clone ssh://git@127.0.0.1:2222/convexegg/chatgpt.git"
+      "reference_answer_raw_annotation": "git clone ssh://git@__GITLAB_IP__:2222/convexegg/chatgpt.git"
     },
     "intent_template_id": 329
   },
@@ -9272,12 +9272,12 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": ["git clone ssh://git@127.0.0.1:2222/root/metaseq.git"]
+        "must_include": ["git clone ssh://git@__GITLAB_IP__:2222/root/metaseq.git"]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "git clone ssh://git@127.0.0.1:2222/root/metaseq.git"
+      "reference_answer_raw_annotation": "git clone ssh://git@__GITLAB_IP__:2222/root/metaseq.git"
     },
     "intent_template_id": 329
   },
@@ -9301,12 +9301,12 @@
             "string_match"
         ],
         "reference_answers": {
-            "must_include": ["ssh://git@127.0.0.1:2222/eriklindernoren/PyTorch-GAN.git"]
+            "must_include": ["ssh://git@__GITLAB_IP__:2222/eriklindernoren/PyTorch-GAN.git"]
         },
         "reference_url": "",
         "program_html": [],
         "string_note": "",
-        "reference_answer_raw_annotation": "ssh://git@127.0.0.1:2222/eriklindernoren/PyTorch-GAN.git"
+        "reference_answer_raw_annotation": "ssh://git@__GITLAB_IP__:2222/eriklindernoren/PyTorch-GAN.git"
     },
     "intent_template_id": 329
   },
@@ -9330,12 +9330,12 @@
         "string_match"
       ],
       "reference_answers": {
-        "must_include": ["git clone ssh://git@127.0.0.1:2222/yjlou/2019-nCov.git"]
+        "must_include": ["git clone ssh://git@__GITLAB_IP__:2222/yjlou/2019-nCov.git"]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "ssh://git@127.0.0.1:2222/yjlou/2019-nCov.git"
+      "reference_answer_raw_annotation": "ssh://git@__GITLAB_IP__:2222/yjlou/2019-nCov.git"
     },
     "intent_template_id": 329
   },

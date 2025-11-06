@@ -6,6 +6,7 @@ import uvicorn
 import uuid
 import torch
 import time
+import asyncio
 
 # import ChatCompletion, Choice, ChoiceLogprobs
 from openai.types.chat.chat_completion import ChatCompletion, Choice, ChoiceLogprobs
@@ -27,14 +28,16 @@ class ChatCompletionRequest(BaseModel):
     logprobs: Optional[bool] = False
     top_logprobs: Optional[int] = 10  # how many alternative tokens to return
 
+import threading
+processing_lock = threading.Lock()
 
 # -------- Model Loader --------
 def get_or_load_model(model_name: str) -> HuggingFaceModel:
-    if model_name not in loaded_models:
-        loaded_models[model_name] = HuggingFaceModel(model_name=model_name)
-        loaded_models[model_name].initialize()
-    return loaded_models[model_name]
-
+    with processing_lock:
+        if model_name not in loaded_models:
+            loaded_models[model_name] = HuggingFaceModel(model_name=model_name)
+            loaded_models[model_name].initialize()
+        return loaded_models[model_name]
 
 # -------- Endpoint --------
 @app.post("/api/v1/chat/completions", response_model=ChatCompletion)

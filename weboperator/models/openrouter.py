@@ -50,7 +50,7 @@ class OpenRouterModel(BaseModel):
     def retry_with_exponential_backoff(  # type: ignore
         func,
         initial_delay: float = 1,
-        exponential_base: float = 1.5,
+        exponential_base: float = 2,
         jitter: bool = True,
         max_retries: int = 5,
         errors: tuple[Any] = (openai.RateLimitError, OpenRouterError),
@@ -77,7 +77,8 @@ class OpenRouterModel(BaseModel):
                     )
                     # delay = min(delay * exponential_base * (1 + jitter * random.random()), 500)
                     print(f"#{num_retries} Error occurred: {e}.\n Retrying in {delay} seconds.")
-                    time.sleep(delay)
+                    # time.sleep(delay)
+                    delay = min(delay * exponential_base, 500)
 
                 except Exception as e:
                     # import traceback
@@ -94,7 +95,7 @@ class OpenRouterModel(BaseModel):
 
                     # Increment the delay
                     # delay = min(delay * exponential_base * (1 + jitter * random.random()), 500)
-                    delay = min(delay * exponential_base, 300)
+                    delay = min(delay * exponential_base, 500)
                     print(f"#{num_retries} Error occurred: {e}.\n Retrying in {delay} seconds.")
                     # Sleep for the delay
                     time.sleep(delay)

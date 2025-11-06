@@ -13,6 +13,8 @@ site_urls = {
     "reddit": REDDIT,
     "shopping": SHOPPING,
     "shopping_admin": SHOPPING_ADMIN,
+    "map": MAP,
+    "wikipedia": WIKIPEDIA
 }
 
 

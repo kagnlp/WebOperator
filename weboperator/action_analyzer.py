@@ -19,7 +19,7 @@ def was_destructive(obs):
     if obs is None or obs.parent is None or obs.last_action is None:
         return False
 
-    if not AccessControl.is_authorized_url(obs.url):
+    if not AccessControl.is_authenticated_url(obs.url):
         return False
 
     for req in obs.http_requests:

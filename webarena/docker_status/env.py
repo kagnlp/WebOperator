@@ -62,10 +62,12 @@ def _get_prev_tasks(site = None):
                         seen_task_ids.add(task["task_id"])
         return all_prev_tasks
     
-    prev_tasks_path = os.path.join("webarena/docker_status", f"{site}_tasks.json")
-    with open(prev_tasks_path, "r", encoding="utf-8") as f:
-        prev_tasks = json.load(f)
-    return prev_tasks
+    if site in ["gitlab", "reddit", "shopping_admin", "shopping"]:
+        prev_tasks_path = os.path.join("webarena/docker_status", f"{site}_tasks.json")
+        with open(prev_tasks_path, "r", encoding="utf-8") as f:
+            prev_tasks = json.load(f)
+        return prev_tasks
+    return []
 
 def _set_prev_tasks(site, tasks):
     prev_tasks_path = os.path.join("webarena/docker_status", f"{site}_tasks.json")

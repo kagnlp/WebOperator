@@ -5,10 +5,6 @@ import os
 import time
 import openai
 from typing import Any
-from dotenv import load_dotenv
-
-load_dotenv(override=True)
-
 
 class OpenHFError(Exception):
     """Custom exception for OpenHF API errors"""

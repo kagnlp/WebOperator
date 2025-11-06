@@ -8,6 +8,7 @@ def load_task_configs(dataset_path="webarena/test.raw.json"):
         all_configs_str = f.read()
     for pattern, url_key in {
         "__GITLAB__": "WA_GITLAB",
+        "__GITLAB_IP__": "WA_GITLAB_IP", # NEW
         "__REDDIT__": "WA_REDDIT",
         "__SHOPPING__": "WA_SHOPPING",
         "__SHOPPING_ADMIN__": "WA_SHOPPING_ADMIN",
@@ -23,6 +24,7 @@ def load_site_tasks(target_sites, dataset_path="webarena/test.raw.json"):
         all_configs_str = f.read()
     for pattern, url_key in {
         "__GITLAB__": "WA_GITLAB",
+        "__GITLAB_IP__": "WA_GITLAB_IP", # NEW
         "__REDDIT__": "WA_REDDIT",
         "__SHOPPING__": "WA_SHOPPING",
         "__SHOPPING_ADMIN__": "WA_SHOPPING_ADMIN",
@@ -38,6 +40,7 @@ def load_configs_by_task_ids(task_ids, dataset_path="webarena/test.raw.json"):
         all_configs_str = f.read()
     for pattern, url_key in {
         "__GITLAB__": "WA_GITLAB",
+        "__GITLAB_IP__": "WA_GITLAB_IP", # NEW
         "__REDDIT__": "WA_REDDIT",
         "__SHOPPING__": "WA_SHOPPING",
         "__SHOPPING_ADMIN__": "WA_SHOPPING_ADMIN",

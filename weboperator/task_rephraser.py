@@ -74,7 +74,7 @@ class TaskRephraser:
             for line in f:
                 try:
                     item = json.loads(line)
-                    if item["task"] == task_description and item["url"] == current_url:
+                    if item["task"] == task_description: # and item["url"] == current_url:
                         existing_data = item
                         break
                 except json.JSONDecodeError:

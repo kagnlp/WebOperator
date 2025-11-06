@@ -7,3 +7,4 @@ torch==2.7.1
 fastapi==0.118.0
 uvicorn==0.35.0
 accelerate==1.9.0
+tokenizers==0.21.4

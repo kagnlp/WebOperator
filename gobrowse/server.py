@@ -11,6 +11,7 @@ class ChatCompletion(BaseModel):
 class ChatCompletionRequest(BaseModel):
     model: str
     goal: str
+    site: str
     obs: str
     top_k: int
     r_type: str
@@ -20,6 +21,7 @@ class ChatCompletionRequest(BaseModel):
 def chat_completions(request: ChatCompletionRequest):
     examples = WebRetriever.search(
         query={"goal": request.goal, "axtree_txt": request.obs},
+        website=request.site,
         model_name=request.model,
         top_k=request.top_k,
         retriever_type=request.r_type

@@ -84,7 +84,7 @@ def image_to_jpg_base64_url(image: np.ndarray | Image.Image):
     return f"data:image/jpeg;base64,{image_base64}"
 
 
-class RenderHelper(object):
+class HTMLRenderer(object):
     """Helper class to render text and image observations and meta data in the trajectory"""
 
     def __init__(self, result_dir: str) -> None:

@@ -35,16 +35,22 @@ class WebRetriever():
     #     cls.cache_base_dir = current_dir / "website_indices"
     #     cls.cache_base_dir.mkdir(parents=True, exist_ok=True)
 
-    @staticmethod
-    def detect_website_from_query(query: str) -> Optional[str]:
-        """Detect website from query based on simple patterns"""
-        query_lower = query.lower()
+    # @staticmethod
+    # def detect_website_from_query(query: str) -> Optional[str]:
+    #     """Detect website from query based on simple patterns"""
+    #     query_lower = query.lower()
 
-        for website, config in WEBSITE_CONFIGS.items():
-            for pattern in config['patterns']:
-                if re.search(pattern, query_lower):
-                    return website
-        return None
+    #     for website, url in {
+    #         "gitlab": os.environ["WA_GITLAB"],
+    #         "reddit": os.environ["WA_REDDIT"],
+    #         "shopping": os.environ["WA_SHOPPING"],
+    #         "shopping_admin": os.environ["WA_SHOPPING_ADMIN"],
+    #         "wikipedia": os.environ["WA_WIKIPEDIA"],
+    #         "map": os.environ["WA_MAP"],
+    #     }:
+    #         if url in query_lower:
+    #             return website
+    #     return None
 
     @classmethod
     def get_or_create_retriever(cls, website: str, model_name: str, retriever_type: str):
@@ -109,11 +115,11 @@ class WebRetriever():
             return None
 
     @classmethod
-    def search(cls, query: Dict[str, Any], model_name: str, top_k: int, retriever_type: str) -> List[Tuple[Dict[str, Any], float, str]]:
+    def search(cls, query: Dict[str, Any], model_name: str, top_k: int, retriever_type: str, website: str) -> List[Tuple[Dict[str, Any], float, str]]:
         """Search with automatic website routing"""
         try:
             # Try website-specific search
-            website = cls.detect_website_from_query(query["axtree_txt"])
+            # website = cls.detect_website_from_query(query["axtree_txt"])
 
             if website:
                 try:

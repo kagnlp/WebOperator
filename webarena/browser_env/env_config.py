@@ -28,7 +28,6 @@ assert (
     + f"Homepage: {HOMEPAGE}\n"
 )
 
-
 ACCOUNTS = {
     "reddit": {"username": "MarvelsGrantMan136", "password": "test1234"},
     "gitlab": {"username": "byteblaze", "password": "hello1234"},

@@ -9,7 +9,7 @@ from PIL import Image
 from typing import Dict, List, Any, Optional
 import gymnasium as gym
 
-# from Logger import RenderHelper
+# from Logger import HTMLRenderer
 from browsergym.core.action.highlevel import HighLevelActionSet
 from browsergym.experiments import AbstractAgentArgs, Agent
 from .web_state_node import WebStateNode
@@ -17,7 +17,7 @@ import re
 import json
 from .action_generator import ActionGenerator
 
-from logger import RenderHelper
+from weboperator.html_renderer import HTMLRenderer
 from weboperator.webprm import WebPRM
 from tabulate import tabulate
 
@@ -87,7 +87,7 @@ class TreeSearchAgent(Agent):
         )
         # use this instead to allow the agent to directly use Python code
         # self.action_set = PythonActionSet())
-        # self.render_helper = RenderHelper(
+        # self.html_renderer = HTMLRenderer(
         #         config_file, dstdir, "id_accessibility_tree"
         #     )
         self.action_history = []
@@ -101,9 +101,8 @@ class TreeSearchAgent(Agent):
         if self.action_selector is not None:
             self.action_selector.reset()
 
-        self.render_helper: Optional[RenderHelper] = None
         self.trajectory = []
-        self.render_helper = None
+        self.html_renderer = None
         self.local_storage = {}
         self.cookies = {}
         self.delayed_destruction = 0
@@ -172,7 +171,7 @@ class TreeSearchAgent(Agent):
             self.action_selector.reset()
 
         self.trajectory = []
-        self.render_helper = None
+        self.html_renderer = None
         self.delayed_destruction = 0
 
     def log(self):
@@ -180,8 +179,8 @@ class TreeSearchAgent(Agent):
         exp_dir = self.exp_dir
         if not exp_dir:
             return
-        if self.render_helper is None:
-            self.render_helper = RenderHelper(exp_dir)
+        if self.html_renderer is None:
+            self.html_renderer = HTMLRenderer(exp_dir)
 
         history = self._get_trajectory()
 
@@ -225,13 +224,13 @@ class TreeSearchAgent(Agent):
         if len(self.trajectory) < 2 or self.trajectory[-2]["action"]["type"] != "stop":
             if curr_obs["action"] is None:
                 # if self.tree_node.last_action is None or self.tree_node.last_action["type"] != "stop":
-                self.render_helper.render_observation(
+                self.html_renderer.render_observation(
                     curr_obs,
                     self.trajectory[-2]["action_error"] if len(self.trajectory) > 1 else None,
                     render_screenshot=True,
                 )
             else:  # Took Action
-                self.render_helper.render_action(
+                self.html_renderer.render_action(
                     curr_obs["action"],
                     curr_obs["obs_description"],
                     backtrack=self.backtrack_manager is not None
@@ -239,7 +238,7 @@ class TreeSearchAgent(Agent):
                 )
 
         # if not self.backtrack_manager.is_backtracking and curr_obs["action"] is not None and curr_obs["action"]["type"] == "stop":
-        #     self.render_helper.close()
+        #     self.html_renderer.close()
 
         if self.tree_root is not None:
             tree_json = self.tree_root.to_json()
@@ -297,9 +296,9 @@ class TreeSearchAgent(Agent):
                 )
             )
 
-        # if self.render_helper is not None:
-        #     self.render_helper.render_file.close()
-        #     logger.info(f"Render file saved at {self.render_helper.render_file.name}")
+        # if self.html_renderer is not None:
+        #     self.html_renderer.render_file.close()
+        #     logger.info(f"Render file saved at {self.html_renderer.render_file.name}")
 
     def obs_preprocessor(self, obs: dict) -> dict:
         if (

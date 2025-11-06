@@ -2,6 +2,7 @@ import copy
 from browsergym.utils.obs import IGNORED_AXTREE_ROLES, IGNORED_AXTREE_PROPERTIES, _process_bid, INCLUDE_BID_ROLES
 from browsergym.utils.obs import flatten_axtree_to_str
 import re
+import os
 
 def is_alert_available(axtree_object):
     for node in axtree_object["nodes"]:
@@ -38,7 +39,8 @@ def get_elem_by_bid(axtree, bid):
     return None
 
 def is_full_axtree_too_long(axtree_txt) -> bool:
-    return len(axtree_txt) >= 80000
+    # return len(axtree_txt) >= 80000
+    return len(axtree_txt) >= int(os.environ["MAX_AXTREE_SIZE"])
 
 def has_axtree_changed(curr_obs) -> bool:
     prev_axtree_txt = curr_obs.parent.axtree_txt if curr_obs.parent is not None else ""
