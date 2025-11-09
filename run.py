@@ -24,6 +24,7 @@ from exp_utils import (
     find_last_checkpoint,
     should_run_task,
 )
+from weboperator.prompt_designer import PromptDesigner
 
 # Suppress beartype deprecation warnings from external libraries
 # warnings.filterwarnings("ignore", category=DeprecationWarning, module="beartype")
@@ -124,7 +125,7 @@ if __name__ == "__main__":
         else:
             task_configs = load_configs_by_task_ids(task_ids, dataset_path=dataset_path)
 
-    enable_multisite = config["env"].get("multisite", False)
+    enable_multisite = config["experiment"].get("multisite", False)
     max_steps = config["env"]["max_steps"]
     mode = config["agent"]["mode"]
     checkpoint = config["agent"].get("checkpoint")
@@ -181,6 +182,12 @@ if __name__ == "__main__":
                 )
                 continue
 
+            if enable_multisite and len(task_config["sites"]) < 2:
+                print(
+                    f"Skipping task {task_id} as it requires single site: {task_config['sites']}"
+                )
+                continue
+            
             if args.site is not None and args.site != task_config["sites"][0]:
                 print(f"Skipping task {task_id} as it is not for site {args.site}")
                 continue
@@ -210,9 +217,15 @@ if __name__ == "__main__":
 
             if config["env"]["task_type"] == "webarena":
                 for site in task_config["sites"]:
-                    AccessControl.authorize(get_wa_site_url(site))
+                    AccessControl.authorize(site, get_wa_site_url(site))
                     if site in ["reddit", "shopping", "shopping_admin"]:
-                        AccessControl.authenticate(get_wa_site_url(site))
+                        AccessControl.authenticate(site, get_wa_site_url(site))
+                        
+                PromptDesigner.configure(
+                    benchmark=config["env"]["task_type"],
+                    multisite=enable_multisite,
+                    sites=task_config["sites"]
+                )
 
             if config["env"]["task_type"] == "webarena":
                 before_task_start(task_id, task_config["sites"])
@@ -237,6 +250,7 @@ if __name__ == "__main__":
                 print(f"Task {task_id} already terminated.")
                 if config["env"]["task_type"] == "webarena":
                     after_task_end(task_id, task_config["sites"])
+                    AccessControl.reset()
             else:
                 break
 

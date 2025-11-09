@@ -4949,13 +4949,13 @@
       ],
       "reference_answers": {
         "fuzzy_match": [
-          "7min"
+          "7min |OR| 7min 19sec"
         ]
       },
       "reference_url": "",
       "program_html": [],
       "string_note": "",
-      "reference_answer_raw_annotation": "7min"
+      "reference_answer_raw_annotation": "7min |OR| 7min 19sec"
     },
     "intent_template_id": 36
   },
@@ -13359,11 +13359,11 @@
           "locator": "document.querySelector('[id=\"sidebar_content\"').outerText",
           "required_contents": {
             "must_include": [
-              "Pittsburgh"
+              "WQED |OR| Pittsburgh"
             ]
           }
         }
-      ]
+      ] 
     },
     "intent_template_id": 371
   },
@@ -23063,7 +23063,7 @@
   },
   {
     "sites": [
-      "shopping",
+      "shopping",     
       "reddit"
     ],
     "task_id": 673,
@@ -27369,7 +27369,7 @@
           }
         },
         {
-          "url": "last",
+          "url": "last", 
           "locator": "document.querySelector('[name=\"route_to\"').value",
           "required_contents": {
             "must_include": [

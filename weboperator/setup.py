@@ -256,6 +256,7 @@ def configure_prompt_designer(config):
     benchmark_name = config["env"]["task_type"]
     print("+ Prompt Designer")
     print(" - Benchmark: ", benchmark_name)
+    print(" - Multisite: ", config["experiment"].get("multisite", False))
     PromptDesigner.configure(benchmark=benchmark_name)
 
 

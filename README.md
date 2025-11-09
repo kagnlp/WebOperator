@@ -43,6 +43,15 @@ pip install -r requirements.txt
 playwright install chromium --with-deps # Need admin rights
 ```
 
+### 4️⃣ Set up environment variables
+Create a `.env` file by copying the example configuration:
+
+```bash
+cp .env.example .env
+```
+
+Then open the `.env` file and update any necessary values (such as API keys, website urls) according to your environment.
+
 ## 🚀 Usage
 
 ### Skeleton Code

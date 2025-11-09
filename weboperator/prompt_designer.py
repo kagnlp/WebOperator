@@ -1,10 +1,44 @@
 import os
+from .access_control import AccessControl
 REDDIT = os.environ.get("WA_REDDIT", "")
 SHOPPING = os.environ.get("WA_SHOPPING", "")
 SHOPPING_ADMIN = os.environ.get("WA_SHOPPING_ADMIN", "")
 MAP = os.environ.get("WA_MAP", "")
 WIKIPEDIA = os.environ.get("WA_WIKIPEDIA", "")
 GITLAB = os.environ.get("WA_GITLAB", "")
+
+SITE_MAP = {
+    "gitlab": {
+        "title": "GitLab",
+        "url": GITLAB,
+        "description": "A web-based DevOps lifecycle tool that provides a Git repository manager. For any task related to repository you should use this."
+    },
+    "reddit": {
+        "title": "Reddit",
+        "url": REDDIT,
+        "description": "A social news aggregation, web content rating, and discussion website. For any task related to reddit/forums you should use this."
+    },
+    "shopping": {
+        "title": "Shopping",
+        "url": SHOPPING,
+        "description": "An online shopping platform named One Stop Market."
+    },
+    "shopping_admin": {
+        "title": "Shopping Admin",
+        "url": SHOPPING_ADMIN,
+        "description": "Admin panel for managing the shopping platform."
+    },
+    "wikipedia": {
+        "title": "Wikipedia",
+        "url": WIKIPEDIA,
+        "description": "A free online encyclopedia."
+    },
+    "map": {
+        "title": "Map",
+        "url": MAP,
+        "description": "A web-based mapping service."
+    }
+}
 
 CHAT_SYSTEM_PROMPT = """
 You are a UI Assistant, your goal is to help the user perform tasks using a web browser. You can
@@ -92,10 +126,16 @@ action_prompt_map = {
     "note": NOTE_ACTION,
 }
 
+# GOAL_INPUT_SPECIFICATION = """
+# >> Goal
+# {goal}
+# {hint}
+# """
+
+
 GOAL_INPUT_SPECIFICATION = """
 >> Goal
 {goal}
-{hint}
 """
 
 REPHRASED_GOAL_INPUT_SPECIFICATION = """
@@ -155,11 +195,15 @@ FAILED_ATTEMPTS = """
 
 class PromptDesigner:
     benchmark: str = "webarena"
+    multisite: bool = False
+    sites: list = None
     
     @classmethod
-    def configure(cls, benchmark="webarena"):
+    def configure(cls, benchmark="webarena", multisite=False, sites=None):
         cls.benchmark = benchmark
-        
+        cls.multisite = multisite
+        cls.sites = sites
+
     @staticmethod
     def format_examples(examples) -> str:
         """Format retrieved examples for the prompt"""
@@ -221,18 +265,18 @@ class PromptDesigner:
         return "\n".join(history_parts)
     
     @classmethod
-    def design_actor_prompt(cls, goal, rephrased_goal, trajectory, history_length, examples, action_space, notes, prev_responses, prev_errors, chat_messages=None, cross_site=False):
+    def design_actor_prompt(cls, goal, rephrased_goal, trajectory, history_length, examples, action_space, notes, prev_responses, prev_errors, chat_messages=None):
         """Build prompt for action generation using template"""
 
         input_specifications = ""
 
         if chat_messages is None:            
-            hint = ""
-            if "reddit" in goal.lower() or "forum" in goal.lower():
-                hint = f"Note: Reddit website is simulated through Postmil website. For any task related to reddit/forums you should use Postmil website hosted at {os.environ['WA_REDDIT']}"
+            # hint = ""
+            # if "reddit" in goal.lower() or "forum" in goal.lower():
+            #     hint = f"Note: Reddit website is simulated through Postmil website. For any task related to reddit/forums you should use Postmil website hosted at {os.environ['WA_REDDIT']}"
             # if "repository" in goal.lower() or "gitlab" in goal.lower():
             #     hint = f"For any task related to repository you should use GitLab website hosted at {os.environ['WA_GITLAB']}"
-            input_specifications += GOAL_INPUT_SPECIFICATION.format(goal=goal, hint=hint)
+            # input_specifications += GOAL_INPUT_SPECIFICATION.format(goal=goal, hint=hint)
 
             # Add rephrased goal if available
             if rephrased_goal:
@@ -284,36 +328,12 @@ class PromptDesigner:
 You are participating in a web automation benchmark evaluation. Your actions will be assessed for accuracy and efficiency."""
 
         if cls.benchmark =="webarena":
-            if cross_site:
+            sites = AccessControl.get_authorized_domains().keys()
+            if len(sites) > 1:
                 benchmark_specifications += "\n\n" + CROSS_SITE_TEMPLATE.format(
                     website_list="\n".join(
-                        f"- {site}: {record['description']}, Url: {record['url']}"
-                        for site, record in {
-                            "GitLab": {
-                                "url": GITLAB,
-                                "description": "A web-based DevOps lifecycle tool that provides a Git repository manager. For any task related to repository you should use this."
-                            },
-                            "Reddit": {
-                                "url": REDDIT,
-                                "description": "A social news aggregation, web content rating, and discussion website. For any task related to reddit/forums you should use this."
-                            },
-                            "Shopping": {
-                                "url": SHOPPING,
-                                "description": "An online shopping platform named One Stop Market."
-                            },
-                            "Shopping Admin": {
-                                "url": SHOPPING_ADMIN,
-                                "description": "Admin panel for managing the shopping platform."
-                            },
-                            "Wikipedia": {
-                                "url": WIKIPEDIA,
-                                "description": "A free online encyclopedia."
-                            },
-                            "Map": {
-                                "url": MAP,
-                                "description": "A web-based mapping service."
-                            }
-                        }.items() if record['url']  # Only include sites with valid URLs
+                        f"- {record['title']}: {record['description']}, Url: {record['url']}"
+                        for site, record in SITE_MAP.items() if record['url'] and site in sites  # Only include sites with valid URLs
                     ),
                     action_space="- " + "\n- ".join(action_space),
                     # last_action=current_obs.get("last_action_error") if current_obs.get("last_action_error") is not None else current_obs.get("last_action")
