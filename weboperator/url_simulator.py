@@ -11,6 +11,7 @@ import gymnasium as gym
 import socket
 import requests
 import playwright.sync_api
+from .observation_processor import ObservationProcessor
 
 class URLSimulator:
     _visited_cache = {}
@@ -41,16 +42,19 @@ class URLSimulator:
     @staticmethod
     def safe_goto(page, url):
         timeout = 30000
-        while True:
+        for i in range(5):  # Retry up to 3 times
             try:    
                 response = page.goto(url, timeout=timeout)
                 return response
             except playwright.sync_api.TimeoutError:
                 print(f"Timeout while loading {url}, retrying...")
                 timeout += 10000
+                time.sleep(10 * (i + 1))  # Exponential backoff
             except Exception as e:
                 print(f"Error while loading {url}: {e}, exiting...")
                 raise
+            
+        raise ValueError(f"Failed to load {url} after multiple attempts")
         
     @staticmethod
     def _is_error_page(page):
@@ -62,19 +66,18 @@ class URLSimulator:
         except Exception:
             return True
         
-    # @classmethod
-    # def _get_axtree_txt(cls, url):
-    #     env = get_env()
-    #     original_page = env.page
-    #     env.page = env.context.new_page()
-    #     obs, _, _, _, _ = env.step(f"goto('{url}')")
-    #     obs = ObservationProcessor.process_obs(obs)
-    #     axtree_txt = obs["axtree_txt"]
-    #     axtree_obj = obs["axtree_object"]
-    #     env.page.close()
-    #     env.page = original_page
-    #     time.sleep(1)
-    #     return axtree_txt, axtree_obj
+    @classmethod
+    def _get_axtree_txt(cls, url, env):
+        original_page = env.page
+        env.page = env.context.new_page()
+        obs, _, _, _, _ = env.step(f"goto('{url}')")
+        obs = ObservationProcessor.process_obs(obs)
+        axtree_txt = obs["axtree_txt"]
+        axtree_obj = obs["axtree_object"]
+        env.page.close()
+        env.page = original_page
+        time.sleep(1)
+        return axtree_txt, axtree_obj
     
     @classmethod
     def open_and_check(cls, url, env):

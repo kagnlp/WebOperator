@@ -465,7 +465,7 @@ Action {step_num}: {action["code"]}
 
         for _ in range(3):  # Try up to 3 times to get a valid answer
             try:
-                response, scores = cls.reward_model.chat(message)
+                response, scores = cls.reward_model.chat(message, logprobs=True)
             except Exception as e:
                 print(f"Error during evaluation: {e}. Retrying...")
                 continue

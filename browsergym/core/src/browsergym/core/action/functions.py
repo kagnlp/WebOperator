@@ -686,12 +686,12 @@ def go_forward():
 
 
 # https://playwright.dev/python/docs/api/class-browsercontext#browser-context-new-page
-def new_tab():
+def new_tab(url: str):
     """
-    Open a new tab. It will become the active one.
+    Open a new tab and navigate to a url. It will become the active tab.
 
     Examples:
-        new_tab()
+        new_tab("http://www.example.com")
     """
     global page
     # set the new page as the active page
@@ -706,6 +706,7 @@ const event = new Event('pageshow', {
 window.dispatchEvent(event);
 """
     )
+    goto(url)
 
 
 # https://playwright.dev/python/docs/api/class-page#page-close

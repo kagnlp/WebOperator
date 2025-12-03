@@ -3,6 +3,8 @@ from browsergym.utils.obs import IGNORED_AXTREE_ROLES, IGNORED_AXTREE_PROPERTIES
 from browsergym.utils.obs import flatten_axtree_to_str
 import re
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 def is_alert_available(axtree_object):
     for node in axtree_object["nodes"]:
@@ -36,6 +38,35 @@ def get_elem_by_bid(axtree, bid):
         #  and int(tmp_bid) == int(bid)
         if tmp_bid is not None and tmp_bid == int(bid):
             return node
+    return None
+
+def find_option_in_axtree(axtree, bid, option_str):
+    if axtree is None:
+        return None
+    node_id_to_idx = {node["nodeId"]: idx for idx, node in enumerate(axtree["nodes"])}
+    def dfs(node_idx: int) -> dict:
+        node = axtree["nodes"][node_idx]
+        node_name = ""
+        
+        if "name" in node:
+            node_name = node["name"]["value"]
+            if node_name.strip() == option_str:
+                return node
+
+        for child_node_id in node["childIds"]:
+            if child_node_id not in node_id_to_idx or child_node_id == node["nodeId"]:
+                continue
+            result = dfs(node_id_to_idx[child_node_id])
+            if result is not None:
+                return result
+
+        return None
+            
+    for node in (axtree["nodes"]):
+        tmp_bid = node.get("weboperator_id", None)
+        if tmp_bid is not None and tmp_bid == int(bid):
+            # Now find the option_str in its subtree
+            return dfs(node_id_to_idx[node["nodeId"]])
     return None
 
 def is_full_axtree_too_long(axtree_txt) -> bool:
@@ -206,9 +237,9 @@ def axtree_equal(ax1, ax2):
         
         if len(children1) != len(children2):
             # print(f"Comparing nodes {norm1['bid'] if norm1 is not None else None} and {norm2['bid'] if norm2 is not None else None}")
-            print(f"Different number of children: {len(children1)} vs {len(children2)}.")
+            logger.debug(f"Different number of children: {len(children1)} vs {len(children2)}.")
             flag = is_skipped_subtree(n1) and is_skipped_subtree(n2)
-            print(flag)
+            # print(flag)
             return flag
 
         return all(
@@ -255,21 +286,8 @@ def is_diff_axtree_obj_by_bid(ax1, ax2, bid):
     idmap2 = {n["nodeId"]: n for n in ax2["nodes"]}
     
     # Find the node with given bid, it's ancestors, descendants and siblings, and create two new axtree objects
-    def find_node_and_related(node, bid, ancestors, siblings, idmap):
+    def find_node_and_related(node, bid, ancestors, idmap):
         if node.get("weboperator_id") == int(bid):
-            # Now I have the node, its ancestors and siblings
-            # Now find all its descendants
-            
-            # last_childIds = siblings
-            # for siblingId in siblings:
-            #     if siblingId != node["nodeId"] and siblingId in idmap:
-            #         idmap[siblingId]["childIds"] = []
-            
-            # for aid in reversed(ancestors):
-            #     if aid in idmap:
-            #         idmap[aid]["childIds"] = last_childIds
-            #         last_childIds = [aid]
-
             last_aid = node["nodeId"]
             for aid in reversed(ancestors):
                 new_child = []
@@ -277,25 +295,26 @@ def is_diff_axtree_obj_by_bid(ax1, ax2, bid):
                     if cid != last_aid:
                         idmap[cid]["childIds"] = []
                         
-                    if ("name" in idmap[cid] and idmap[cid]["role"]["value"] not in IGNORED_AXTREE_ROLES) or cid == last_aid: # Ignore None leaves
+                    if cid == last_aid: # Ignore Siblings
+                    # if ("name" in idmap[cid] and idmap[cid]["role"]["value"] not in IGNORED_AXTREE_ROLES) or cid == last_aid: # Ignore None leaves
                         new_child.append(cid)
                         
                 idmap[aid]["childIds"] = new_child
                 last_aid = aid
                         
-            print(f"Found bid {bid} in ax tree")
+            logger.debug(f"Found bid {bid} in ax tree")
             return True
         
         
         for cid in node["childIds"]:
             if cid in idmap:
-                if find_node_and_related(idmap[cid], bid, ancestors + [node["nodeId"]], node["childIds"], idmap):
+                if find_node_and_related(idmap[cid], bid, ancestors + [node["nodeId"]], idmap):
                     return True
 
         return False
 
-    flag1 = find_node_and_related(ax1["nodes"][0], bid, [], [], idmap1)
-    flag2 = find_node_and_related(ax2["nodes"][0], bid, [], [], idmap2)
+    flag1 = find_node_and_related(ax1["nodes"][0], bid, [], idmap1)
+    flag2 = find_node_and_related(ax2["nodes"][0], bid, [], idmap2)
     
     # Collect only reachable nodes starting from root
     def collect_reachable(root, idmap):
@@ -313,7 +332,7 @@ def is_diff_axtree_obj_by_bid(ax1, ax2, bid):
         reachable1 = collect_reachable(ax1["nodes"][0]["nodeId"], idmap1)
     else:
         reachable1 = set()
-        print(f"Bid {bid} not found in ax1")
+        logger.debug(f"Bid {bid} not found in ax1")
         axtree_txt_1 = flatten_axtree_to_str(ax1)
         axtree_txt_2 = flatten_axtree_to_str(ax2)
         print("############### AXTree 1 ###############")
@@ -326,7 +345,7 @@ def is_diff_axtree_obj_by_bid(ax1, ax2, bid):
         reachable2 = collect_reachable(ax2["nodes"][0]["nodeId"], idmap2)
     else:
         reachable2 = set()
-        print(f"Bid {bid} not found in ax2")
+        logger.debug(f"Bid {bid} not found in ax2")
 
     new_ax1 = {"nodes": []}
     for node in ax1["nodes"]:
@@ -338,8 +357,8 @@ def is_diff_axtree_obj_by_bid(ax1, ax2, bid):
         if node["nodeId"] in reachable2:
             new_ax2["nodes"].append(node)
 
-    print(f"Comparing axtree objects for bid {bid}")
-    print(f"New axtree 1 has {len(new_ax1['nodes'])} nodes, New axtree 2 has {len(new_ax2['nodes'])} nodes")
+    logger.debug(f"Comparing axtree objects for bid {bid}")
+    logger.debug(f"New axtree 1 has {len(new_ax1['nodes'])} nodes, New axtree 2 has {len(new_ax2['nodes'])} nodes")
 
     # print(new_ax1["nodes"][0])
     

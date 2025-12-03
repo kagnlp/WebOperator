@@ -39,7 +39,7 @@ def was_destructive(obs):
 
 def is_destructive(obs: WebStateNode, action):
     """Check if an action is destructive (should be avoided during backtracking)"""
-    if not AccessControl.is_authorized_url(obs.url):
+    if not AccessControl.is_authenticated_url(obs.url):
         return False
 
     if (

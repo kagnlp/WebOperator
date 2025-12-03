@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 from .utils import normalize_url
 
 class AccessControl:
@@ -50,7 +50,6 @@ class AccessControl:
             }
         
         url = normalize_url(url)
-        
         page_location = urllib.parse.urlparse(url).netloc
         return page_location in authorized_locations
     

@@ -6,6 +6,7 @@ from browsergym.core.action.functions import can_scroll_down, can_scroll_up
 from .url_simulator import URLSimulator
 from .access_control import AccessControl
 import gymnasium as gym
+from .axtree_utils import find_option_in_axtree
 
 def is_repeated_action(action_str, trajectory):
     count = 1
@@ -24,8 +25,8 @@ class ActionValidator:
     allow_unauthorized_page = True
 
     @classmethod
-    def configure(cls, allow_invalid_page=False, allow_unauthorized_page=True):
-        cls.allow_invalid_action = False
+    def configure(cls, allow_invalid_action=False, allow_invalid_page=False, allow_unauthorized_page=True):
+        cls.allow_invalid_action = allow_invalid_action
         cls.allow_invalid_page = allow_invalid_page
         cls.allow_unauthorized_page = allow_unauthorized_page
         
@@ -47,6 +48,16 @@ class ActionValidator:
                         f"bid '{bid}' not found in Current page Accessibility Tree. Only use bid which are present in Current page Accessibility Tree.")
                     raise ValueError(f"bid '{bid}' not found in Current page Accessibility Tree. Only use bid which are present in Current page Accessibility Tree.")
             
+            if arg_dict.get("options") is not None and isinstance(arg_dict.get("options"), str):
+                option = arg_dict.get("options")
+                
+                if not find_option_in_axtree(current_obs["axtree_object"], bid, option):
+                # if option not in current_obs["axtree_txt"]:
+                    logger.warning(
+                        f"Option '{option}' not found under bid '{bid}' in Current page Accessibility Tree. Only use options which are present in Current page Accessibility Tree.")
+                    raise ValueError(f"Option '{option}' not found under bid '{bid}' in Current page Accessibility Tree. Only use options which are present in Current page Accessibility Tree.")
+                
+            
         if func_name not in action_space:
             raise ValueError(f"Action '{func_name}' not in action space. Use an action from current action space.")
         
@@ -61,12 +72,12 @@ class ActionValidator:
         #                 f"Field with bid {bid} is read-only. Cannot fill it. Try another way.")            
         # Disable press_enter_after for content writing fields
 
-        if not cls.allow_invalid_page and func_name == "goto" and not URLSimulator.is_valid_page(arg_dict["url"], env):
+        if not cls.allow_invalid_page and (func_name == "goto" or func_name == "new_tab") and not URLSimulator.is_valid_page(arg_dict["url"], env):
                 logger.warning(f"Attempting to navigate to a 404 URL: {arg_dict['url']}")
                 raise ValueError(f"Cannot navigate to invalid URL: {arg_dict['url']}. Please check the URL or try a different action. Don't try to create url from training data. Try the urls that exist in the current context.")
 
         if not cls.allow_unauthorized_page:
-            if func_name == "goto":
+            if func_name == "goto" or func_name == "new_tab":
                 final_url = URLSimulator.get_final_url(arg_dict["url"], env)
                 if not AccessControl.is_authorized_url(final_url):
                     logger.warning(f"Attempting to navigate to unauthorized URL: {arg_dict['url']}")

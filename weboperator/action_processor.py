@@ -26,13 +26,19 @@ class ActionProcessor:
     def postprocess(cls, action, axtree_object):
         import copy
         action = copy.deepcopy(action)
+        flag = False
         if action["type"] in ["click", "fill", "select_option"]: # bid based
             # Find the actual browsergym_id from self.tree_node.axtree_object
             for node in axtree_object["nodes"]:
                 if node.get('browsergym_id') is not None and int(action["args"]["bid"]) == node.get('weboperator_id'):
                     action["args"]["bid"] = node.get('browsergym_id')
+                    flag = True
                     # action["code"] = cls.action_to_python_code(action) # Done later
                     break
+                
+            # if not flag:
+            #     logger.warning(f"bid {action['args']['bid']} not found in current axtree nodes.")
+                # raise ValueError(f"bid {action['args']['bid']} not found in current axtree nodes.")
         
         if action["type"] == "stop":
             action["type"] = "send_msg_to_user"

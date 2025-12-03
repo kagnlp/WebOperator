@@ -3,12 +3,16 @@ from .observation_processor import ObservationProcessor
 from .axtree_utils import is_diff_axtree_obj_by_bid
 from .action_selector import ActionSelector
 from .action_processor import ActionProcessor
+from .url_simulator import URLSimulator
 # from browsergym.experiments.loop import get_env
 import time
 import gymnasium as gym
+import logging
+logger = logging.getLogger(__name__)
 
 class BacktrackManager:
     simulation_enabled = True
+    destruction_aware = True
     
     def __init__(self):
         self.pending_actions = []
@@ -19,6 +23,7 @@ class BacktrackManager:
     def configure(cls, simulation_enabled: bool, destruction_aware: bool):
         cls.simulation_enabled = simulation_enabled
         ActionSelector.destruction_aware_backtracking = destruction_aware
+        cls.destruction_aware = destruction_aware
 
     def reset(self):
         self.pending_actions = []
@@ -56,8 +61,8 @@ class BacktrackManager:
         n_tabs = len(anchestor_tab_urls)
         # Multiple tab in anchestor means, that is root. And active index of root is n_tabs-1
         for i in range(1, n_tabs):
-            reset_actions.append("new_tab()")
-            reset_actions.append(f"goto('{anchestor_tab_urls[i]}')")
+            reset_actions.append(f"new_tab('{anchestor_tab_urls[i]}')")
+            # reset_actions.append(f"goto('{anchestor_tab_urls[i]}')")
 
         for i in range(len(reset_actions) - 1):
             reset_nodes.append(None)
@@ -73,9 +78,78 @@ class BacktrackManager:
         return reset_actions, reset_nodes
 
     @classmethod
+    def backtrack(cls, start_node, end_node: WebStateNode, env: gym.Env):
+        nodes = []
+        def append_action(curr_node):
+            if curr_node.last_action is not None and not curr_node.last_action["code"].startswith("note"):
+                nodes.append(curr_node)
+        
+        if len(end_node.parent.open_pages_urls) == 1: # Single Tab Case
+            last = end_node.last_action
+            if last["type"] == "goto":
+                if(cls._safe_backtrack([end_node], start_node, end_node.parent, env, False)):
+                    return True, 1
+                
+        go_back_count = 0
+        go_forward_count = 0
+        if end_node.last_action is not None:
+            append_action(end_node)
+            if end_node.last_action["type"] == "go_back":
+                go_back_count += 1
+            if end_node.last_action["type"] != "go_forward":
+                # end_node = end_node.parent.parent
+                go_forward_count += 1
+        
+        target_node = end_node.parent
+        curr = target_node
+        
+        # Multiple Tab Case
+        while len(curr.open_pages_urls) > 1 and curr.last_action is not None:
+            if curr.last_action["type"] == "go_back":
+                go_back_count += 1
+            elif curr.url != curr.parent.url and go_back_count > 0:
+                go_back_count -= 1
+            # if curr.last_action["type"] == "go_back" and :
+            #     go_back_flag = True
+            append_action(curr)
+            curr = curr.parent
+        
+        while curr is not None:
+            if cls.destruction_aware and curr.destructive: # Search upwards until destructive action
+                break
+            if curr.parent is None or (curr.parent.url != curr.url and not curr.refresh_loses_state and cls.destruction_aware):
+                # Safe to stop here?
+                if curr.parent is not None and go_back_count > 0:
+                    append_action(curr)
+                    if curr.last_action["type"] == "go_back":
+                        go_back_count += 1
+                    else:
+                        go_back_count -= 1
+                elif curr.parent is not None and curr.last_action["type"] == "go_back":
+                    append_action(curr)
+                    go_back_count += 1
+                else:
+                    logger.debug(f"Found a likely anchestor. Checking if safe to stop here: {curr.url}")
+                    forward_nodes = list(reversed(nodes))
+
+                    if cls._safe_backtrack(forward_nodes, start_node, curr, env, end_node.last_action["type"] != "stop" and cls.simulation_enabled):
+                        return True, len(forward_nodes)
+                    else: # Single Simultation
+                        break
+
+            else:
+                append_action(curr)
+                if curr.last_action["type"] == "go_back":
+                    go_back_count += 1
+            curr = curr.parent
+        
+        return False, 0
+    
+    @classmethod
     def get_backtrack_actions(cls, start_node, end_node: WebStateNode, env: gym.Env):
         # if is_same_node(end_node.parent, start_node): 
         #     return True
+        # logger.debug("[Backtrack Manager] Finding backtrack path", end_node.url, start_node.url)
         nodes = []
         actions = []
         reset_actions = []
@@ -120,11 +194,13 @@ class BacktrackManager:
             append_action(curr, curr.last_action["code"])
             curr = curr.parent
 
-        # Single Tab Case -> Find safe anchestor of curr
+        # Single Tab Case -> Find safe anchestor of curr  
+        final_actions = None
+        final_nodes = None
         while curr is not None:
-            if curr.destructive:
+            if cls.destruction_aware and curr.destructive: # Search upwards until destructive action
                 break
-            if curr.parent is None or curr.parent.url != curr.url:
+            if curr.parent is None or (curr.parent.url != curr.url and not curr.refresh_loses_state and cls.destruction_aware):
                 # Safe to stop here?
                 if curr.parent is not None and go_back_count > 0:
                     append_action(curr, curr.last_action["code"])
@@ -136,14 +212,17 @@ class BacktrackManager:
                     append_action(curr, curr.last_action["code"])
                     go_back_count += 1
                 else:
-                    print(f"Found a likely anchestor. Checking if safe to stop here: {curr.url}")
+                    logger.debug(f"Found a likely anchestor. Checking if safe to stop here: {curr.url}")
                     reset_actions, reset_nodes = cls.get_reset_steps(source_n_tabs, curr.open_pages_urls)
                     final_actions = reset_actions+list(reversed(actions))
                     final_nodes = reset_nodes+list(reversed(nodes))
-  
-                    if cls._simulate(final_actions, final_nodes, start_node.active_page_index, env):
+
+                    if end_node.last_action["type"] == "stop" or cls._simulate(final_actions, final_nodes, start_node.active_page_index, env):
                         return final_actions, final_nodes
-                    elif curr.parent is not None: # Need to go further up
+                    else: # Single Simultation
+                        break
+                        
+                    if curr.parent is not None: # Need to go further up
                         append_action(curr, curr.last_action["code"])
                         if curr.last_action["type"] == "go_back":
                             go_back_count += 1
@@ -154,6 +233,10 @@ class BacktrackManager:
                 if curr.last_action["type"] == "go_back":
                     go_back_count += 1
             curr = curr.parent
+        
+        # if final_actions is not None and final_nodes is not None:
+        #     if not cls.simulation_enabled or cls._simulate(final_actions, final_nodes, start_node.active_page_index, env):
+        #         return final_actions, final_nodes
         return None, None
 
     @classmethod
@@ -164,22 +247,19 @@ class BacktrackManager:
         # nodes = list(reversed(nodes))
         # red color print
         # print(actions)
-        print(f"[SIMULATION] Simulating {len(actions)} actions for backtrack verification.")
+        logger.debug(f"[SIMULATION] Simulating {len(actions)} actions for backtrack verification.")
         
         for action in actions:
-            print(f"\033[91m{action}\033[0m")
-            
-        # new_tab(actions[0])
-        # actions = actions[1:]
+            logger.debug(f"\033[91m{action}\033[0m")
         
         # First action is always goto
         if len(actions) <= 1:
-            print(f"[SIMULATION] Only {len(actions)} action(s), skipping simulation.")
+            logger.debug(f"[SIMULATION] Only {len(actions)} action(s), skipping simulation.")
             return True
         
         for node in nodes:
             if node is not None and node.corrupted:
-                print(f"[SIMULATION] Node in the path already marked as corrupted, skipping simulation.")
+                logger.debug(f"[SIMULATION] Node in the path already marked as corrupted, skipping simulation.")
                 return False
             
         bid_flag = False
@@ -189,30 +269,15 @@ class BacktrackManager:
                 break
         
         if not bid_flag:
-            print(f"[SIMULATION] No bid-based actions in the path, skipping simulation.")
+            logger.debug(f"[SIMULATION] No bid-based actions in the path, skipping simulation.")
             return True
             
         for i in range(1, len(actions) - 1):       
             if nodes[i] is not None and nodes[i].parent is not None:
-                # Only for i = 0, nodes[i].last_action["code"] may not equal actions[i]
-                # if nodes[i].last_action["code"] == actions[i]:
-                #     last_action = nodes[i].last_action
-                # elif actions[i].startswith("goto"):
-                #     last_action = {
-                #         "type": "goto",
-                #         "args": {
-                #             "url": extract_url_from_goto(actions[i])
-                #         },
-                #         "code": actions[i]
-                #     }
-                # else:
-                #     last_action = nodes[i].last_action
                 if nodes[i].destructive: # and nodes[i].last_action_error == "":
-                    print(f"[SIMULATION] Destructive action found at index {i}: {nodes[i].last_action['code']}")
+                    logger.debug(f"[SIMULATION] Destructive action found at index {i}: {nodes[i].last_action['code']}")
                     return False
 
-        # Clone current tabs
-        # env = get_env()
         current_total_tabs = len(env.context.pages)
         current_active_tab = active_page_index
         original_page = env.page
@@ -222,19 +287,11 @@ class BacktrackManager:
         
         env.page = env.context.pages[current_total_tabs + current_active_tab]
         
-        # actions[0] = goto('{node.url}')
-        # print(f"[SIMULATION] First action: {actions[-1]}")
-        # print(f"[SIMULATION] First node URL: {extract_url_from_goto(actions[-1])}")
-        # env.page.goto(extract_url_from_goto(actions[-1]), timeout=0)
-        # actions = actions[:-1]
         # what if one of the actions is related to tabs?
         flag = True
         obs = None
         
         for i, action in enumerate(actions):
-            # if action.startswith("new_tab") or action.startswith("tab_close") or action.startswith("tab_focus"):
-            #     print(f"[SIMULATION] Skipping tab action {action} during simulation.")
-            #     break
             if nodes[i] is not None:
                 formatted_action = nodes[i].last_action
                 if formatted_action is not None and formatted_action["type"] == "tab_focus":
@@ -242,19 +299,16 @@ class BacktrackManager:
                     # relative_tab_index = int(re.search(r'tab_focus\((\d+)\)', action).group(1))
                     abs_tab_index = current_total_tabs + relative_tab_index
                     action = f"tab_focus({abs_tab_index})"
-                    print(f"[SIMULATION] Converted tab_focus action to absolute index: {action}")
+                    # print(f"[SIMULATION] Converted tab_focus action to absolute index: {action}")
 
                 if obs is not None and nodes[i].last_action is not None and formatted_action["type"] in ("click", "fill", "select_option"): # bid-based actions
                     bid = formatted_action["args"]["bid"]
                     if is_diff_axtree_obj_by_bid(obs["axtree_object"], nodes[i].parent.axtree_object, bid):
-                        print(f"[SIMULATION] Simulation mismatch at action {action} due to bid {bid}.")
-                        # print(f"[SIMULATION] Current URL: {obs['url']}, Node URL: {nodes[i].url}")
-                        # print_first_diff_lines(obs["axtree_txt"], nodes[i].axtree_txt)
-                        # nodes[i].corrupted = True
+                        logger.debug(f"[SIMULATION] Simulation mismatch at action {action} due to bid {bid}.")
                         flag = False
                         break
                     else:
-                        print(f"[SIMULATION] Bid {bid} matches for action {action}.")
+                        logger.debug(f"[SIMULATION] Bid {bid} matches for action {action}.")
             
                     action = ActionProcessor.postprocess(formatted_action, obs["axtree_object"])["code"]
                 
@@ -265,41 +319,109 @@ class BacktrackManager:
             obs = ObservationProcessor.process_obs(obs)
             
             if obs["last_action_error"] != "":
-                print(f"[SIMULATION] Simulation error at action {action}: {obs['last_action_error']}")
-                # if nodes[i] is not None:
-                #     nodes[i].corrupted = True
-                # flag = False
-                # break
-                
-            # if is_diff_axtree_obj(obs["axtree_object"], nodes[i].axtree_object):
-            # # if is_diff_axtree(obs["axtree_txt"], nodes[i].axtree_txt):
-            #     print(f"[SIMULATION] Simulation mismatch at action {action}.")
-                
-            #     if obs["url"] != nodes[i].url:
-            #         print(f"[SIMULATION] URL mismatch: {obs['url']} != {nodes[i].url}")
-            #     # else:
-            #     #     print_first_diff_lines(obs["axtree_txt"], nodes[i].axtree_txt)
-                    
-            #     nodes[i].corrupted = True
-            #     flag = False
-            #     break
-            # else:
-            #     print(f"[SIMULATION] Action {action} successful.")
-            #     print_first_diff_lines(obs["axtree_txt"], nodes[i].axtree_txt)
+                logger.error(f"[SIMULATION] Simulation error at action {action}: {obs['last_action_error']}")
         
         if flag:
-            print(f"[SIMULATION] Simulation successful.")
-        
-        while len(env.context.pages) > current_total_tabs:
-            env.context.pages[-1].close()
+            logger.debug(f"[SIMULATION] Simulation successful.")
+        else:
+            logger.debug(f"[SIMULATION] Simulation failed.")
+            # Close new tabs
+            while len(env.context.pages) > current_total_tabs:
+                env.context.pages[-1].close()
             
         env.page = original_page  
         
         if current_active_tab >= len(env.context.pages):
-            print(f"[SIMULATION] Invalid active tab index {current_active_tab}, skipping refocus.")
+            logger.debug(f"[SIMULATION] Invalid active tab index {current_active_tab}, skipping refocus.")
         else:
-            print(f"[SIMULATION] Refocusing on tab {current_active_tab}.")
+            logger.debug(f"[SIMULATION] Refocusing on tab {current_active_tab}.")
             _, _, _, _, _ = env.step(f"tab_focus({current_active_tab})")
+            
+        time.sleep(1)
+        return flag
+    
+    @classmethod
+    def _safe_backtrack(cls, nodes, source_node, rollback_node, env: gym.Env, simulation_enabled):
+        # if not cls.simulation_enabled:
+        #     return True
+
+        logger.debug(f"[SIMULATION] Simulating {len(nodes)} actions for backtrack verification.")
+        
+        for node in nodes:
+            logger.debug(f"\033[91m{node.last_action['code']}\033[0m")
+        
+        current_total_tabs = len(source_node.open_pages_urls)
+        current_active_tab = source_node.active_page_index
+        
+        new_total_tabs = len(rollback_node.open_pages_urls)
+        new_active_tab = rollback_node.active_page_index # Should be always 0
+        
+        original_page = env.page
+        # create same number of tabs
+        for i in range(new_total_tabs):
+            page = env.context.new_page()
+            URLSimulator.safe_goto(page, rollback_node.open_pages_urls[i])
+            
+        flag = True
+        # env.page = env.context.pages[current_total_tabs + new_active_tab]
+        obs, _, _, _, _ = env.step(f"tab_focus({current_total_tabs + new_active_tab})")
+        obs = ObservationProcessor.process_obs(obs)
+        last_ax = obs["axtree_object"]
+
+        # Ignore the last action during forward execution
+        for i, node in enumerate(nodes):
+            formatted_action = node.last_action
+            action = formatted_action["code"]
+            if formatted_action is not None and formatted_action["type"] == "tab_focus":
+                relative_tab_index = formatted_action["args"]["index"]
+                abs_tab_index = current_total_tabs + relative_tab_index
+                action = f"tab_focus({abs_tab_index})"
+
+            if formatted_action is not None and formatted_action["type"] in ("click", "fill", "select_option"): # bid-based actions
+                if simulation_enabled: # Verify bid-based actions only when simulation is enabled
+                    bid = formatted_action["args"]["bid"]
+                    if is_diff_axtree_obj_by_bid(last_ax, node.parent.axtree_object, bid):
+                        logger.debug(f"[SIMULATION] Simulation mismatch at action {action} due to bid {bid}.")
+                        flag = False
+                        break
+                    else:
+                        logger.debug(f"[SIMULATION] Bid {bid} matches for action {action}.")
+        
+                action = ActionProcessor.postprocess(formatted_action, last_ax)["code"]
+                
+            if i >= len(nodes) - 1:
+                break
+            
+            print(f"# Action: \033[91m[B] \033[92m{action}\033[0m")
+            
+            obs, _, _, _, _ = env.step(action)
+            obs = ObservationProcessor.process_obs(obs)
+            last_ax = obs["axtree_object"]
+            
+            if obs["last_action_error"] != "":
+                logger.error(f"[SIMULATION] Simulation error at action {action}: {obs['last_action_error']}")
+        
+        if flag:
+            logger.debug(f"[SIMULATION] Simulation successful.")
+            # input("Press Enter to continue...")
+            # Close old tabs
+            for _ in range(current_total_tabs):
+                env.context.pages[0].close()
+            
+        else:
+            logger.debug(f"[SIMULATION] Simulation failed.")
+            # input("Press Enter to continue...")
+            # Close new tabs
+            while len(env.context.pages) > current_total_tabs:
+                env.context.pages[-1].close()
+            
+            env.page = original_page 
+        
+            if current_active_tab >= len(env.context.pages):
+                logger.debug(f"[SIMULATION] Invalid active tab index {current_active_tab}, skipping refocus.")
+            else:
+                logger.debug(f"[SIMULATION] Refocusing on tab {current_active_tab}.")
+                _, _, _, _, _ = env.step(f"tab_focus({current_active_tab})")
             
         time.sleep(1)
         return flag

@@ -12,13 +12,15 @@ import gymnasium as gym
 # from Logger import HTMLRenderer
 from browsergym.core.action.highlevel import HighLevelActionSet
 from browsergym.experiments import AbstractAgentArgs, Agent
+
+from .url_simulator import URLSimulator
 from .web_state_node import WebStateNode
 import re
 import json
 from .action_generator import ActionGenerator
 
-from weboperator.html_renderer import HTMLRenderer
-from weboperator.webprm import WebPRM
+from .html_renderer import HTMLRenderer
+from .webprm import WebPRM
 from tabulate import tabulate
 
 logger = logging.getLogger(__name__)
@@ -65,6 +67,7 @@ class TreeSearchAgent(Agent):
         self.curr_pos = 0
         self.checklist = ""
         self.n_steps = 0
+        self.revived = False
         self.backtrack_manager = backtrack_manager
         if self.backtrack_manager is not None:
             self.backtrack_manager.reset()
@@ -419,17 +422,58 @@ class TreeSearchAgent(Agent):
 
         return final_action_list
 
+    def _revive_terminating_actions(self):
+        if self.revived:
+            print("Already revived terminating actions once, not reviving again.")
+            return
+        curr = self.tree_node
+        while curr.parent is not None and not curr.destructive:
+            curr = curr.parent
+            
+        # curr is the root. Now collect all terminating actions in its subtree (which might be pruned)
+        def collect_terminating_actions(node):
+            actions = []
+            if node.last_action is not None and is_terminating(node.last_action):
+                actions.append(node)
+            for child in node.children:
+                actions.extend(collect_terminating_actions(child))
+            return actions
+        
+        terminating_nodes = collect_terminating_actions(curr)
+        action_list = ActionProcessor.evaluate_actions(terminating_nodes, self.goal, self.checklist)
+        # t_actions = ActionProcessor.merge_actions(action_list)
+        
+        if self.action_selector is not None and len(action_list) > 0:
+            print(f"\033[93mReviving {len(action_list)} terminating actions\033[0m")
+            for score, node in action_list:
+                print(f"- {node.last_action['code']} (Reward: {score:.6f})")
+            self.revived = True
+            self.action_selector.add_actions(self.tree_node, action_list, False)
+        else:
+            print("\033[93mNo terminating actions to revive.\033[0m")
+    
     def adjust_tree(self, actions, add_actions=True):
         if add_actions:
             actions = self.process_actions(actions)
+            if self.action_selector is not None:
+                self.action_selector.add_actions(self.tree_node, actions)
         else:
             actions = []
 
         # Choose best action based on selection strategy
         if self.action_selector is not None:
-            return self.action_selector.select_action(
-                self.tree_node, actions, self.n_expanded, add_actions
+            best_node = self.action_selector.select_action(
+                self.tree_node, self.n_expanded
             )
+            # if self.action_selector.selection_strategy == "action-aware" and best_node.last_action["type"] == "stop" and best_node.last_action["args"]["text"] == "N/A. Agent failed to find a valid solution.":
+            #     # print("\033[93mNo valid actions available, reviving terminating actions.\033[0m")
+            #     self._revive_terminating_actions()
+            #     best_node = self.action_selector.select_action(
+            #         self.tree_node, self.n_expanded
+            #     )
+            # else:
+            #     print(best_node.last_action["type"], best_node.last_action["args"])
+            return best_node
         else:
             # Default: choose the first action
             if len(actions) == 0:
@@ -470,18 +514,47 @@ class TreeSearchAgent(Agent):
                 ):
                     # Backtrack
                     print(
-                        f"Backtracking from [{self.tree_node.level},{self.tree_node.position}] to [{best_node.level},{best_node.position}]"
+                        f"\033[95m[Backtrack Manager] Backtracking from [{self.tree_node.level},{self.tree_node.position}] "
+                        f"to [{best_node.level},{best_node.position}]\033[0m"
                     )
-                    bt_actions, bt_nodes = BacktrackManager.get_backtrack_actions(
-                        self.tree_node, best_node, env
-                    )
-                    if bt_actions is not None:
+                    # bt_actions, bt_nodes = BacktrackManager.get_backtrack_actions(
+                    #     self.tree_node, best_node, env
+                    # )
+                    flag, n_bt_steps = BacktrackManager.backtrack(self.tree_node, best_node, env)
+                    if flag:
+                        print(
+                            f"\033[92m[Backtrack Manager] Found valid path in the tree for backtracking.\033[0m"
+                        )
+                        
+                        self.trajectory[-1]["action"] = {
+                            "code": f"backtrack({best_node.level},{best_node.position})",
+                            "thought": "Backtracking action",
+                            "type": "backtrack",
+                        }
+                        self.trajectory[-1]["obs_description"] = ""
+                        self.log()
+                        self.trajectory.append({
+                            "screenshot": best_node.parent.screenshot,
+                            "open_pages_urls": best_node.parent.open_pages_urls,
+                            "open_pages_titles": best_node.parent.open_pages_titles,
+                            "active_page_index": best_node.parent.active_page_index,
+                            "url": best_node.parent.url,
+                            "axtree_txt": best_node.parent.axtree_txt,
+                            "action": None,
+                            "action_error": None,
+                            "obs_description": None,
+                            "http_requests": best_node.parent.http_requests,
+                        })
+                        
                         self.tree_node = best_node
-                        self.backtrack_manager.start_backtracking(bt_actions, bt_nodes)
+                        self.log()
+                        self.n_backtracks += 1
+                        self.n_steps += n_bt_steps
+                        # self.backtrack_manager.start_backtracking(bt_actions, bt_nodes)
                         break
                     else:
                         print(
-                            "No valid path found in the tree for backtracking, re-adjusting the tree..."
+                            f"\033[91m[Backtrack Manager] No valid path found in the tree for backtracking.\033[0m"
                         )
                         flag = False
                         continue
@@ -530,6 +603,16 @@ class TreeSearchAgent(Agent):
             # self.n_expanded += 1
             return self.get_best_action(obs, env)
 
+        if self.backtrack_manager is not None and self.backtrack_manager.destruction_aware and self.tree_node.last_action["type"] in ("click", "fill", "select_option"): # bid-based actions
+            if self.tree_node.parent is not None and self.tree_node.parent.parent is not None:
+                curr = self.tree_node.parent
+                if curr.url != curr.parent.url:
+                    new_axtree_txt, new_axtree_obj = URLSimulator._get_axtree_txt(curr.url, env)
+                    from .axtree_utils import is_diff_axtree_obj_by_bid
+                    if is_diff_axtree_obj_by_bid(new_axtree_obj, curr.axtree_object, self.tree_node.last_action["args"]["bid"]):
+                        logger.debug("Refresh changes the axtree for bid-based action, marking refresh_loses_state=True")
+                        self.tree_node.parent.refresh_loses_state = True
+
         # action = self.tree_node.last_action['code']
         return self.tree_node.last_action, self.tree_node.last_obs_description
 
@@ -557,7 +640,7 @@ class TreeSearchAgent(Agent):
 
         self.log()
         
-        print(f"Executing action code: {action['code']}")
+        logger.debug(f"Executing action code: {action['code']}")
         return action["code"], {}
 
 

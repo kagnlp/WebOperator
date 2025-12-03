@@ -3,6 +3,7 @@ from .action_analyzer import is_destructive, is_repeated_action, is_terminating
 import logging
 from .trajectory_manager import has_safe_anchestor
 from .action_queue_manager import ActionQueueManager
+from .action_processor import ActionProcessor
 logger = logging.getLogger(__name__)
 
 class ActionSelector:
@@ -56,12 +57,14 @@ class ActionSelector:
     def _handle_max_steps(self, n_expanded, curr_node):
         if n_expanded < self.max_steps:
             return None
+        # if n_expanded >= 0.8 * self.max_steps:
+        #     ActionProcessor.prune_low_terminating = False
 
         if self.action_queue_manager.get_terminating_actions_count() > 0:  # More than one candidate solution
             _, best_node = self.action_queue_manager.get_best_terminating_action()
             print(f"Best candidate solution found [Max Steps Exceeded]: {best_node.last_action['code']}")
             return best_node
-
+            
         logger.error("Max steps reached but no candidate solution found.")
         return self._make_terminating_action("N/A. Agent failed to find a valid solution.", curr_node)
         
@@ -74,35 +77,35 @@ class ActionSelector:
             count += node.frequency
         return count
     
-    def select_action(self, curr_obs, actions, n_expanded, add_actions=True):
-        if add_actions:
-            if self.destruction_aware_backtracking and curr_obs.destructive:
-                self.action_queue_manager.destruct()
-                self.n_destruct += 1
-                print(f"  \033[91mDestructive action detected! Total so far: {self.n_destruct}\033[0m")
+    def add_actions(self, curr_obs, actions, check_budget=True):
+        if self.destruction_aware_backtracking and curr_obs.destructive:
+            self.action_queue_manager.destruct()
+            self.n_destruct += 1
+            print(f"  \033[91mDestructive action detected! Total so far: {self.n_destruct}\033[0m")
+
+        if check_budget and self.selection_strategy == "action-aware" and self.action_queue_manager.is_out_of_budget():
+            self.action_queue_manager.minimize()
+            self.n_prune += 1
+            print(f"Queue size {self.action_queue_manager.length()}. Tree pruned, best node found.")
+        else:
+            print(f"Queue size {self.action_queue_manager.length()}. Adding new actions...")
+            
+        if self.selection_scope == "local":
+            self.action_queue_manager.clear()
+
+        if self.termination_strategy == "all_agree" and self._calculate_frequency(actions) >= 2 and len(actions) == 1 and is_terminating(actions[0][1].last_action):
+            self.action_queue_manager.clear()
+
+        for score, new_node in actions:
+            if is_terminating(new_node.last_action):
+                self.discovered_solutions += 1
+            elif new_node.level >= self.max_depth:
+                print(f"Non-terminating Node {new_node.last_action['code']} exceeded max depth {self.max_depth}, skipping...")
+                new_node.prune()
+                continue
+            self.action_queue_manager.push(-score, new_node)
                 
-            if self.action_queue_manager.is_out_of_budget():
-                self.action_queue_manager.minimize()
-                self.n_prune += 1
-                print(f"Queue size {self.action_queue_manager.length()}. Tree pruned, best node found.")
-            else:
-                print(f"Queue size {self.action_queue_manager.length()}. Adding new actions...")
-                
-            if self.selection_scope == "local":
-                self.action_queue_manager.clear()
-
-            if self.termination_strategy == "all_agree" and self._calculate_frequency(actions) >= 2 and len(actions) == 1 and is_terminating(actions[0][1].last_action):
-                self.action_queue_manager.clear()
-
-            for score, new_node in actions:
-                if is_terminating(new_node.last_action):
-                    self.discovered_solutions += 1
-                elif new_node.level >= self.max_depth:
-                    print(f"Non-terminating Node {new_node.last_action['code']} exceeded max depth {self.max_depth}, skipping...")
-                    new_node.prune()
-                    continue
-                self.action_queue_manager.push(-score, new_node)
-
+    def select_action(self, curr_obs, n_expanded):
         # 1. Handle max-step pruning
         node = self._handle_max_steps(n_expanded, curr_obs)
         if node: return node

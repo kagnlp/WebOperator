@@ -6995,7 +6995,7 @@
       },
       "reference_url": "",
       "program_html": [],
-      "string_note": "There is no hotel near CMU that is within 5 minutes walking distance",
+      "string_note": "There is no hotel near CMU that is within 3 minutes walking distance",
       "reference_answer_raw_annotation": "N/A"
     },
     "intent_template_id": 41
@@ -9026,7 +9026,7 @@
       ],
       "reference_answers": {
         "fuzzy_match": [
-          "5h 47min"
+          "5h 45min"
         ]
       },
       "reference_url": "",

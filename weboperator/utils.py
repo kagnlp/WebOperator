@@ -3,8 +3,8 @@ from urllib.parse import urlparse
 
 
 def normalize_url(url):
-    if "://" not in url:
-        url = "http://" + url
+    # if "://" not in url:
+    #     url = "http://" + url
     return url
     # parsed = urlparse(url)
     # return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/").lower()

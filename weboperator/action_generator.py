@@ -185,6 +185,8 @@ class ActionGenerator:
                 elem = get_elem_by_bid(current_obs["axtree_object"], bid)
                 if elem is not None:  # Add this check
                     selected_elem = elem
+                else:
+                    raise ValueError(f"bid '{bid}' not found in Current page Accessibility Tree. Only use bid which are present in Current page Accessibility Tree.")
 
         action_str = action_to_python_code({"type": func_name, "args": arg_dict})
 
@@ -434,7 +436,7 @@ class ActionGenerator:
         last_valid_response = None
 
         while True:  # Retry up to max_retry times
-            if self.max_retry != -1 and valid_format >= self.max_retry:
+            if self.max_retry != -1 and (valid_format >= self.max_retry or (attempt >= 2 * self.max_retry and valid_format == 0)):
                 break
             try:
                 while True:
@@ -487,10 +489,8 @@ class ActionGenerator:
                     sleep_time = min(sleep_time * 2, 200)  # Exponential backoff up to 60 seconds
                     attempt += 1
                     continue
-
-                valid_format += 1
-
-                # Add blue color
+                    
+                valid_format += 1 
                 print(f"\033[94m[Action Generated]\033[0m {action_str}")
                 formatted_action = self.parse_action(action_str, reason_str, trajectory)
                 last_valid_response = (formatted_action, obs_str)

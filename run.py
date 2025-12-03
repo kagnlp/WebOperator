@@ -182,11 +182,11 @@ if __name__ == "__main__":
                 )
                 continue
 
-            if enable_multisite and len(task_config["sites"]) < 2:
-                print(
-                    f"Skipping task {task_id} as it requires single site: {task_config['sites']}"
-                )
-                continue
+            # if enable_multisite and len(task_config["sites"]) < 2:
+            #     print(
+            #         f"Skipping task {task_id} as it requires single site: {task_config['sites']}"
+            #     )
+            #     continue
             
             if args.site is not None and args.site != task_config["sites"][0]:
                 print(f"Skipping task {task_id} as it is not for site {args.site}")

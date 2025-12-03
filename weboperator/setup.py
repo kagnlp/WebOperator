@@ -199,13 +199,16 @@ def configure_action_validator(config):
     allow_invalid_page = (
         config["components"].get("action_validator", {}).get("allow_invalid_page", False)
     )
+    allow_invalid_action = config["components"].get("action_validator", {}).get("allow_invalid_action", False)
     # Action Validator is Optional
     if "action_validator" in config["components"]:
         print("+ Action Validator")
         print(" - Allow Invalid Page: ", allow_invalid_page)
+        print(" - Allow Invalid Action: ", allow_invalid_action)
         print(" - Allow Unauthorized Page: ", allow_unauthorized_page)
+        
         ActionValidator.configure(
-            allow_invalid_page=allow_invalid_page, allow_unauthorized_page=allow_unauthorized_page
+            allow_invalid_page=allow_invalid_page, allow_unauthorized_page=allow_unauthorized_page, allow_invalid_action=allow_invalid_action
         )
 
 

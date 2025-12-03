@@ -105,7 +105,7 @@ GO_BACK_ACTION = "go_back(): To return to the previously viewed page. E.g., `go_
 GO_FORWARD_ACTION = "go_forward(): Navigate to the next page in history. E.g., `go_forward()`."
 STOP_ACTION = 'stop(text: str): To stop interaction. E.g., `stop("Based on the results of my search, the city was built in 1751.")`. If the task isn\'t a QnA, and you have completed the task, you should call "stop" with appropriate message. But if the task is a QnA, you should ensure that the "text" parameter is consistent with the "goal" and observations. Because your answer will be evaluated by exact string matcher.'
 REPORT_INFEASIBLE_ACTION = "report_infeasible(reason: str): Notifies the user that their instructions are infeasible. E.g., `report_infeasible('I cannot follow these instructions because there is no email field in this form.')`."
-NEW_TAB_ACTION = "new_tab(): Open a new tab. It will become the active one. Example: `new_tab()`"
+NEW_TAB_ACTION = "new_tab(url: str): Open a new tab and navigate to a url. It will become the active tab. Example: `new_tab('http://www.example.com')`"
 TAB_FOCUS_ACTION = "tab_focus(index: int): Bring tab to front (activate tab). Example: `tab_focus(2)`"
 TAB_CLOSE_ACTION = "tab_close(): Close the current tab. Example: `tab_close()`"
 NOTE_ACTION = 'note(txt: str): To take note of all important info w.r.t. completing the task to enable reviewing it later. E.g., `note("Spent $10 on 4/1/2024")`'
@@ -277,6 +277,7 @@ class PromptDesigner:
             # if "repository" in goal.lower() or "gitlab" in goal.lower():
             #     hint = f"For any task related to repository you should use GitLab website hosted at {os.environ['WA_GITLAB']}"
             # input_specifications += GOAL_INPUT_SPECIFICATION.format(goal=goal, hint=hint)
+            input_specifications += GOAL_INPUT_SPECIFICATION.format(goal=goal)
 
             # Add rephrased goal if available
             if rephrased_goal:
