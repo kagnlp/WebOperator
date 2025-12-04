@@ -70,8 +70,8 @@ def find_option_in_axtree(axtree, bid, option_str):
     return None
 
 def is_full_axtree_too_long(axtree_txt) -> bool:
-    # return len(axtree_txt) >= 80000
-    return len(axtree_txt) >= int(os.environ["MAX_AXTREE_SIZE"])
+    max_size = int(os.getenv("MAX_AXTREE_SIZE", 80000))  # default = 80000
+    return len(axtree_txt) >= max_size
 
 def has_axtree_changed(curr_obs) -> bool:
     prev_axtree_txt = curr_obs.parent.axtree_txt if curr_obs.parent is not None else ""
