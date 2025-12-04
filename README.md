@@ -56,7 +56,7 @@ Then open the `.env` file and update any necessary values (such as API keys, web
 ## 🚀 Usage
 
 ### Skeleton Code
-Boilerplate code to run WebOperator on an interactive, open-ended task:
+Boilerplate code ([demo.py](demo.py)) to run WebOperator on an interactive, open-ended task:
 
 ```python
 import gymnasium as gym
