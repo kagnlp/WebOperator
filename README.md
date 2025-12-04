@@ -75,7 +75,7 @@ env = gym.make(
 
 # Create an agent
 action_generator = ActionGenerator(
-    model=OpenRouterModel("openai/gpt-oss-20b:free")
+    model=OpenRouterModel("openai/gpt-oss-20b:free")  # Set OPENROUTER_API_KEYS in .env file
 )
 agent = TreeSearchAgent(
         chat_mode=True,
