@@ -12,9 +12,7 @@ experiment:
 agent:
   mode: "evaluation"
   allow_unauthorized_page: true
-  # checkpoint: "last"
-  # checkpoint: "tree copy.json"
-
+  
 # Model Configuration
 models:
   action_model:
@@ -35,6 +33,7 @@ components:
     recover_from_captcha: true
 
   action_generator:
+    max_retry: 5
     full_action_space:
       - "click"
       - "fill"
@@ -45,13 +44,11 @@ components:
       - "new_tab"
       - "tab_focus"
       - "tab_close"
-      # - "note"
       - "stop"
     action_space_type: "adaptive" # fixed
     candidates:
       - name: "simple_action_generator"
         model: "action_model"
         history_length: 5
-        max_retry: 5
         rephraser: false
         retriever: false

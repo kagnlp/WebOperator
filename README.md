@@ -39,6 +39,7 @@ source weboperator_env/bin/activate  # On Windows use `weboperator_env\Scripts\a
 ```
 
 ### 3️⃣ Install dependencies
+_Refer to the [Running with Docker](#running-with-docker) section if you don't have admin rights to install Playwright dependencies._
 ```bash
 pip install -r requirements.txt
 playwright install chromium --with-deps # Need admin rights
@@ -54,6 +55,25 @@ cp .env.example .env
 Then open the `.env` file and update any necessary values (such as API keys, website urls) according to your environment.
 
 ## 🚀 Usage
+
+### Run the Demo
+
+```bash
+python demo.py
+```
+
+**or**
+
+```bash
+python run.py --config weboperator/configs/default.yml
+```
+
+#### 🐳 Running with Docker
+_Useful if you don't have admin rights to install Playwright dependencies. No need to create a virtual environment or install dependencies._
+
+```bash
+docker compose run --user $(id -u) weboperator --config weboperator/configs/default.yml
+```
 
 ### Skeleton Code
 Boilerplate code ([demo.py](demo.py)) to run WebOperator on an interactive, open-ended task:
@@ -92,6 +112,134 @@ while True:
         break
 # release the environment
 env.close()
+```
+
+## 📊 Benchmark Configurations
+
+#### WebArena
+
+```bash
+python run.py --config weboperator/configs/wa-gpt-4o.yml
+```
+
+#### WebVoyager
+
+```bash
+python run.py --config weboperator/configs/wv-gpt-4o.yml
+```
+
+## ⚙️ Agent Configuration Explanation
+
+#### Environment
+
+```yaml
+env:
+  task_type: "openended" # ["webarena", "webvoyager", "openended"]
+  max_steps: 100 # Maximum steps per episode (For BrowserGym)
+  headless: false # false: show browser UI; true: hide browser UI
+```
+
+#### Experiment
+
+```yaml
+experiment:
+  results_dir: "./results/openended/gpt-oss-20b" # Directory to save results. Give relative path.
+```
+
+#### Agent
+
+```yaml
+agent:
+  allow_unauthorized_page: true # Whether allow visit to pages outside the benchmark domain
+```
+
+#### Models
+
+```yaml
+models: # List of models used in the agent
+  action_model: # Unique identifier of the model
+    type: "OpenRouterModel" # Options: ["OpenAIModel", "AzureOpenAIModel", "OpenRouterModel", "OpenHFModel"]
+    model_name: "openai/gpt-oss-20b:free"
+  reward_model:
+    type: "AzureOpenAIModel"
+    model_name: "gpt-4o"
+    temperature: 1.0
+```
+
+#### Agent Components
+
+```yaml
+components:
+  action_validator: # Optional: Action validator configuration
+    allow_invalid_action: false # Whether to allow semantically invalid actions (Default: false)
+    allow_invalid_page: false # Whether to allow navigation to invalid pages (Default: false)
+
+  observation_processor: # Observation processor configuration
+    optimized: true # true: use full or visible-only observation based on the observation size. false: always use visible-only observation
+    truncate_error_message: true # Truncate long error messages
+
+  action_processor: # Action processor configuration
+    merge_strategy: "sum" # ["sum", "max", "none"]: strategy to merge semantically similar actions. "none": do not merge.
+  
+  recovery_assistant: # Optional: Recovery assistant configuration
+    recover_from_invalid_page: true # true: forcefully go_back or tab_close when on invalid page
+    recover_from_captcha: true # Whether to allow human intervention for captcha recovery
+
+  backtrack_manager: # Optional: Enables backtracking mechanism
+    destruction_aware: true # Whether to re-root the tree after executing destructive actions
+    simulation_verified: true # Whether to do snapshot-validation or not
+
+  action_selector: # Action selection strategy configuration
+    selection_strategy: "action-aware" # options: ["highest-reward", "action-aware"]
+    search_budget: 4 # Frontier budget
+    n_candidates: 2 # Number of solution candidates to consider
+    max_depth: 20 # Maximum search depth
+    max_steps: 20 # Maximum steps (excluding backtracking steps)
+
+  rephraser: # Optional: Enables instruction rephraser
+    model: "action_model" # Model used for rephrasing instructions
+
+  retriever: # Optional: Enables examples retriever
+    type: "faiss" # ["faiss", "bm25"]
+    model: "all-MiniLM-L6-v2" # Sentence transformer model (for faiss retriever)
+    top_k: 5 # Number of examples to retrieve
+
+  judge: # Reward and checklist model configuration. Note: Applicable only for multiple action candidates
+    prompt_type: "web_operator"  # Options: likert_scale, web_shepherd, web_operator
+    checklist_model: "reward_model" # Model used for checklist generation
+    reward_model: "reward_model" # Model used for reward estimation
+
+  action_generator:
+    max_retry: 5 # Maximum retries for generating syntactically and semantically valid actions
+    full_action_space: # List of all possible actions
+      - "click"
+      - "fill"
+      - "select_option"
+      - "goto"
+      - "go_back"
+      - "go_forward"
+      - "scroll"
+      - "new_tab"
+      - "tab_focus"
+      - "tab_close"
+      - "stop"
+    action_space_type: "adaptive" # options: ["fixed", "adaptive"]
+    candidates: # List of action generator candidates
+      - name: "simple_action_generator" # Unique name for the candidate
+        model: "action_model" # Model to use 
+        history_length: 5 # Number of previous steps to include in the context
+        rephraser: false # Whether to include rephrased task instruction
+        retriever: false # Whether to include retrieved examples
+      - name: "action_generator_w_retriever"
+        model: "action_model"
+        history_length: 3
+        rephraser: false
+        retriever: true
+      - name: "action_generator_w_rephraser"
+        model: "action_model" 
+        history_length: 4
+        rephraser: true
+        retriever: false
 ```
 
 <!-- ## Evaluation -->

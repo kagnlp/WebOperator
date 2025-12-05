@@ -1,0 +1,104 @@
+# BrowserGym Experiment Configuration
+debug: true
+# Environment Configuration
+env:
+# Benchmark Configuration
+  task_type: "webvoyager" 
+  max_steps: 100
+  headless: true
+  
+# Experiment Settings
+experiment:
+  results_dir: "./results/webvoyager/gpt-4o"
+  multisite: True
+
+# Agent Configuration
+agent:
+  mode: "evaluation"
+  allow_unauthorized_page: false
+
+# Model Configuration
+models:
+  action_model:
+    type: "AzureOpenAIModel"
+    model_name: "gpt-4o"
+
+  reward_model:
+    type: "AzureOpenAIModel"
+    model_name: "gpt-4o"
+    temperature: 1.0
+
+# Components Configuration
+components:
+  # Judge Configuration
+  judge:
+    prompt_type: "web_operator"  # Options: likert_scale, web_shepherd, web_operator
+    reward_model: "reward_model"
+    checklist_model: "reward_model"
+
+  rephraser:
+    model: "action_model"
+
+  retriever:
+    model: "all-MiniLM-L6-v2"
+    type: "faiss"
+    # type: "bm25"
+    top_k: 5
+
+  action_selector:
+    selection_strategy: "action-aware" # highest-reward
+    n_candidates: 2
+    search_budget: 4
+    termination_strategy: "all_agree" # all_agree
+    max_depth: 20
+    max_steps: 20
+
+  action_validator:
+    allow_invalid_page: false
+    allow_invalid_action: false
+    max_retry: 5
+  
+  action_processor:
+    merge_strategy: "sum"
+
+  observation_processor:
+    optimized: true
+    truncate_error_message: true
+  
+  recovery_assistant:
+    recover_from_invalid_page: true
+    recover_from_captcha: true
+
+  backtrack_manager:
+    simulation_verified: true
+    destruction_aware: true
+
+  action_generator:
+    full_action_space:
+      - "click"
+      - "fill"
+      - "select_option"
+      - "goto"
+      - "go_back"
+      - "scroll"
+      - "new_tab"
+      - "tab_focus"
+      - "tab_close"
+      - "stop"
+    action_space_type: "adaptive" # fixed
+    candidates:
+      - name: "simple_action_generator"
+        model: "action_model"
+        history_length: 5
+        rephraser: false
+        retriever: false
+      - name: "action_generator_w_retriever"
+        model: "action_model"
+        history_length: 3
+        rephraser: false
+        retriever: true
+      - name: "action_generator_w_rephraser"
+        model: "action_model" 
+        history_length: 4
+        rephraser: true
+        retriever: false

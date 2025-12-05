@@ -43,6 +43,7 @@ def create_action_generator_from_config(config, models):
         return None
 
     generator_config = config["components"]["action_generator"]
+    validator_config = config["components"].get("action_validator")
 
     print("+ Action Generator")
     print(" - Action Space: ", generator_config.get("full_action_space", []))
@@ -52,10 +53,10 @@ def create_action_generator_from_config(config, models):
     ActionGenerator.configure(
         full_action_space=generator_config.get("full_action_space", []),
         action_space_type=generator_config.get("action_space_type", "adaptive"),
-        max_retry=config["components"]["action_validator"].get("max_retry", 6),
-        allow_invalid_action=config["components"]["action_validator"].get(
+        max_retry=generator_config.get("max_retry", 6),
+        allow_invalid_action=validator_config.get(
             "allow_invalid_action", False
-        ),
+        ) if validator_config else True,
     )
     generators = []
     for gen_config in generator_config.get("candidates", []):

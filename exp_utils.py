@@ -33,6 +33,10 @@ def load_site_tasks(target_sites, dataset_path="webarena/test.raw.json"):
     }.items():
         all_configs_str = all_configs_str.replace(pattern, os.environ[url_key])
     test_configs = json.loads(all_configs_str)
+    
+    # Default to all sites
+    if target_sites is None:
+        return test_configs
     return [cfg for cfg in test_configs if set(cfg["sites"]) <= set(target_sites)]
 
 def load_configs_by_task_ids(task_ids, dataset_path="webarena/test.raw.json"):
@@ -49,8 +53,9 @@ def load_configs_by_task_ids(task_ids, dataset_path="webarena/test.raw.json"):
     }.items():
         all_configs_str = all_configs_str.replace(pattern, os.environ[url_key])
     test_configs = json.loads(all_configs_str)
+    if task_ids is None:
+        return test_configs
     return [cfg for cfg in test_configs if cfg["task_id"] in task_ids]
-
 
 def find_last_checkpoint(task_results_dir):
     if os.path.exists(task_results_dir):

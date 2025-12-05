@@ -73,8 +73,8 @@ class ActionValidator:
         # Disable press_enter_after for content writing fields
 
         if not cls.allow_invalid_page and (func_name == "goto" or func_name == "new_tab") and not URLSimulator.is_valid_page(arg_dict["url"], env):
-                logger.warning(f"Attempting to navigate to a 404 URL: {arg_dict['url']}")
-                raise ValueError(f"Cannot navigate to invalid URL: {arg_dict['url']}. Please check the URL or try a different action. Don't try to create url from training data. Try the urls that exist in the current context.")
+            logger.warning(f"Attempting to navigate to a 404 URL: {arg_dict['url']}")
+            raise ValueError(f"Cannot navigate to invalid URL: {arg_dict['url']}. Please check the URL or try a different action. Don't try to create url from training data. Try the urls that exist in the current context.")
 
         if not cls.allow_unauthorized_page:
             if func_name == "goto" or func_name == "new_tab":

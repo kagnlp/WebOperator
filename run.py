@@ -33,7 +33,6 @@ warnings.filterwarnings(
     category=BeartypeDecorHintPep585DeprecationWarning,
 )
 
-
 def load_config(config_path="exp_config.yml"):
     """Load experiment configuration from YAML file."""
     with open(config_path, "r") as file:
@@ -115,7 +114,14 @@ if __name__ == "__main__":
     
     if config["env"]["task_type"] != "openended":
         # Get configuration values
-        dataset_path = config["experiment"].get("dataset_path", "webarena/test.raw.json")
+        dataset_path = config["experiment"].get("dataset_path")
+        if dataset_path is None:
+            if config["env"]["task_type"] == "webarena":
+                dataset_path = "webarena/test.raw.json"
+            elif config["env"]["task_type"] == "webvoyager":
+                dataset_path = "webvoyager/test.raw.json"
+            else:
+                raise ValueError(f"Unknown task_type: {config['env']['task_type']}")
         task_ids = config["env"].get("task_ids")
         min_task_id = config["env"].get("min_task_id")
         max_task_id = config["env"].get("max_task_id")
@@ -127,9 +133,9 @@ if __name__ == "__main__":
 
     enable_multisite = config["experiment"].get("multisite", False)
     max_steps = config["env"]["max_steps"]
-    mode = config["agent"]["mode"]
+    mode = config["agent"].get("mode", "evaluation")
     checkpoint = config["agent"].get("checkpoint")
-    reset_strategy = config["env"].get("reset_strategy", "always")
+    reset_strategy = config["env"].get("reset_strategy", "never")
     fresh_start = config["env"].get("fresh_start", False)
     evaluation_strategy = config["env"].get("evaluation_strategy", "all")
     headless = config["env"].get("headless", True)
