@@ -10,6 +10,23 @@
 LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. 
 This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page’s DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce **WebOperator**, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a **54.56%** success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
 
+## 📊 Results on WebArena Benchmark
+
+| Agent | Model | Overall (#812) | Reddit (#106) | GitLab (#180) | Shopping (#187) | CMS (#182) | Map (#109) | Multisite (#48) |
+|-------|:--------:|:----------------:|:----------------:|:----------------:|:------------------:|:-------------:|:--------------:|:------------------:|
+| BrowserGym | gpt-4 | 15.0 | 20.2 | 19.0 | 17.2 | 14.8 | 25.5 | - |
+| LM-TS | gpt-4o | 19.2 | 11.3 | 13.9 | 27.8 | 16.5 | 26.6 | 16.7 |
+| Go-Browse | qwen-2.5-7b | 22.6 | 30.7 | 15.3 | 22.4 | 25.3 | 17.9 | - |
+| AWM | gpt-4 | 35.5 | 50.9 | 31.8 | 30.8 | 29.1 | 43.3 | - |
+| Branch-n-Browse | gpt-4o | 35.8 | 50.9 | 36.7 | 34.6 | 26.4 | 46.8 | 18.8 |
+| WebPilot | gpt-4o | 37.2 | 65.1 | 39.4 | 36.9 | 24.7 | 33.9 | - |
+| AgentOccam | gpt-4-turbo | 45.7 | 67.0 | 43.3 | 46.2 | 38.9 | 52.3 | 16.7 |
+| AgentSymbiotic | claude-3.5 | 52.1 | 66.0 | 51.0 | 48.0 | 49.0 | **60.0** | 29.0 |
+| ScribeAgent | gpt-4o | 53.0 | 73.7 | **59.7** | 45.8 | 37.9 | 56.3 | - |
+||
+| **_WebOperator_** | gpt-4o | **54.56** | **76.42** | 52.78 | **49.20** | **54.95** | 55.24 | **31.25** |
+
+
 ## 📂 Project Structure
 
 ```bash
@@ -114,7 +131,7 @@ while True:
 env.close()
 ```
 
-## 📊 Benchmark Configurations
+## 🎯 Benchmark Configurations
 
 #### WebArena
 
