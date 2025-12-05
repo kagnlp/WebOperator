@@ -82,14 +82,14 @@ python demo.py
 **or**
 
 ```bash
-python run.py --config weboperator/configs/default.yml
+python run.py --config weboperator/configs/demo.yml
 ```
 
 #### 🐳 Running with Docker
 _Useful if you don't have admin rights to install Playwright dependencies. No need to create a virtual environment or install dependencies._
 
 ```bash
-docker compose run --user $(id -u) weboperator --config weboperator/configs/default.yml
+docker compose run --user $(id -u) weboperator --config weboperator/configs/demo.yml
 ```
 
 ### Skeleton Code
