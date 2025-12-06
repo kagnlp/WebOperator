@@ -183,7 +183,7 @@
 
         <h4 style="text-align: center; margin-top: -0.5rem; font-weight: 500">
             <a href="https://mahirlabibdihan.github.io">Mahir Labib Dihan</a>
-            <sup style="color: blue">1</sup><sup>*</sup>,
+            <sup style="color: blue">1</sup> <sup>*</sup>,
             <a href="https://sites.google.com/site/tanzimahashem/">Tanzima Hashem</a>
             <sup style="color: purple">1</sup>,
             <a href="https://sites.google.com/site/mohammedeunusali/">Mohammed Eunus Ali</a>
@@ -363,7 +363,7 @@
 
       <h2 style="text-align: center">Introduction</h2>
       <p>
-        LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page's DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce <b>WebOperator</b>, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a 54.6% success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
+        LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page's DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce WebOperator, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a 54.6% success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
       </p>
 
       <h2 style="text-align: center">WebOperator Overview</h2>
@@ -381,6 +381,16 @@
         style="width: 100%"
       />
       <p style="text-align: center">Table 1: Success rate (SR %) comparison on WebArena.</p>
+
+      <h2 style="text-align: center; margin-top: 2rem" id="results">Example Tree Search</h2>
+      <hr />
+      <!-- <br> -->
+      <img
+        src="assets/example.svg"
+        alt="Overview"
+        style="width: 100%; margin-top: 1rem; margin-bottom: 0.5rem;"
+      />
+      <hr />
       <!-- <p>
             In simple program synthesis tasks like HumanEval and MBPP we got highest scale of performance (Pass@1) scores. The current state-of-the-art method, Reflexion perform reasonably well, this approach does not generalize across varying datasets depicting a wide variety of problems. Self-reflection techniques enhance GPT-4's performance on HumanEval but result in a 3% decrease on the MBPP dataset. Consequently, even in HumanEval, with GPT-4, our Pass@1 surpasses Reflexion by ~3%. The significance of MapCoder shines through clearly when evaluated in competitive problem-solving contexts. Across datasets such as APPS, xCodeEval, and CodeContests, MapCoder demonstrates substantial enhancements over Direct prompting methods, with improvements of 41.3%, 52.6%, and 132.8% for ChatGPT, and 73.7%, 41.2%, and 135.1% for GPT4, respectively. Notably, the most challenging datasets are APPS and CodeContest, where MapCoder's performance stands out prominently. Importantly, on CodeContest our Pass@1 results match the Pass@5 scores of the concurrent state-of-the-art model AlphaCodium: 28.5% vs. their 29%. Furthermore, our Pass@5 in CodeContest is 35.2% results demonstrate an additional improvement of 12.8% over AlphaCodium.
         </p>  -->
