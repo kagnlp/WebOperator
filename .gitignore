@@ -165,7 +165,7 @@ dataset_hash.txt
 
 *results/
 *.pkl.gz
-*.png
+# *.png
 
 .vscode
 paper/
