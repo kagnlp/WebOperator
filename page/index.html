@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link rel="icon" href="../assets/wo_logo_3.png" type="image/png" />
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css"> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>WebOperator</title>
+
+    <meta property="og:title" content="WebOperator" />
+    <meta
+      property="og:description"
+      content="Action-Aware Tree Search for Autonomous Agents in Web Environment."
+    />
+    <meta
+      property="og:image"
+      content="https://mapeval.github.io/images/mapeval.png"
+    />
+    <meta property="og:url" content="https://mapeval.github.io" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image:width" content="3840" />
+    <meta property="og:image:height" content="2160" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MapEval" />
+    <meta
+      name="twitter:description"
+      content="Action-Aware Tree Search for Autonomous Agents in Web Environment."
+    />
+    <meta name="twitter:image:width" content="3840" />
+    <meta name="twitter:image:height" content="2160" />
+    <meta
+      name="twitter:image"
+      content="https://mapeval.github.io/images/mapeval.png"
+    />
+    <meta
+      name="google-site-verification"
+      content="9pM5JfTm1_c-Tmup10c-YeYhrLtBVv_tnZJ_mbvxGWQ"
+    />
+    <meta
+      name="keywords"
+      content="WebOperator, Web Agent, Web Automation, Tree Search, Autonomous Agents, Web Environment"
+    />
+    <style>
+      body {
+        font-family: "Poppins";
+        font-size: 18px;
+        margin: 0;
+        padding: 0;
+        text-align: justify;
+      }
+      /* body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+            text-align: justify;
+        } */
+
+      .container {
+        max-width: 59rem;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .link-block {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: -0.5rem;
+      }
+
+      .external-link {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        border-radius: 0.1rem;
+        transition: background-color 0.3s;
+        border-radius: 0.3rem;
+
+        display: flex;
+        flex-direction: row;
+        gap: 0.2rem;
+      }
+
+      .icon {
+        margin-top: 0.2rem;
+      }
+
+      .gray-border {
+        border: 0.1rem solid gray;
+        border-collapse: collapse;
+      }
+
+      .black-border {
+        border: 0.5rem solid black;
+        border-collapse: collapse;
+      }
+
+      .bg-gray {
+        background-color: gainsboro;
+      }
+
+      .center-align {
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      .dark-font {
+        color: black;
+        font-weight: bolder;
+      }
+
+      .responsive-flex {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+      }
+
+      .half-width {
+        width: 50%;
+      }
+
+      @media (max-width: 768px) {
+        .responsive-flex {
+          flex-direction: column;
+        }
+
+        .half-width {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+        <div style="text-align: center; margin-top: 3rem;  display: flex; align-items: center; justify-content: center;">
+            <img src="../assets/wo_logo_3.png" alt="Overview" style="width: 4rem; margin-bottom: 0.4rem; margin-right: 1.0rem;">
+            <h1>WebOperator</h1>
+        </div>
+        <h2 style="text-align: center; margin-top: -1.5rem; font-weight: 500; font-size:x-large;">Action-Aware Tree Search for Autonomous Agents in Web Environment</h2>
+        
+<!-- 
+        <h2 style="text-align: center; margin-top: -.5rem; font-weight:900; font-size:x-large; color: orange; background-color: black;">
+            🏆 ICML'25 Spotlight Paper 🏆
+        </h2> -->
+
+        <h4 style="text-align: center; margin-top: -0.5rem; font-weight: 500">
+            <a href="https://mahirlabibdihan.github.io">Mahir Labib Dihan</a>
+            <sup style="color: blue">1 *</sup>,
+            <a href="https://sites.google.com/site/tanzimahashem/">Tanzima Hashem</a>
+            <sup style="color: purple">1</sup>,
+            <a href="https://sites.google.com/site/mohammedeunusali/">Mohammed Eunus Ali</a>
+            <sup style="color: green">2</sup>,
+            <a href="https://rizwan09.github.io/">Md Rizwan Parvez</a>
+            <sup style="color: orange">3</sup>
+        </h4>
+
+        <p style="text-align: center; margin-top: -1rem; font-weight: 500; font-size: medium;">
+            <sup style="color: blue">1</sup>
+            Department of Computer Science and Engineering<br>
+            Bangladesh University of Engineering and Technology (BUET)
+        </p>
+        <!-- <p  style="text-align: center; margin-top: -1.2rem; font-weight: 500; font-size: medium;">
+            <sup style="color: green">2</sup>
+            Statistics, Islamic University Bangladesh
+        </p>
+        <p style="text-align: center; margin-top: -1.2rem; font-weight: 500; font-size: medium;">
+            <sup style="color: orange">3</sup>
+            Bangladesh Computer Council (BCC)
+            
+        </p> -->
+        <p style="text-align: center; margin-top: -1.2rem; font-weight: 500; font-size: medium;">
+        <sup style="color: green">2</sup>
+            Faculty of Information Technology, Monash University
+        </p>
+        <p style="text-align: center; margin-top: -1.2rem; font-weight: 500; font-size: medium;">
+            <sup style="color: orange">3</sup>
+            Qatar Computing Research Institute (QCRI)
+        </p>
+
+      <!-- <span
+        style="
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
+          font-size: medium;
+          margin-top: -1.2rem;
+        "
+      >
+        <h1
+          style="
+            font-family: 'Roboto', sans-serif;
+            font-weight: 150;
+            font-size: 1.2rem;
+            margin-right: 4px;
+          "
+        >
+          †
+        </h1>
+        Corresponding to&nbsp;<a href="mailto:mohammed.eunus.ali@gmail.com"
+          >mohammed.eunus.ali@gmail.com</a
+        >
+      </span> -->
+
+      <span
+        style="
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
+          font-size: medium;
+          margin-top: -1.2rem;
+        "
+      >
+        <h1
+          style="
+            font-family: 'Roboto', sans-serif;
+            font-weight: 150;
+            font-size: 1.2rem;
+            margin-right: 4px;
+          "
+        >
+          *
+        </h1>
+         Work done when working as a remote RA at QCRI.
+      </span>
+
+      <div style="margin-top: 1rem"></div>
+
+      <span class="link-block" style="margin-top: -0.5rem">
+        <!-- <a href="https://arxiv.org/abs/2501.00316" class="external-link" style="background-color:#363636; display: flex; align-items: center; padding-top: 8px; padding-bottom: 8px;">
+                <i class="ai ai-arxiv"></i>
+                <span>arXiv</span>
+            </a> -->
+
+        <a
+          href="https://openreview.net/forum?id=vnEuxLVFmN"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <i class="fas fa-file-alt" style="margin-right: 4px"></i>
+          <span>Paper</span>
+        </a>
+        <!-- <a href="https://huggingface.co/papers/2501.00316" class="external-link"
+                style="background-color:#363636; display: flex; align-items: center; padding-top: 8px; padding-bottom: 8px;">
+                <i class="fas fa-file-alt"></i>
+                <span>Paper</span>
+            </a> -->
+
+        <a
+          href="https://github.com/kagnlp/WebOperator"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <i class="fab fa-github" style="margin-right: 4px"></i>
+          <span>Code</span>
+        </a>
+        <!-- <a
+          href="https://huggingface.co/MapEval"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <i class="fa-solid fa-images" style="margin-right: 4px"></i>
+          <span>Dataset</span>
+        </a> -->
+        <a
+          href="#results"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <!-- <p style="font-size:18px; margin: 0; margin-right: 4px;">🏆</p> -->
+          <i class="fa-solid fa-trophy" style="margin-right: 4px"></i>
+          <span>Leaderboard</span>
+        </a>
+        <!-- <a
+          href="https://mapqator.github.io/project"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <i class="fa-solid fa-location-dot" style="margin-right: 4px"></i>
+          <span>MapQaTor</span> -->
+        </a>
+      </span>
+      <!-- <embed src="files/overview.pdf" type="application/pdf" width="100%" height="600px" /> -->
+      <img
+        src="../assets/wo_banner.svg"
+        alt="Overview"
+        style="width: 100%; margin-top: 1rem; margin-top: 2rem"
+      />
+      <p>
+        Overview of WebOperator, a tree-search framework for solving web tasks. The workflow iteratively explores the web environment via a structured tree: it (1) initializes at the start page, (2) observes and encodes the current page state as a node in the search tree, (3) adapts action space using the current observation, and expands the node by generating candidate actions using varied contextual formulations, and these actions are validated through rule-based analysis and simple URL-existence checks; (4) evaluates actions with a reward model, (5) merges duplicate or equivalent actions, (6) updates the search tree, (7) selects the best unexecuted action using action-aware criteria, (8) restores the target state using speculative backtracking, (9) executes the selected action, and (10) repeats until a terminating action produces a complete solution trajectory. The left panel shows an example thought-action sequence produced during task execution, and the right panel details the speculative backtracking mechanism.
+      </p>
+
+      <h2 style="text-align: center">Introduction</h2>
+      <p>
+        LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page's DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce <b>WebOperator</b>, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a 54.6% success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
+      </p>
+
+      <h2 style="text-align: center">WebOperator Overview</h2>
+      We introduce WebOperator, which redefines web environments by extending the notions of state (temporary and persistent) and actions (safe and destructive). It develops an action-aware tree-search approach that incorporates:  (a) Dynamic adaptation of the action space at each step based on the current observation, along with validation of generated actions to reject those that are invalid or have no meaningful effect. (b) Variation of the LLM input context to generate diverse candidate actions, combined with consolidation of redundant actions to ensure meaningful exploration. (c) Reliable backtracking using speculative execution and snapshot validation, allowing previously executed actions to be replayed or aborted without corrupting the main environment. (d) Pre- and post-execution heuristics to identify potentially destructive actions based solely on observable content. (e) Efficient traversal via a best-first search strategy that prioritizes safe, reversible actions early and defers destructive actions, replacing costly random-rollout methods like MCTS.
+      <br />
+      <br />
+      Together, these contributions enable WebOperator to systematically explore web environments, safely handle both temporary and persistent state changes, and operate efficiently under uncertainty, advancing the capabilities of tree search for realistic web automation tasks. Through comprehensive experiments on two dynamic, real-world web benchmarks, WebArena and WebVoyager, we demonstrate the effectiveness of WebOperator. Our ablation studies and analyses further provide deeper insights into WebOperator's capabilities and limitations.
+
+     
+
+      <h2 style="text-align: center; margin-top: 2rem" id="results">Results</h2>
+      <img
+        src="../assets/main_results.jpg"
+        alt="Overview"
+        style="width: 100%"
+      />
+      <p style="text-align: center">Table 1: Success rate (SR %) comparison on WebArena.</p>
+      <!-- <p>
+            In simple program synthesis tasks like HumanEval and MBPP we got highest scale of performance (Pass@1) scores. The current state-of-the-art method, Reflexion perform reasonably well, this approach does not generalize across varying datasets depicting a wide variety of problems. Self-reflection techniques enhance GPT-4's performance on HumanEval but result in a 3% decrease on the MBPP dataset. Consequently, even in HumanEval, with GPT-4, our Pass@1 surpasses Reflexion by ~3%. The significance of MapCoder shines through clearly when evaluated in competitive problem-solving contexts. Across datasets such as APPS, xCodeEval, and CodeContests, MapCoder demonstrates substantial enhancements over Direct prompting methods, with improvements of 41.3%, 52.6%, and 132.8% for ChatGPT, and 73.7%, 41.2%, and 135.1% for GPT4, respectively. Notably, the most challenging datasets are APPS and CodeContest, where MapCoder's performance stands out prominently. Importantly, on CodeContest our Pass@1 results match the Pass@5 scores of the concurrent state-of-the-art model AlphaCodium: 28.5% vs. their 29%. Furthermore, our Pass@5 in CodeContest is 35.2% results demonstrate an additional improvement of 12.8% over AlphaCodium.
+        </p>  -->
+
+        <h2 style="text-align: center;" >Cite Us</h2>
+            <pre
+                style="white-space: pre; word-wrap: normal; padding: 1.25em 1.5em; overflow-x: auto; background-color: #eee; color: #4a4a4a; font-size: .875em; border-radius: 3px; margin: 0 3px;">
+<code>@inproceedings{
+    dihan2025weboperator,
+    title={WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment},
+    author={Mahir Labib Dihan and Tanzima Hashem and Mohammed Eunus Ali and Md Rizwan Parvez},
+    booktitle={Submitted to The Fourteenth International Conference on Learning Representations},
+    year={2025},
+    url={https://openreview.net/forum?id=vnEuxLVFmN},
+    note={under review}
+}</code>
+</pre>
+    </div>
+  </body>
+</html>

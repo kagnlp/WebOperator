@@ -1,14 +1,20 @@
 <div align="center">
-<img src="assets/wo_logo_2.png" alt="WEB-OPERATOR Logo"/>
+<!-- <img src="assets/wo_logo_2.png" alt="WEB-OPERATOR Logo"/> -->
 <h1>WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment</h1>
 </div>
+
+<p align="center">
+    <a href="https://kagnlp.github.io/WebOperator">🌐 Website</a> •
+    <a href="https://openreview.net/forum?id=vnEuxLVFmN">📃 Paper</a> •
+    <a href="https://github.com/kagnlp/WebOperator">💻 Code</a>
+</p>
 
 ![WebOperator](assets/wo_banner.svg)
 
 ## 📖 Abstract
 
 LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. 
-This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page’s DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce **WebOperator**, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a **54.56%** success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
+This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content such as the current page’s DOM and UI elements—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce **WebOperator**, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. Notably, on WebArena, WebOperator achieves state-of-the-art performance with gpt-4o, achieving a **54.6%** success rate, underscoring the critical advantage of integrating strategic foresight with safe execution.
 
 ## 📊 Results on WebArena Benchmark
 
@@ -130,6 +136,12 @@ while True:
 # release the environment
 env.close()
 ```
+
+### Sample Output
+*Open-ended + Google Maps*
+
+![Screenshot](assets/output.png)
+
 
 ## 🎯 Benchmark Configurations
 
