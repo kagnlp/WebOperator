@@ -5,7 +5,7 @@
 
 <p align="center">
     <a href="https://kagnlp.github.io/WebOperator">🌐 Website</a> •
-    <a href="https://openreview.net/forum?id=vnEuxLVFmN">📃 Paper</a> •
+    <a href="https://arxiv.org/abs/2512.12692">📃 Paper</a> •
     <a href="https://github.com/kagnlp/WebOperator">💻 Code</a>
 </p>
 
