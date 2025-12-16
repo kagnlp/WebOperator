@@ -314,3 +314,17 @@ conda install -c conda-forge mesa-libgl-cos7-x86_64 mesa-dri-drivers-cos7-x86_64
 <!-- 
 gitlab -> something went wrong on our end.
 reddit -> 504 Gateway Time-out -->
+
+## 📝 Citation
+
+Please cite our paper:
+
+```
+@article{
+    dihan2025weboperator,
+    title={WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment},
+    author={Mahir Labib Dihan and Tanzima Hashem and Mohammed Eunus Ali and Md Rizwan Parvez},
+    journal={arXiv preprint arXiv:2512.12692},
+    year={2025},
+}
+```
