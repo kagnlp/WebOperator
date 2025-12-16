@@ -4,7 +4,7 @@
  */
 
 async ([parent_bid, bid_attr_name, tags_to_mark]) => {
-    console.log("Starting frame marking...");
+    // console.log("Starting frame marking...");
     // standard html tags
     // https://www.w3schools.com/tags/
     const html_tags = new Set([
@@ -59,9 +59,9 @@ async ([parent_bid, bid_attr_name, tags_to_mark]) => {
     let som_buttons = [];
     let i = 0;
     while (i < elements.length) {
-        if (i % 1000 == 0) {
-            console.log(`Frame marking progress: ${i} / ${elements.length} elements processed`);
-        }
+        // if (i % 1000 == 0) {
+        //     console.log(`Frame marking progress: ${i} / ${elements.length} elements processed`);
+        // }
         const elem = elements[i];
         // add shadowDOM elements to the elements array, in such a way that order is preserved
         // TODO: do we really need the order preserved?
@@ -119,7 +119,7 @@ async ([parent_bid, bid_attr_name, tags_to_mark]) => {
             elem_global_bid = elem.getAttribute(bid_attr_name);
             // if the bid has already been encountered, then this is a duplicate and a new bid should be set
             if (all_bids.has(elem_global_bid)) {
-                console.log(`BrowserGym: duplicate bid ${elem_global_bid} detected, generating a new one`);
+                // console.log(`BrowserGym: duplicate bid ${elem_global_bid} detected, generating a new one`);
                 elem_global_bid = null;
             }
         }
