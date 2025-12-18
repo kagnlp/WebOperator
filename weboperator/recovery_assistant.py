@@ -4,7 +4,7 @@ from .action_analyzer import is_repeated_action
 import logging
 
 logger = logging.getLogger(__name__)
-
+from .utils import RECAPTCHA_RECOVERY_MESSAGE
 
 class RecoveryAssistant:
     recover_from_invalid_page = True
@@ -95,11 +95,11 @@ class RecoveryAssistant:
                 actions = [
                     (
                         {
-                            "code": "stop('reCAPTCHA detected in the page. Please resolve it manually and reply to continue.')",
+                            "code": f"stop('{RECAPTCHA_RECOVERY_MESSAGE}')",
                             "thought": "Current page has reCAPTCHA, which should be resolved manually. Returning to user.",
                             "type": "stop",
                             "args": {
-                                 "text": "reCAPTCHA detected in the page. Please resolve it manually and reply to continue."    
+                                 "text": RECAPTCHA_RECOVERY_MESSAGE    
                             },
                             "selected_element": None,
                         },

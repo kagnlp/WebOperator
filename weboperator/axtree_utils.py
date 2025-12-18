@@ -589,7 +589,7 @@ def clean_axtree(
 
     # reverse the nodes to maintain original order
     cleaned_tree["nodes"] = list(reversed(cleaned_tree["nodes"]))
-    print(f"Cleaned AX tree has {len(cleaned_tree['nodes'])} nodes (originally {len(AX_tree['nodes'])} nodes).")
+    logger.debug(f"Cleaned AX tree has {len(cleaned_tree['nodes'])} nodes (originally {len(AX_tree['nodes'])} nodes).")
     return include_woid_in_axtree(cleaned_tree)
 
 

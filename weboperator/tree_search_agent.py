@@ -8,7 +8,7 @@ import openai
 from PIL import Image
 from typing import Dict, List, Any, Optional
 import gymnasium as gym
-
+from .action_analyzer import is_destructive
 # from Logger import HTMLRenderer
 from browsergym.core.action.highlevel import HighLevelActionSet
 from browsergym.experiments import AbstractAgentArgs, Agent
@@ -31,8 +31,7 @@ from .action_processor import ActionProcessor
 from .recovery_assistant import RecoveryAssistant
 from .action_analyzer import was_destructive, is_terminating
 from .action_selector import ActionSelector
-
-
+from .utils import RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE
 from .axtree_utils import is_alert_available, has_axtree_changed
 
 
@@ -54,6 +53,7 @@ class TreeSearchAgent(Agent):
         action_generator: Optional[ActionGenerator] = None,
         action_selector: Optional[ActionSelector] = None,
         backtrack_manager: Optional[BacktrackManager] = None,
+        human_intervention: bool = False,
         exp_dir: str = "",
         checkpoint: str = None,
     ) -> None:
@@ -68,6 +68,7 @@ class TreeSearchAgent(Agent):
         self.checklist = ""
         self.n_steps = 0
         self.revived = False
+        self.human_intervention = human_intervention
         self.backtrack_manager = backtrack_manager
         if self.backtrack_manager is not None:
             self.backtrack_manager.reset()
@@ -316,7 +317,8 @@ class TreeSearchAgent(Agent):
         new_goal = None
         if self.chat_mode:
             if obs["chat_messages"][-1]["role"] == "user":
-                new_goal = obs["chat_messages"][-1]["message"]
+                if self.tree_node.last_action is None or is_terminating(self.tree_node.last_action):
+                    new_goal = obs["chat_messages"][-1]["message"]
         elif self.goal is None:
             new_goal = processed_obs["goal_object"][0]["text"]
 
@@ -328,14 +330,17 @@ class TreeSearchAgent(Agent):
             processed_obs["last_action_error"] = RecoveryAssistant.get_recovery_hint(self.tree_node)
 
         if new_goal is not None and (self.goal is None or new_goal != self.goal):
-            print(f"# New Goal Detected: {new_goal}")
-            self.goal = new_goal
-            # self.reset()
-            self.checklist = WebPRM.generate_checklist(
-                goal=self.goal, start_url=self.tree_node.url, start_obs=self.tree_node.axtree_txt
-            )
-            self.tree_node.checklist = self.checklist
-            self.tree_node.goal = self.goal
+            if is_terminating(self.tree_node.last_action) and self.tree_node.last_action["args"]["text"] in [RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE]:
+                pass
+            else:
+                print(f"# New Goal Detected: {new_goal}")
+                self.goal = new_goal
+                # self.reset()
+                self.checklist = WebPRM.generate_checklist(
+                    goal=self.goal, start_url=self.tree_node.url, start_obs=self.tree_node.axtree_txt
+                )
+                self.tree_node.checklist = self.checklist
+                self.tree_node.goal = self.goal
 
         prev_action_success = True
         if processed_obs["last_action_error"].strip() != "":
@@ -617,8 +622,15 @@ class TreeSearchAgent(Agent):
         return self.tree_node.last_action, self.tree_node.last_obs_description
 
     def get_action(self, obs: dict, env: gym.Env) -> tuple[str, dict]:
+        while True:
+            action, obs_description = self.get_best_action(obs, env)
+            if self.human_intervention and is_destructive(self.tree_node.parent, action):
+                input(
+                    f"\033[91mThe selected action is destructive: {action['code']}. Press Enter to confirm execution...\033[0m"
+                )
+            break
         self.n_steps += 1
-        action, obs_description = self.get_best_action(obs, env)
+            
         if self.backtrack_manager is not None and self.backtrack_manager.is_backtracking:
             self.n_backtracks += 1
         else:
@@ -656,6 +668,7 @@ class TreeSearchAgentArgs(AbstractAgentArgs):
     action_generator: Optional[ActionGenerator] = None
     action_selector: Optional[ActionSelector] = None
     backtrack_manager: Optional[BacktrackManager] = None
+    human_intervention: bool = False    
 
     def make_agent(self, exp_dir: str = "", checkpoint: str = None):
         return TreeSearchAgent(
@@ -663,6 +676,7 @@ class TreeSearchAgentArgs(AbstractAgentArgs):
             action_generator=self.action_generator,
             action_selector=self.action_selector,
             backtrack_manager=self.backtrack_manager,
+            human_intervention=self.human_intervention,
             exp_dir=exp_dir,
             checkpoint=checkpoint,
         )

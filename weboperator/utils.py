@@ -1,7 +1,8 @@
 import unicodedata
 from urllib.parse import urlparse
 
-
+RECAPTCHA_RECOVERY_MESSAGE = "reCAPTCHA detected in the page. Please resolve it manually and reply to continue."
+DESTRUCTION_APPROVAL_MESSAGE = "The next action may cause data loss or other destructive effects. Please confirm to proceed. Y = Approve, N = Disapprove."
 def normalize_url(url):
     # if "://" not in url:
     #     url = "http://" + url

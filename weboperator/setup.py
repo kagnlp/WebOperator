@@ -291,6 +291,7 @@ def get_agent_args(config):
         action_generator=action_generator,
         action_selector=action_selector,
         backtrack_manager=backtrack_manager,
+        human_intervention=config["agent"].get("human_intervention", False)
     )
 
     return agent_args

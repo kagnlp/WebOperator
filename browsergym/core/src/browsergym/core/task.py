@@ -3,6 +3,8 @@ from typing import Tuple
 
 import numpy as np
 import playwright.sync_api
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AbstractBrowserTask(ABC):
@@ -97,7 +99,7 @@ class OpenEndedTask(AbstractBrowserTask):
             dialog.dismiss()
             
         def handle_console(msg):
-            print(f"[JS Console][{msg.type}] {msg.text}")
+            logger.debug(f"[JS Console][{msg.type}] {msg.text}")
 
 
         def log_request(request):
