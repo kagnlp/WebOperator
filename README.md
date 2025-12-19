@@ -148,6 +148,8 @@ env.close()
 
 #### WebArena
 
+*Webarena setup guide*: [link](https://github.com/mahirlabibdihan/webarena-docker)
+
 ```bash
 python run.py --config weboperator/configs/wa-gpt-4o.yml
 ```
