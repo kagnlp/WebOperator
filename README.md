@@ -342,11 +342,10 @@ reddit -> 504 Gateway Time-out -->
 Please cite our paper:
 
 ```
-@article{
-    dihan2025weboperator,
-    title={WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment},
-    author={Mahir Labib Dihan and Tanzima Hashem and Mohammed Eunus Ali and Md Rizwan Parvez},
-    journal={arXiv preprint arXiv:2512.12692},
-    year={2025},
+@article{dihan2025weboperator,
+  title={WebOperator: Action-Aware Tree Search for Autonomous Agents in Web Environment},
+  author={Dihan, Mahir Labib and Hashem, Tanzima and Ali, Mohammed Eunus and Parvez, Md Rizwan},
+  journal={arXiv preprint arXiv:2512.12692},
+  year={2025}
 }
 ```
