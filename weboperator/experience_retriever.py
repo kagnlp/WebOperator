@@ -1,5 +1,6 @@
 from beartype.typing import Dict, List, Optional, Tuple, Any
 import os
+
 class ExperienceRetriever():
     """Simple router for website-specific retrieval"""
     retriever_type: str = "bm25"
@@ -37,6 +38,9 @@ class ExperienceRetriever():
     def get_examples(cls, goal: str, obs: str):
         """Get examples based on query"""
         import requests
+        if not os.environ.get("RETRIEVER_API_SERVER"):
+            raise ValueError("Set RETRIEVER_API_SERVER in environment variables to retrieve examples.")
+        
         response = requests.post(
             os.environ["RETRIEVER_API_SERVER"] + "/api/v1/search",
             json={

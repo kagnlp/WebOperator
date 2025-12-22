@@ -12,15 +12,13 @@ load_dotenv(override=True)
 
 class OpenRouterError(Exception):
     """Custom exception for OpenRouter API errors"""
-
     pass
-
 
 # OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "your-api-key-here")
 OPENROUTER_API_KEYS = os.environ.get("OPENROUTER_API_KEYS", "").split(",")
 
 if not OPENROUTER_API_KEYS or OPENROUTER_API_KEYS == [""]:
-    raise ValueError("No OpenRouter API keys found in environment!")
+    raise ValueError("No OpenRouter API keys found in environment! Set OPENROUTER_API_KEYS in environment variables.")
 
 # Keep global index for round-robin rotation
 _current_key_index = 0
