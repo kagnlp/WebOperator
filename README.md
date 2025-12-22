@@ -148,9 +148,24 @@ env.close()
 
 #### WebArena
 
-You have two options to setup your webarena instance:
+Before running WebArena experiments, you need to set up the WebArena environment and configure the website endpoints as described below.
+- **Host Websites**: You have two options to setup your webarena instance:
   - option 1: follow the official [webarena README](https://github.com/web-arena-x/webarena/blob/main/environment_docker/README.md)
   - option 2: use our [unofficial setup scripts](https://github.com/mahirlabibdihan/webarena-docker)
+
+- **Set Website URLs**: Setup the URLs as environment variables.
+
+  ```bash
+  PUBLIC_HOSTNAME=<YOUR_SERVER_DOMAIN_HERE>
+
+  WA_SHOPPING=http://${PUBLIC_HOSTNAME}:7770
+  WA_SHOPPING_ADMIN=http://${PUBLIC_HOSTNAME}:7780/admin
+  WA_REDDIT=http://${PUBLIC_HOSTNAME}:9999
+  WA_GITLAB=http://${PUBLIC_HOSTNAME}:8023
+  WA_GITLAB_IP=${PUBLIC_HOSTNAME}
+  WA_WIKIPEDIA=http://${PUBLIC_HOSTNAME}:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing
+  WA_MAP=http://${PUBLIC_HOSTNAME}:3000
+  ```
 
 then run the following command.
 ```bash
@@ -234,7 +249,7 @@ components:
   rephraser: # Optional: Enables instruction rephraser
     model: "action_model" # Model used for rephrasing instructions
 
-  retriever: # Optional: Enables examples retriever
+  retriever: # Optional: Enables examples retriever (Set RETRIEVER_API_SERVER in environment variables)
     type: "faiss" # ["faiss", "bm25"]
     model: "all-MiniLM-L6-v2" # Sentence transformer model (for faiss retriever)
     top_k: 5 # Number of examples to retrieve
