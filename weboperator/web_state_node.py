@@ -132,7 +132,7 @@ class WebStateNode:
             "frequency": self.frequency,
             "notes": self.notes,
             "visible": self.visible,
-            "scroll": self.scroll,
+            # "scroll": self.scroll,
             "checklist": self.checklist,
             "checklist_completion": self.checklist_completion,
             "is_404": self.is_404,
