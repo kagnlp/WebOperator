@@ -11,7 +11,7 @@ import json
 def build_parser():
     parser = argparse.ArgumentParser(description="WebArena Evaluation Script")
     parser.add_argument(
-        "--src_dir",
+        "--results_dir",
         type=str,
         required=True,
         help="Directory to store results",
@@ -71,7 +71,7 @@ def main():
     # Traverse all directory in results folder
     # and find all directories that start with "task_"
 
-    results_dir = args.src_dir
+    results_dir = args.results_dir
     task_info = {}
     summary_path = os.path.join(results_dir, "summary.json")
     if os.path.exists(summary_path):

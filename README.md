@@ -144,39 +144,63 @@ env.close()
 ![Screenshot](assets/output.png)
 
 
-## 🎯 Benchmark Configurations
+## 🎯 Benchmarks
 
-#### WebArena
+### WebArena Setup
 
-Before running WebArena experiments, you need to set up the WebArena environment and configure the website endpoints as described below.
-- **Host Websites**: You have two options to setup your webarena instance:
-  - option 1: follow the official [webarena README](https://github.com/web-arena-x/webarena/blob/main/environment_docker/README.md)
-  - option 2: use our [unofficial setup scripts](https://github.com/mahirlabibdihan/webarena-docker)
+Before running WebArena experiments, you must host the WebArena websites and configure the corresponding endpoints.
 
-- **Set Website URLs**: Setup the URLs as environment variables.
+**Host Websites (choose one):**
+- Official setup: https://github.com/web-arena-x/webarena/blob/main/environment_docker/README.md  
+- Unofficial (simplified): https://github.com/mahirlabibdihan/webarena-docker
+
+
+**Set Environment Variables:**
+```bash
+PUBLIC_HOSTNAME=<YOUR_SERVER_DOMAIN_OR_IP>
+
+export WA_SHOPPING=http://${PUBLIC_HOSTNAME}:7770
+export WA_SHOPPING_ADMIN=http://${PUBLIC_HOSTNAME}:7780/admin
+export WA_REDDIT=http://${PUBLIC_HOSTNAME}:9999
+export WA_GITLAB=http://${PUBLIC_HOSTNAME}:8023
+export WA_GITLAB_IP=${PUBLIC_HOSTNAME}
+export WA_WIKIPEDIA=http://${PUBLIC_HOSTNAME}:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing
+export WA_MAP=http://${PUBLIC_HOSTNAME}:3000
+```
+
+### Inference
+
+Run the agent on each benchmark using the corresponding configuration file.
+
+- **WebArena**
 
   ```bash
-  PUBLIC_HOSTNAME=<YOUR_SERVER_DOMAIN_HERE>
-
-  export WA_SHOPPING=http://${PUBLIC_HOSTNAME}:7770
-  export WA_SHOPPING_ADMIN=http://${PUBLIC_HOSTNAME}:7780/admin
-  export WA_REDDIT=http://${PUBLIC_HOSTNAME}:9999
-  export WA_GITLAB=http://${PUBLIC_HOSTNAME}:8023
-  export WA_GITLAB_IP=${PUBLIC_HOSTNAME}
-  export WA_WIKIPEDIA=http://${PUBLIC_HOSTNAME}:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing
-  export WA_MAP=http://${PUBLIC_HOSTNAME}:3000
+  python run.py --config weboperator/configs/wa-gpt-4o.yml
   ```
 
-then run the following command.
-```bash
-python run.py --config weboperator/configs/wa-gpt-4o.yml
-```
+- **WebVoyager**
 
-#### WebVoyager
+  ```bash
+  python run.py --config weboperator/configs/wv-gpt-4o.yml
+  ```
 
-```bash
-python run.py --config weboperator/configs/wv-gpt-4o.yml
-```
+### Evaluation
+
+Move the inference outputs and compute benchmark scores.
+
+- **WebArena**
+
+  ```bash
+  python -m utils.move_exp --src_dir results/webarena/gpt-4o --dest_dir experiments/webarena/gpt-4o
+  python -m utils.eval_exp --results_dir experiments/webarena/gpt-4o --task_type webarena 
+  ```
+
+- **WebVoyager**
+
+  ```bash
+  python -m utils.move_exp --src_dir results/webvoyager/gpt-4o --dest_dir experiments/webvoyager/gpt-4o
+  python -m utils.eval_exp --results_dir experiments/webvoyager/gpt-4o --task_type webvoyager 
+  ```
 
 ## ⚙️ Agent Configuration Explanation
 
