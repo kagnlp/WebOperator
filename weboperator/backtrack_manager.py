@@ -359,7 +359,53 @@ class BacktrackManager:
         original_page = env.page
         # create same number of tabs
         for i in range(new_total_tabs):
+            def handle_dialog(dialog):
+                page.dialog_message = dialog.message
+                dialog.dismiss()
+            def handle_console(msg):
+                logger.debug(f"[JS Console][{msg.type}] {msg.text}")
+            def log_request(request):
+                try:
+                    # Try to read textual post data (may raise UnicodeDecodeError for binary payloads)
+                    payload = request.post_data
+                except UnicodeDecodeError:
+                    # Binary/compressed data — avoid decoding; record content-type and a placeholder
+                    try:
+                        content_type = dict(request.headers).get("content-type")
+                    except Exception:
+                        content_type = None
+                    payload = f"<binary or compressed payload; content-type={content_type}>"
+                except Exception:
+                    # Best-effort fallback: try to capture base64 raw if available, else None
+                    try:
+                        base64_data = getattr(request._impl_obj, "post_data", None)
+                        if base64_data:
+                            # keep it short to avoid huge logs
+                            payload = f"<base64:{base64_data[:200]}...>"
+                        else:
+                            payload = None
+                    except Exception:
+                        payload = None
+
+                try:
+                    headers = dict(request.headers)
+                except Exception:
+                    headers = {}
+
+                page.http_requests.append({
+                    "method": getattr(request, "method", None),
+                    "url": getattr(request, "url", None),
+                    "header": headers,
+                    "payload": payload if payload is not None else "",
+                })
+                
+            # set the new page as the active page
             page = env.context.new_page()
+            page.dialog_message = None
+            page.http_requests = []
+            page.on("dialog", handle_dialog)
+            page.on("request", log_request)
+            page.on("console", handle_console)
             URLSimulator.safe_goto(page, rollback_node.open_pages_urls[i])
             
         flag = True

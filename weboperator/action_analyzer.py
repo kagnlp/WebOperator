@@ -25,7 +25,7 @@ def was_destructive(obs):
     for req in obs.http_requests:
         if req["method"] == "POST" and is_destructive(obs.parent, obs.last_action):
             if not req["payload"]:
-                continue
+                continue  
             # Color red
             print(f"\033[91m- {req['method']} {req['url']}\033[0m")
             # print(f"  Payload: {req['payload']}")
@@ -92,8 +92,14 @@ def is_destructive(obs: WebStateNode, action):
 
     return False
 
+from .utils import RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE
 
 def is_terminating(action):
-    if action["type"] == "stop":
+    if action and action["type"] == "stop" and action["args"]["text"] not in [RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE]:
+        return True
+    return False
+
+def is_human_intervention(action):
+    if action and action["type"] == "stop" and action["args"]["text"] in [RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE]:
         return True
     return False

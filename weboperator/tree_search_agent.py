@@ -29,7 +29,7 @@ from .observation_processor import ObservationProcessor
 from .backtrack_manager import BacktrackManager
 from .action_processor import ActionProcessor
 from .recovery_assistant import RecoveryAssistant
-from .action_analyzer import was_destructive, is_terminating
+from .action_analyzer import was_destructive, is_terminating, is_human_intervention
 from .action_selector import ActionSelector
 from .utils import RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE
 from .axtree_utils import is_alert_available, has_axtree_changed
@@ -225,7 +225,7 @@ class TreeSearchAgent(Agent):
 
         curr_obs = self.trajectory[-1]
 
-        if len(self.trajectory) < 2 or self.trajectory[-2]["action"]["type"] != "stop":
+        if len(self.trajectory) < 2 or not is_terminating(self.trajectory[-2]["action"]):
             if curr_obs["action"] is None:
                 # if self.tree_node.last_action is None or self.tree_node.last_action["type"] != "stop":
                 self.html_renderer.render_observation(
@@ -330,7 +330,7 @@ class TreeSearchAgent(Agent):
             processed_obs["last_action_error"] = RecoveryAssistant.get_recovery_hint(self.tree_node)
 
         if new_goal is not None and (self.goal is None or new_goal != self.goal):
-            if is_terminating(self.tree_node.last_action) and self.tree_node.last_action["args"]["text"] in [RECAPTCHA_RECOVERY_MESSAGE, DESTRUCTION_APPROVAL_MESSAGE]:
+            if is_human_intervention(self.tree_node.last_action):
                 pass
             else:
                 print(f"# New Goal Detected: {new_goal}")

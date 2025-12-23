@@ -68,9 +68,9 @@ def _pre_extract(
                 )
                 continue
             if child_frame.url.startswith("http") and not child_frame.url.startswith(page.url):
-                logger.warning(
-                    f"Skipping cross-origin frame '{child_frame.name}' for marking."
-                )
+                # logger.warning(
+                #     f"Skipping cross-origin frame '{child_frame.name}' for marking."
+                # )
                 continue
             # deal with sandboxed frames with blocked script execution
             sandbox_attr = child_frame_elem.get_attribute("sandbox")
