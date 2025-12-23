@@ -158,9 +158,6 @@ uv.lock
 retrieve/dataset
 # retrieve/websites_old
 retrieve/website_indices
-*.pkl
-*.bin
-*.npy
 dataset_hash.txt
 
 *results/

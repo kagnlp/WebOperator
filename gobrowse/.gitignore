@@ -1,1 +1,4 @@
 *.json
+*.pkl
+*.bin
+*.npy
