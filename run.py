@@ -126,7 +126,7 @@ if __name__ == "__main__":
         min_task_id = config["env"].get("min_task_id")
         max_task_id = config["env"].get("max_task_id")
         if task_ids is None:
-            task_configs = load_site_tasks(config["env"]["sites"], dataset_path=dataset_path)
+            task_configs = load_site_tasks(config["env"].get("sites"), dataset_path=dataset_path)
             task_ids = [cfg["task_id"] for cfg in task_configs]
         else:
             task_configs = load_configs_by_task_ids(task_ids, dataset_path=dataset_path)

@@ -10,7 +10,6 @@ import re
 from pathlib import Path
 from beartype.typing import Dict, List, Optional, Tuple, Any
 from base_retriever import create_retriever
-from website_configs import WEBSITE_CONFIGS
 from base_retriever import BaseRetriever
 
 
@@ -121,7 +120,7 @@ class WebRetriever():
             # Try website-specific search
             # website = cls.detect_website_from_query(query["axtree_txt"])
 
-            if website:
+            if website != "None":
                 try:
                     retriever = cls.get_or_create_retriever(website, model_name, retriever_type)
                     if retriever is None:

@@ -353,7 +353,7 @@ class ExpArgs:
     stack_trace: str = None
     order: int = None  # use to keep the original order the experiments were meant to be launched.
     logging_level: int = logging.DEBUG
-    logging_level_stdout: int = logging.INFO
+    logging_level_stdout: int = logging.CRITICAL
     exp_id: str = None
     depends_on: tuple[str] = ()
     save_screenshot: bool = True

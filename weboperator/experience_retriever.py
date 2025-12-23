@@ -22,7 +22,7 @@ class ExperienceRetriever():
         }.items():
             if url in query_lower:
                 return website
-        return None
+        return "None" # None has issues with api request
     
     @classmethod
     def configure(cls,
@@ -44,14 +44,15 @@ class ExperienceRetriever():
         response = requests.post(
             os.environ["RETRIEVER_API_SERVER"] + "/api/v1/search",
             json={
-                "goal": goal, 
-                "obs": obs, 
-                "site": cls.detect_website_from_query(obs),
                 "model": cls.model_name, 
+                "goal": goal, 
+                "site": cls.detect_website_from_query(obs),
+                "obs": obs, 
                 "top_k": cls.top_k, 
                 "r_type": cls.retriever_type
             },
         )
+        
         if response.status_code == 200:
             return response.json()["examples"]
         return []
