@@ -257,10 +257,10 @@ class BacktrackManager:
             logger.debug(f"[SIMULATION] Only {len(actions)} action(s), skipping simulation.")
             return True
         
-        for node in nodes:
-            if node is not None and node.corrupted:
-                logger.debug(f"[SIMULATION] Node in the path already marked as corrupted, skipping simulation.")
-                return False
+        # for node in nodes:
+        #     if node is not None and node.corrupted:
+        #         logger.debug(f"[SIMULATION] Node in the path already marked as corrupted, skipping simulation.")
+        #         return False
             
         bid_flag = False
         for node in nodes:

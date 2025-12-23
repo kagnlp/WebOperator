@@ -138,7 +138,7 @@ class WebStateNode:
             "is_404": self.is_404,
             "page_too_long": self.page_too_long,
             "refresh_loses_state": self.refresh_loses_state,
-            "corrupted": self.corrupted,
+            # "corrupted": self.corrupted,
             "destructive": self.destructive,
             "http_requests": self.http_requests,
             "children": [child.to_json() for child in self.children],
