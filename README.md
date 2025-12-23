@@ -191,14 +191,14 @@ Move the inference outputs and compute benchmark scores.
 - **WebArena**
 
   ```bash
-  python -m utils.move_exp --src_dir results/webarena/gpt-4o --dest_dir experiments/webarena/gpt-4o
+  python -m utils.move_exp --src_dir results/webarena/gpt-4o --dst_dir experiments/webarena/gpt-4o
   python -m utils.eval_exp --results_dir experiments/webarena/gpt-4o --task_type webarena 
   ```
 
 - **WebVoyager**
 
   ```bash
-  python -m utils.move_exp --src_dir results/webvoyager/gpt-4o --dest_dir experiments/webvoyager/gpt-4o
+  python -m utils.move_exp --src_dir results/webvoyager/gpt-4o --dst_dir experiments/webvoyager/gpt-4o
   python -m utils.eval_exp --results_dir experiments/webvoyager/gpt-4o --task_type webvoyager 
   ```
 
