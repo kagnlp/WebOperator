@@ -291,6 +291,7 @@ class TreeSearchAgent(Agent):
                             "action_error": step["action_error"],
                             "obs_description": step["obs_description"],
                             # "screenshot_url": step["screenshot_url"],
+                            **({"n_bt_steps": step["n_bt_steps"]} if "n_bt_steps" in step else {}), # For backtracking steps
                             "http_requests": step["http_requests"],
                         }
                         for step in self.trajectory
@@ -536,6 +537,7 @@ class TreeSearchAgent(Agent):
                             "thought": "Backtracking action",
                             "type": "backtrack",
                         }
+                        self.trajectory[-1]["n_bt_steps"] = n_bt_steps
                         self.trajectory[-1]["obs_description"] = ""
                         self.log()
                         self.trajectory.append({
