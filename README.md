@@ -31,7 +31,9 @@ LLM-based agents often operate in a greedy, step-by-step manner, selecting actio
 ||
 | **_WebOperator_** | gpt-4o | **54.56** | **76.42** | 52.78 | **49.20** | **54.95** | 55.24 | **31.25** |
 
-**Experimental trajectories:** [link](https://github.com/mahirlabibdihan/WebOperator-Experiments/tree/main/webarena/main/)
+**Experimental trajectories:** 
+- [github](https://github.com/mahirlabibdihan/WebOperator-Experiments/tree/main/webarena/main/)
+- [huggingface](https://huggingface.co/datasets/mahirlabibdihan/weboperator-experiments/tree/main/webarena/main)
 
 
 ## 📂 Project Structure
