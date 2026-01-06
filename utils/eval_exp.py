@@ -110,8 +110,6 @@ def main():
             # print(f"Skipping task {config_file['task_id']} -> {config_file['sites']} as it is not found in results.")
             continue
         
-        print(f"Evaluating task {config_file['task_id']} -> {config_file['sites']}")
-        
         evaluator = evaluator_router(config_file)
 
         ti = task_info[str(config_file["task_id"])]
@@ -154,6 +152,13 @@ def main():
             # total_reward += score
             # total_tasks += 1
             if len(config_file["sites"]) > 1:
+                if total_score.get("multisite") is None:
+                    total_score["multisite"] = 0
+                    total_reward["multisite"] = 0
+                    total_tasks["multisite"] = 0
+                    total_actions["multisite"] = 0
+                    total_steps["multisite"] = 0
+                    total_truncate["multisite"] = 0
                 total_score["multisite"] += (score == 1.0)
                 total_reward["multisite"] += score
                 total_tasks["multisite"] += 1

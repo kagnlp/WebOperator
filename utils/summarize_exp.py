@@ -8,19 +8,20 @@ def update_results(results, src_dir, overwrite=False):
         for d in os.listdir(src_dir)
         if d.startswith("task_") and os.path.isdir(os.path.join(src_dir, d))
     ]
+   
 
     for task_dir in task_dirs:
         if not overwrite and results.get(task_dir):
             continue  # Skip existing entries unless overwrite is specified
-        
+
         with open(os.path.join(src_dir, task_dir, "exp_summary.json"), "r", encoding="utf-8") as f:
             exp_summary = json.load(f)
-            
+ 
         task_id = task_dir.split("_")[1]
         if results.get(task_id) is None:
             results[task_id] = {}
         elif results[task_id].get("exp_id", "") == exp_summary["exp_id"]:
-            break  # Skip copying
+            continue  # Skip copying
         results[task_id]["exp_id"] = exp_summary["exp_id"]
         # All the keys except "exp_id"
         results[task_id]["stats"] = {
@@ -31,8 +32,7 @@ def update_results(results, src_dir, overwrite=False):
             
         if results[task_id].get("score") is not None:
             del results[task_id]["score"]
-        break
-    
+        
     return results
 
 def build_parser():
