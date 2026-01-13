@@ -95,7 +95,7 @@ Analyze previous actions. Do not get stuck in a loop by repeatedly trying the sa
 Select your action here. Strictly adheres to the given format. **Only issue one single action**.
 """
 
-CLICK_ACTION = "click(bid: str): To click on an element with its numerical ID on the webpage. E.g., `click('a51')`."
+CLICK_ACTION = "click(bid: str): To click on an element with its numerical ID on the webpage. E.g., `click('51')`."
 SELECT_OPTION_ACTION = "select_option(bid: str, option: str): To select an option in a <select> element. You can specify option value or label to select. E.g., `select_option('237', 'Option 1')`. In case directly clicking an option returns error, you can try this out."
 MULTI_SELECT_OPTION_ACTION = "select_option(bid: str, option: str): To select an option in a <select> element. You can specify option value or label to select. E.g., `select_option('237', 'Option 1')`. Multiple options can be selected. select_option('245', ['red', 'green', 'blue']). In case directly clicking an option returns error, you can try this out."
 FILL_ACTION = 'fill(bid: str, value: str, press_enter_after: bool): To type content into a field with a specific ID. Note that, this function overwrites the existing text in that field. Optionally, it can press Enter after typing. E.g., `fill("237", "example value", True)` or `fill("237", "example value", False)`. In case this fill action is related to content writing (e.g., Reddit posts, comments, tweets, blog posts, forum posts, reviews, messages, emails, bios, descriptions), ensure that the "value" matches EXACTLY the text specified in the goal. Because your actions will be evaluated by exact string matcher.'
