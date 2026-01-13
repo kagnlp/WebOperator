@@ -215,9 +215,9 @@ def prepare_environment(task_config, reset_strategy):
             destructed_sites = _get_destructed_site(task_id)
             for site in destructed_sites:
                 reset_site(site)
-        if len(destructed_sites) > 0:
-            return False
-        
+            if len(destructed_sites) > 0:
+                return False
+            
     print(f"All dependencies for task {task_id} are satisfied.")
     if task_id in REDDIT_POST_TASKS:
         prev_tasks = _get_prev_tasks("reddit")
