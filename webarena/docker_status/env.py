@@ -210,10 +210,10 @@ def prepare_environment(task_config, reset_strategy):
 
     # If any of the dependent tasks have been executed before, reset the site
     if len(set(task_dependencies).intersection(prev_task_ids)) > 0:
-        print(f"Task {task_id} depends on tasks {task_dependencies} which have been executed before. Resetting sites.")
-        destructed_sites = _get_destructed_site(task_id)
-        for site in destructed_sites:
-            if reset_strategy != "never":
+        if reset_strategy != "never":
+            print(f"Task {task_id} depends on tasks {task_dependencies} which have been executed before. Resetting sites.")
+            destructed_sites = _get_destructed_site(task_id)
+            for site in destructed_sites:
                 reset_site(site)
         if len(destructed_sites) > 0:
             return False
