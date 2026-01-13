@@ -13,15 +13,6 @@ class OpenHFError(Exception):
     pass
 
 
-if not os.environ.get("HUGGING_FACE_API_SERVER"):
-    raise ValueError("Set HUGGING_FACE_API_SERVER in environment variables to retrieve examples.")
-else:
-    # check if the server is reachable
-    try:
-        requests.get(os.environ["HUGGING_FACE_API_SERVER"] + "/api/v1/health")
-    except requests.exceptions.RequestException as e:
-        raise ConnectionError(f"Could not connect to HUGGING_FACE_API_SERVER: {e}")
-
 
 OpenHFClient = OpenAI(
     base_url=os.environ["HUGGING_FACE_API_SERVER"] + "/api/v1",
@@ -81,6 +72,16 @@ class OpenHFModel(BaseModel):
         Chat completion using the chat/completions endpoint.
         Supports multi-modal inputs (text + images) for vision models.
         """
+        
+        if not os.environ.get("HUGGING_FACE_API_SERVER"):
+            raise ValueError("Set HUGGING_FACE_API_SERVER in environment variables to retrieve examples.")
+        else:
+            # check if the server is reachable
+            try:
+                requests.get(os.environ["HUGGING_FACE_API_SERVER"] + "/api/v1/health")
+            except requests.exceptions.RequestException as e:
+                raise ConnectionError(f"Could not connect to HUGGING_FACE_API_SERVER: {e}")
+
         response = OpenHFClient.chat.completions.create(
             model=self.name,
             messages=messages,
