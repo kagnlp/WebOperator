@@ -1,4 +1,5 @@
 from openai import OpenAI, AzureOpenAI
+import requests
 from .base import BaseModel
 import random
 import os
@@ -10,6 +11,16 @@ class OpenHFError(Exception):
     """Custom exception for OpenHF API errors"""
 
     pass
+
+
+if not os.environ.get("HUGGING_FACE_API_SERVER"):
+    raise ValueError("Set HUGGING_FACE_API_SERVER in environment variables to retrieve examples.")
+else:
+    # check if the server is reachable
+    try:
+        requests.get(os.environ["HUGGING_FACE_API_SERVER"] + "/api/v1/health")
+    except requests.exceptions.RequestException as e:
+        raise ConnectionError(f"Could not connect to HUGGING_FACE_API_SERVER: {e}")
 
 
 OpenHFClient = OpenAI(

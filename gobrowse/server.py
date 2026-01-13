@@ -28,6 +28,10 @@ def chat_completions(request: ChatCompletionRequest):
     )
     return ChatCompletion(examples=examples)
 
+@app.get("/api/v1/health")
+def health_check():
+    return {"status": "ok"}
+
 
 # Usage: uvicorn server:app --host 0.0.0.0 --port 8000
 # 10.141.10.17

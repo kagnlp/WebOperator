@@ -40,6 +40,12 @@ class ExperienceRetriever():
         import requests
         if not os.environ.get("RETRIEVER_API_SERVER"):
             raise ValueError("Set RETRIEVER_API_SERVER in environment variables to retrieve examples.")
+        else:
+            # check if the server is reachable
+            try:
+                requests.get(os.environ["RETRIEVER_API_SERVER"] + "/api/v1/health")
+            except requests.exceptions.RequestException as e:
+                raise ConnectionError(f"Could not connect to RETRIEVER_API_SERVER: {e}")
         
         response = requests.post(
             os.environ["RETRIEVER_API_SERVER"] + "/api/v1/search",

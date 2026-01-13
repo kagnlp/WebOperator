@@ -108,6 +108,9 @@ def chat_completions(request: ChatCompletionRequest):
         ],
     )
 
+@app.get("/api/v1/health")
+def health_check():
+    return {"status": "ok"}
 
 # Usage: uvicorn hf_server:app --host 0.0.0.0 --port 5000
 # python -m uvicorn hf_server:app --host 0.0.0.0 --port 5000
