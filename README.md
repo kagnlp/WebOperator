@@ -59,7 +59,7 @@ cd WebOperator
 ```bash
 conda create -n weboperator_env python=3.12
 conda activate weboperator_env
-# or using pip and virtualenv
+# or using pip and virtualenv (if python3.12 is the system python)
 python -m venv weboperator_env
 source weboperator_env/bin/activate  # On Windows use `weboperator_env\Scripts\activate`
 ```
