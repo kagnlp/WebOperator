@@ -410,6 +410,7 @@ class ExpArgs:
     # the parsing error of an action should not be re-run.
     def run(self, checkpoint):
         """Run the experiment and save the results"""
+        exp_start_time = time.perf_counter()
         
         # start writing logs to run logfile
         self._set_logger()
@@ -503,7 +504,14 @@ class ExpArgs:
                     e = KeyboardInterrupt("Early termination??")
                     err_msg = f"Exception uncaught by agent or environment in task {self.env_args.task_name}.\n{type(e).__name__}:\n{e}"
                 logger.info(f"Saving summary info.")
-                self.save_summary_info(episode_info, self.exp_dir, err_msg, stack_trace)
+                total_time_sec = time.perf_counter() - exp_start_time
+                self.save_summary_info(
+                    episode_info,
+                    self.exp_dir,
+                    err_msg,
+                    stack_trace,
+                    total_time_sec,
+                )
             except Exception as e:
                 logger.error(f"Error while saving summary info in the finally block: {e}")
             try:
@@ -564,6 +572,7 @@ class ExpArgs:
         exp_dir,
         err_msg,
         stack_trace,
+        total_time_sec: float | None = None,
     ):
         # bring err from agent_info to the top level
         if err_msg is None:
@@ -582,6 +591,7 @@ class ExpArgs:
             cum_raw_reward=sum([step.raw_reward for step in episode_info if step.raw_reward]),
             err_msg=err_msg,
             stack_trace=stack_trace,
+            total_time_sec=total_time_sec,
         )
         for key, val in _aggregate_episode_stats(episode_info).items():
             summary_info[f"stats.{key}"] = val
