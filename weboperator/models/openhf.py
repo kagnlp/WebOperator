@@ -82,16 +82,26 @@ class OpenHFModel(BaseModel):
             except requests.exceptions.RequestException as e:
                 raise ConnectionError(f"Could not connect to HUGGING_FACE_API_SERVER: {e}")
 
-        response = OpenHFClient.chat.completions.create(
-            model=self.name,
-            messages=messages,
-            # max_tokens=self.max_tokens,
-            temperature=self.temperature,
-            top_p=self.top_p,
-            n=kwargs.get("n", self.n),
-            logprobs=True,
-            top_logprobs=10,
-        )
+        if kwargs.get("logprobs", False):    
+            response = OpenHFClient.chat.completions.create(
+                model=self.name,
+                messages=messages,
+                # max_tokens=self.max_tokens,
+                temperature=self.temperature,
+                top_p=self.top_p,
+                n=kwargs.get("n", self.n),
+                logprobs=True,
+                top_logprobs=10,
+            )
+        else:
+            response = OpenHFClient.chat.completions.create(
+                model=self.name,
+                messages=messages,
+                # max_tokens=self.max_tokens,
+                temperature=self.temperature,
+                top_p=self.top_p,
+                n=kwargs.get("n", self.n),
+            )
 
         # Raise OpenHFError if we get invalid response to trigger retry
         if not response or not hasattr(response, "choices") or not response.choices:

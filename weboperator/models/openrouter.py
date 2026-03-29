@@ -106,16 +106,26 @@ class OpenRouterModel(BaseModel):
         Chat completion using the chat/completions endpoint.
         Supports multi-modal inputs (text + images) for vision models.
         """
-        response = self.client.chat.completions.create(
-            model=self.name,
-            messages=messages,
-            # max_tokens=self.max_tokens,
-            temperature=self.temperature,
-            top_p=self.top_p,
-            n=kwargs.get("n", self.n),
-            logprobs=True,
-            top_logprobs=10,
-        )
+        if kwargs.get("logprobs", False):    
+            response = self.client.chat.completions.create(
+                model=self.name,
+                messages=messages,
+                # max_tokens=self.max_tokens,
+                temperature=self.temperature,
+                top_p=self.top_p,
+                n=kwargs.get("n", self.n),
+                logprobs=True,
+                top_logprobs=10,
+            )
+        else:
+            response = self.client.chat.completions.create(
+                model=self.name,
+                messages=messages,
+                # max_tokens=self.max_tokens,
+                temperature=self.temperature,
+                top_p=self.top_p,
+                n=kwargs.get("n", self.n),
+            )
         # print(response.choices[0])
         usage = getattr(response, "usage", None)
         if usage:

@@ -201,7 +201,7 @@ class WebPRM:
         if len(trajectory) < 2:
             return "No previous actions."
 
-        # Show trajectory[-4:-2] for context (2 steps before current)
+        # Show up to the last 10 prior steps (excluding current)
         context_steps = trajectory[-10:-1] if len(trajectory) >= 10 else trajectory[:-1]
         # print(f"Context steps for evaluation: {context_steps}")
         if not context_steps:
@@ -641,7 +641,7 @@ class WebClosePRM(WebPRM):
         # print("USER PROMPT: ", message[-1]["content"])
 
         for _ in range(3):  # Try up to 3 times to get a valid answer
-            response, scores = self.reward_model.chat(message)
+            response, scores = self.reward_model.chat(message, logprobs=True)
             generated_text = response
             if "# Checklist Evaluation" in generated_text:
                 # print(scores)
