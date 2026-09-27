@@ -701,6 +701,7 @@ def new_tab(url: str):
         dialog.dismiss()
     def handle_console(msg):
         logger.debug(f"[JS Console][{msg.type}] {msg.text}")
+        
     def log_request(request):
         try:
             # Try to read textual post data (may raise UnicodeDecodeError for binary payloads)

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 from typing import Any
 
 import playwright.sync_api
@@ -68,6 +69,7 @@ def execute_python_code(
         "send_message_to_user": send_message_to_user,
         "report_infeasible_instructions": report_infeasible_instructions,
         "DEMO_MODE": get_global_demo_mode(),
+        "logger": logging.getLogger("browsergym.core.action.exec"),
     }
 
     exec(code, globals)
