@@ -44,7 +44,7 @@
     <meta property="og:image:height" content="2160" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MapEval" />
+    <meta name="twitter:title" content="WebOperator" />
     <meta
       name="twitter:description"
       content="Action-Aware Tree Search for Autonomous Agents in Web Environment."
@@ -307,6 +307,20 @@
           <i class="fab fa-github" style="margin-right: 4px"></i>
           <span>Code</span>
         </a>
+        <a
+          href="https://github.com/mahirlabibdihan/WebReplayBench"
+          class="external-link"
+          style="
+            background-color: #363636;
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          "
+        >
+          <i class="fa-solid fa-vial" style="margin-right: 4px"></i>
+          <span>WebReplayBench</span>
+        </a>
         <!-- <a
           href="https://huggingface.co/MapEval"
           class="external-link"
@@ -353,26 +367,26 @@
       </span>
       <!-- <embed src="files/overview.pdf" type="application/pdf" width="100%" height="600px" /> -->
       <img
-        src="assets/wo_banner.svg"
-        alt="Overview"
-        style="width: 100%; margin-top: 1rem; margin-top: 2rem"
+        src="assets/overview.svg"
+        alt="Overview of WebOperator"
+        style="width: 100%; margin-top: 2rem"
       />
       <p>
-        Overview of WebOperator, a tree-search framework for solving web tasks. The workflow iteratively explores the web environment via a structured tree: it (1) initializes at the start page, (2) observes and encodes the current page state as a node in the search tree, (3) adapts action space using the current observation, and expands the node by generating candidate actions using varied contextual formulations, and these actions are validated through rule-based analysis and simple URL-existence checks; (4) evaluates actions with a reward model, (5) merges duplicate or equivalent actions, (6) updates the search tree, (7) selects the best unexecuted action using action-aware criteria, (8) restores the target state using speculative backtracking, (9) executes the selected action, and (10) repeats until a terminating action produces a complete solution trajectory. The left panel shows an example thought-action sequence produced during task execution, and the right panel details the speculative backtracking mechanism.
+        Overview of WebOperator. The agent organizes candidate actions in a search tree and explores actions that are easier to undo before actions that may permanently change the website. To backtrack, it reconstructs an earlier page and compares it with a saved snapshot. It continues only when the two match. Real-time updates, randomized content, or other external changes can produce a mismatch, in which case the backtracking attempt is aborted. If an executed action permanently changes the website, earlier branches may no longer be valid; WebOperator discards them and starts a new search tree from the resulting page.
       </p>
 
-      <h2 style="text-align: center">Introduction</h2>
+      <h2 style="text-align: center">Abstract</h2>
       <p>
-        LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content (e.g., DOM and UI elements)—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce WebOperator, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. On WebArena, WebOperator achieves a state-of-the-art 54.6% success rate with gpt-4o, underscoring the critical advantage of integrating strategic foresight with safe execution.
+        LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable&mdash;limited to browser-visible content (e.g., DOM and UI elements)&mdash;where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but applying them to the web introduces two challenges: replaying an action sequence may not reconstruct the same page, and some actions may irreversibly change the website. To address these challenges, we introduce <b>WebOperator</b>, a tree-search framework that enables validated backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward and reversibility, along with a robust backtracking mechanism that verifies reconstructed pages before continuing from them. It prioritizes reversible actions, postpones potentially irreversible ones, and discards earlier branches when its post-execution heuristic flags a possible persistent change. Experiments on WebArena and WebVoyager demonstrate the effectiveness of the framework. On WebArena, it achieves 54.6% task success with gpt-4o, outperforming all prior tree-search methods using the same backbone. Controlled ablations show that naive tree search can reduce performance, whereas action-aware selection and validated backtracking improve corrective search. We further introduce <b>WebReplayBench</b>, a web environment that records which actions actually change the website's state, to evaluate whether WebOperator detects irreversible actions and avoids repeating them during backtracking.
       </p>
 
-      <h2 style="text-align: center">WebOperator Overview</h2>
-      We introduce WebOperator, which redefines web environments by extending the notions of state (temporary and persistent) and actions (safe and destructive). It develops an action-aware tree-search approach that incorporates:  (a) Dynamic adaptation of the action space at each step based on the current observation, along with validation of generated actions to reject those that are invalid or have no meaningful effect. (b) Variation of the LLM input context to generate diverse candidate actions, combined with consolidation of redundant actions to ensure meaningful exploration. (c) Reliable backtracking using speculative execution and snapshot validation, allowing previously executed actions to be replayed or aborted without corrupting the main environment. (d) Pre- and post-execution heuristics to identify potentially destructive actions based solely on observable content. (e) Efficient traversal via a best-first search strategy that prioritizes safe, reversible actions early and defers destructive actions, replacing costly random-rollout methods like MCTS.
-      <br />
-      <br />
-      Together, these contributions enable WebOperator to systematically explore web environments, safely handle both temporary and persistent state changes, and operate efficiently under uncertainty, advancing the capabilities of tree search for realistic web automation tasks. Through comprehensive experiments on two dynamic, real-world web benchmarks, WebArena and WebVoyager, we demonstrate the effectiveness of WebOperator. Our ablation studies and analyses further provide deeper insights into WebOperator's capabilities and limitations.
-
-     
+      <h2 style="text-align: center">Contributions</h2>
+      <ul>
+        <li>We identify two obstacles to applying tree search on the web: actions that permanently change the website and unreliable reconstruction of previously visited pages.</li>
+        <li>We introduce a best-first search strategy that postpones potentially irreversible actions, discards invalid branches after a persistent change, and validates reconstructed pages before backtracking to them.</li>
+        <li>We evaluate the framework on WebArena and WebVoyager. WebOperator achieves 54.6% task success on WebArena, outperforming prior tree-search methods using the same gpt-4o backbone. Controlled ablations show that naive tree search can reduce task success, whereas action-aware selection and validated backtracking improve corrective exploration.</li>
+        <li>We introduce <b>WebReplayBench</b>, a benchmark with ground-truth labels for database-changing actions and controlled backtracking scenarios. It enables direct evaluation of irreversible-action detection and backtracking safety.</li>
+      </ul>
 
       <h2 style="text-align: center; margin-top: 2rem" id="results">Results</h2>
       <img
@@ -381,6 +395,18 @@
         style="width: 100%"
       />
       <p style="text-align: center">Table 1: Success rate (SR %) comparison on WebArena.</p>
+
+
+      <h2 style="text-align: center; margin-top: 2rem">WebReplayBench</h2>
+      <p>
+        Existing web benchmarks such as WebArena evaluate whether an agent completes a task, but they do not label which individual actions change persistent state. WebReplayBench is a self-hosted shopping website with an inbox, to-do list, notes, orders, and account settings, where each API response reports whether its request changed the database. It offers 100 distinct actions, 50 that change the database and 50 that do not, including writes that break REST conventions (writes through <code>GET</code> requests, links, menu items, or autosaving fields) and requests that look destructive but write nothing. Predefined action sequences build search-tree trajectories that reach each action, so the benchmark measures how accurately an agent detects destructive actions and whether it executes them again while backtracking.
+      </p>
+      <img
+        src="assets/webreplaybench_home.png"
+        alt="WebReplayBench homepage"
+        style="width: 100%; border: 1px solid #ccc"
+      />
+      <p style="text-align: center">The WebReplayBench website.</p>
 
       <h2 style="text-align: center; margin-top: 2rem" id="results">Example Tree Search</h2>
       <hr />
