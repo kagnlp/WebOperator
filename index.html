@@ -125,7 +125,6 @@
     @media (max-width: 940px) { .hero .wrap { grid-template-columns: 1fr; } }
     .hero .wrap > * { min-width: 0; }
     .hero h1 { display: flex; align-items: center; gap: 16px; font-size: clamp(42px, 6.2vw, 70px); line-height: 1; letter-spacing: -.035em; margin: 0 0 18px; font-weight: 800; }
-    .hero h1 img { width: clamp(48px, 6vw, 68px); height: auto; border-radius: 16px; box-shadow: 0 0 0 1px #ffffff1a, 0 10px 30px rgba(78, 168, 230, .25); }
     .hero h1 span { background: linear-gradient(100deg, #7cc4f5, #b8e65a); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .hero .subtitle { font-size: clamp(19px, 2.2vw, 24px); color: #c9d3de; margin: 0 0 20px; line-height: 1.35; font-weight: 500; }
     .authors { font-size: 15px; color: #aab6c3; margin: 0 0 24px; line-height: 1.6; }
@@ -463,7 +462,7 @@
   <header class="hero">
     <div class="wrap">
       <div>
-        <h1><img src="assets/wo_icon.svg" alt="WebOperator logo" /><span>WebOperator</span></h1>
+        <h1><span>WebOperator</span></h1>
         <p class="subtitle">Action-Aware Tree Search for Autonomous Agents in Web Environment</p>
         <p class="authors" id="authors"></p>
         <div class="btn-row">
