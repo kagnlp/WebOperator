@@ -412,6 +412,12 @@
     table.data th { font-weight: 600; color: var(--text-2); font-size: 12.5px; }
     table.data tr.me td { font-weight: 700; color: var(--accent); }
     .note { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+    .traj { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 18px; color: var(--text-2); font-size: 14px; }
+    .traj form { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+    .traj input { width: 84px; font: 500 13px "JetBrains Mono", monospace; padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--text); }
+    .traj button { font: 600 12.5px "Inter", sans-serif; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); cursor: pointer; }
+    .traj button:hover { border-color: var(--accent); }
+    @media (max-width: 640px) { .traj form { margin-left: 0; } }
 
     /* WebReplayBench */
     .wrb { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; margin-bottom: 22px; }
@@ -482,8 +488,8 @@
         <div class="btn-row">
           <a class="btn primary" href="https://arxiv.org/abs/2512.12692"><i class="fa-solid fa-file-lines"></i> Paper</a>
           <a class="btn" href="https://github.com/kagnlp/WebOperator"><i class="fa-brands fa-github"></i> Code</a>
+          <a class="btn" href="https://github.com/mahirlabibdihan/WebOperator-Experiments"><i class="fa-solid fa-folder-tree"></i> Trajectories</a>
           <a class="btn" href="https://github.com/mahirlabibdihan/WebReplayBench"><i class="fa-solid fa-vial"></i> WebReplayBench</a>
-          <a class="btn" href="#try"><i class="fa-solid fa-terminal"></i> Try it</a>
           <a class="btn" href="#cite"><i class="fa-solid fa-quote-right"></i> BibTeX</a>
         </div>
       </div>
@@ -686,6 +692,15 @@
           <div class="tblview" id="tb-gen"></div>
         </div>
       </div>
+
+      <div class="traj">
+        <span><i class="fa-solid fa-folder-tree"></i> Every run behind these numbers, with logs and trajectories, is in <a href="https://github.com/mahirlabibdihan/WebOperator-Experiments"><i class="fa-brands fa-github"></i> mahirlabibdihan/WebOperator-Experiments</a>.</span>
+        <form id="traj-form" target="_blank">
+          <label for="traj-id">View a WebArena trajectory: task</label>
+          <input id="traj-id" type="number" min="0" max="811" value="421" required />
+          <button type="submit">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -788,13 +803,12 @@
 <script>
 /* ===================================================================================================================== content */
 const AUTHORS = [
-  { name: "Mahir Labib Dihan", url: "https://mahirlabibdihan.github.io", aff: [1], note: "*" },
+  { name: "Mahir Labib Dihan", url: "https://mahirlabibdihan.github.io", aff: [1] },
   { name: "Tanzima Hashem", url: "https://sites.google.com/site/tanzimahashem/", aff: [1] },
   { name: "Mohammed Eunus Ali", url: "https://sites.google.com/site/mohammedeunusali/", aff: [2] },
   { name: "Md Rizwan Parvez", url: "https://rizwan09.github.io/", aff: [3] },
 ];
 const AFFILIATIONS = ["Bangladesh University of Engineering and Technology (BUET)", "Faculty of Information Technology, Monash University", "Qatar Computing Research Institute (QCRI)"];
-const FOOTNOTE = "* Work done as a remote RA at QCRI.";
 
 /* ===================================================================================================================== data (paper) */
 const SITES = [["overall", "Overall"], ["reddit", "Reddit"], ["gitlab", "GitLab"], ["shopping", "Shopping"], ["cms", "CMS"], ["map", "Map"], ["multisite", "Multisite"]];
@@ -902,9 +916,9 @@ function vbar(g, x, yTop, yBase, w, color) {
 
 /* ===================================================================================================================== header */
 function renderAuthors() {
-  const names = AUTHORS.map((a) => `<a href="${a.url}">${a.name}</a><sup>${a.aff.join(",")}${a.note || ""}</sup>`).join(", ");
+  const names = AUTHORS.map((a) => `<a href="${a.url}">${a.name}</a><sup>${a.aff.join(",")}</sup>`).join(", ");
   const affs = AFFILIATIONS.map((x, i) => `<sup>${i + 1}</sup>${x}`).join(" &nbsp;·&nbsp; ");
-  $("#authors").innerHTML = `${names}<span class="aff">${affs}</span><span class="aff">${FOOTNOTE}</span>`;
+  $("#authors").innerHTML = `${names}<span class="aff">${affs}</span>`;
 }
 function initTheme() {
   const saved = store.get("wo-theme");
@@ -1506,6 +1520,11 @@ $$(".seg[data-view]").forEach((sg) => segment(sg, "v", (v) => {
   const lg = $("#lg-" + id); if (lg) lg.style.display = v === "table" ? "none" : "";
 }));
 segment($("#try-tabs"), "c", (v) => $$(".codeblock[data-c]").forEach((b) => (b.style.display = b.dataset.c === v ? "" : "none")));
+$("#traj-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const id = Math.max(0, Math.min(811, Math.round(+$("#traj-id").value || 0)));
+  window.open(`https://mahirlabibdihan.github.io/WebOperator-Experiments/webarena/main/trajectories/html/task_${id}.html`, "_blank", "noopener");
+});
 $$(".copy").forEach((b) => b.addEventListener("click", async () => {
   try { await navigator.clipboard.writeText($("pre", b.parentElement).innerText); b.textContent = "Copied"; } catch { b.textContent = "Select & copy"; }
   setTimeout(() => (b.textContent = "Copy"), 1600);
