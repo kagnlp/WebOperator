@@ -364,7 +364,15 @@
     .pg-node { transition: opacity .4s; }
     .pg-node rect.page { fill: var(--surface); stroke: var(--line); stroke-width: 1.6; }
     .pg-node .hdr { fill: var(--surface-2); }
-    .pg-node .t { font: 600 13px "Inter", sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+    .pg-node .t { font: 700 11px "Inter", sans-serif; fill: var(--text); dominant-baseline: central; }
+    .pg-node .mini .ln { fill: var(--line); }
+    .pg-node .mini .im { fill: var(--surface-2); }
+    .pg-node .mini .fld { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+    .pg-node .mini .ok { fill: color-mix(in srgb, var(--ok) 18%, var(--surface)); }
+    .pg-node .mini .tx { font: 500 8.5px "Inter", sans-serif; fill: var(--text-2); }
+    .pg-node .mini .otx { font: 700 6.5px "Inter", sans-serif; fill: var(--ok); text-anchor: middle; }
+    .pg-node .mini .btx { font: 700 7px "Inter", sans-serif; fill: #fff; text-anchor: middle; }
+    .pg-node .mini .em { text-anchor: middle; }
     .pg-node .v { font: 600 11.5px "JetBrains Mono", monospace; fill: var(--muted); text-anchor: middle; }
     .pg-pop { animation: pop .45s cubic-bezier(.3, 1.6, .5, 1); transform-box: fill-box; transform-origin: center; }
     @keyframes pop { from { transform: scale(0); opacity: 0; } }
@@ -586,8 +594,8 @@
         </div>
         <div class="pg-body">
           <div class="pg-tree">
-            <div class="pg-cap">Search tree <span>· each box is a page the agent reached</span></div>
-            <svg id="pg" viewBox="0 0 1080 400" role="img" aria-label="WebOperator search tree for the current step"></svg>
+            <div class="pg-cap">Search tree <span>· solid: pages the agent reached · dashed: proposed, not visited yet</span></div>
+            <svg id="pg" viewBox="0 0 1080 452" role="img" aria-label="WebOperator search tree for the current step"></svg>
           </div>
           <aside class="pg-side">
             <div class="side-sec">
@@ -619,6 +627,7 @@
           <span><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dotted;border-top-width:3px"></i>replay from a checkpoint</span>
           <span>⚑ checkpoint (page reachable directly)</span>
           <span>◉ snapshot saved</span>
+          <span><i class="lg-box" style="border-color:var(--muted);border-style:dashed"></i>candidate page, not visited yet</span>
           <span><i class="lg-box" style="border-color:var(--ok)"></i>snapshot matches</span>
           <span><i class="lg-box" style="border-color:var(--danger)"></i>mismatch: backtrack rejected</span>
         </div>
@@ -1084,37 +1093,45 @@ function initHero() {
 /* ===================================================================================================================== playground */
 (() => {
   const svg = $("#pg");
-  const W = 112, Hh = 42;
+  const W = 118, Hh = 76;
   // seven evenly spaced columns, so every connector has room to curve
   const X = [72, 222, 372, 522, 672, 852, 1008];
   const N = { // x, y (centre), page, reward of the action that reached it
-    H: [X[0], 200, "Acme Shop", null], S: [X[1], 80, "Search", 0.41], C: [X[1], 200, "Chairs", 0.72], G: [X[1], 320, "Categories", 0.58],
-    M: [X[2], 200, "Modern Chair", 0.80], T: [X[2], 320, "Coffee Table", 0.30], K: [X[3], 200, "Your Cart", 0.76], O: [X[4], 200, "Checkout", 0.70],
-    P: [X[5], 200, "Order placed", 0.85], R1: [X[6], 118, "My Orders", 0.82], R2: [X[6], 282, "Account", 0.40],
+    H: [X[0], 205, "Acme Shop", null], S: [X[1], 74, "Search", 0.41], C: [X[1], 205, "Chairs", 0.72], G: [X[1], 360, "Categories", 0.58],
+    M: [X[2], 205, "Modern Chair", 0.78], T: [X[2], 360, "Coffee Table", 0.30], K: [X[3], 205, "Your Cart", 0.80], O: [X[4], 205, "Checkout", 0.70],
+    P: [X[5], 205, "Order placed", 0.85], R1: [X[6], 92, "My Orders", 0.82], R2: [X[6], 205, "Recommended", 0.35], R3: [X[6], 318, "Account", 0.40],
+  };
+  // What each page looks like, drawn inside its node: [kind, ...content]
+  const LOOK = {
+    H: ["hero", "🏬", "Shop now"], S: ["search", "chair"], C: ["tiles", "🪑"], G: ["list", ["Chairs", "Tables", "Lamps"]],
+    M: ["product", "🪑", "$129", "Add to cart"], T: ["product", "🪵", "$89", "Add to cart"],
+    K: ["cart", "🪑", "$129", "Checkout"], O: ["checkout", "$129", "Place order"],
+    P: ["done", "Order #AC123456"], R1: ["order", "🪑", "Modern Chair", "$129", "Track shipment"], R2: ["recs", ["🪑", "🛋️", "🪴"]],
+    R3: ["menu", ["Profile", "Addresses", "Payment history", "Order history", "Log out"]],
   };
   // frontier entries: [label, score, state, note]; state: next | q | def | gone | new
   const STEPS = [
     { ph: "explore", t: "Start: the task and the shop's home page form the root",
-      d: "Task: buy the Modern Chair and report the order number. Every box in the tree is a page the agent reached with one browser action.",
-      tree: (s) => { s.add("H"); s.cp.add("H"); },
+      d: "Task: buy the Modern Chair and report the order number. Solid boxes are pages the agent has reached; each is saved as a snapshot (◉). ⚑ marks checkpoints, pages that can be reopened directly by URL.",
+      tree: (s) => { s.add("H"); s.run.add("H"); s.cp.add("H"); },
       front: [], def: [],
       br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Home page. A checkpoint: it can be reopened directly by URL." } },
     { ph: "explore", t: "Explore: generate, validate and score candidate actions",
-      d: "Candidate actions are generated for the current page, invalid ones are filtered out, and the reward model scores the rest. They go into the frontier.",
+      d: "Candidate actions are generated for the home page, invalid ones are filtered out, and the reward model scores the rest. They enter the frontier; the pages they lead to (dashed) are not visited yet.",
       why: "Nothing has been executed yet: the frontier only holds candidates.",
       tree: (s) => { ["S", "C", "G"].forEach((k) => s.add(k, "H")); s.hl = ["H"]; },
       front: [["click [Chairs]", 0.72, "next new"], ["click [Categories]", 0.58, "q new"], ["search “chair”", 0.41, "q new"]], def: [],
       br: { url: "/", title: "Acme Shop", e: "🏬" } },
     { ph: "explore", t: "Best-first: execute the best reversible action",
-      d: "Chairs, then Modern Chair. A snapshot of the product page is saved so that a later return to it can be checked. Its candidates join the frontier.",
+      d: "Chairs, then Modern Chair. Each new page is saved as a snapshot, so that a later return to it can be checked. The product page's candidates join the frontier.",
       why: "Best-first over the whole frontier: the next action may come from any branch, not just the current page.",
-      tree: (s) => { s.add("M", "C"); s.hl = ["H", "C", "M"]; s.snap.add("M"); s.cp.add("C"); },
+      tree: (s) => { s.add("M", "C"); s.run.add("C"); s.run.add("M"); s.hl = ["H", "C", "M"]; s.cp.add("C"); },
       front: [["click [Add to cart]", 0.80, "next new"], ["click [Categories]", 0.58, "q"], ["click [Reviews]", 0.52, "q new"], ["search “chair”", 0.41, "q"]], def: [],
       br: { url: "/chairs/modern", title: "Modern Chair · $129", e: "🪑", badge: ["in", "In stock"], msg: "◉ Snapshot saved" } },
     { ph: "explore", t: "A high-scoring action that cannot be undone",
       d: "Add to cart, then Checkout. The best candidate is now “Place order” (0.85), but the pre-execution check flags it: placing an order may change the site for good.",
       why: "Reward alone would execute it now and lose every other option.",
-      tree: (s) => { s.add("K", "M"); s.add("O", "K"); s.hl = ["H", "C", "M", "K", "O"]; },
+      tree: (s) => { s.add("K", "M"); s.add("O", "K"); s.run.add("K"); s.run.add("O"); s.cp.add("K"); s.cp.add("O"); s.hl = ["H", "C", "M", "K", "O"]; },
       front: [["click [Place order]", 0.85, "q new", "⚠ may be irreversible"], ["click [Categories]", 0.58, "q"], ["click [Reviews]", 0.52, "q"], ["search “chair”", 0.41, "q"]], def: [],
       br: { url: "/checkout", title: "Place order?", e: "🧾", badge: ["warn", "⚠ irreversible?"], msg: "Your card will be charged $129.00" } },
     { ph: "defer", t: "Defer: reversible actions go first",
@@ -1123,48 +1140,68 @@ function initHero() {
       tree: (s) => { s.add("P", "O", { deferred: true }); s.ghost.add("P"); s.hl = []; },
       front: [["click [Categories]", 0.58, "next"], ["click [Reviews]", 0.52, "q"], ["search “chair”", 0.41, "q"]], def: [["click [Place order]", 0.85, "def new", "held until it is the best remaining option"]],
       br: { url: "/checkout", title: "Checkout", e: "🧾", msg: "Nothing was submitted." } },
-    { ph: "backtrack", t: "Backtrack: replay from the nearest checkpoint",
-      d: "Backtracking is speculative: the target page is rebuilt in a parallel browser tab while the current tab stays as it is. The new tab jumps to the nearest checkpoint (the home page) and replays just one action.",
-      why: "Short replays in a separate tab: fewer chances for the site to drift, and nothing changes in the main tab yet.",
-      tree: (s) => { s.replay = ["H", "G"]; },
-      front: [["click [Categories]", 0.58, "next", "replaying 1 action from ⚑ Home"], ["click [Reviews]", 0.52, "q"], ["search “chair”", 0.41, "q"]], def: [["click [Place order]", 0.85, "def"]],
-      br: { url: "/categories", title: "Speculative tab: rebuilding Categories…", e: "↩", msg: "⚑ Home → click [Categories]" } },
-    { ph: "validate", t: "Validate: the rebuilt page matches its snapshot",
-      d: "The rebuilt page is compared with the snapshot saved when it was first visited. They match, so the agent closes the old tab and continues in the rebuilt one.",
-      tree: (s) => { s.replay = null; s.ok.add("G"); s.add("T", "G"); s.hl = ["H", "G", "T"]; },
+    { ph: "backtrack", t: "Backtrack: return to the page the action came from",
+      d: "Categories was proposed on the home page, so the agent has to get back there. Backtracking is speculative: a parallel browser tab does it while the current tab stays as it is. Home is a checkpoint, so the new tab simply reopens its URL; nothing has to be replayed.",
+      why: "Starting from the nearest checkpoint keeps replays short, and nothing changes in the main tab yet.",
+      tree: (s) => { s.reopen = "H"; },
+      front: [["click [Categories]", 0.58, "next", "from ⚑ Home, reopened by URL"], ["click [Reviews]", 0.52, "q"], ["search “chair”", 0.41, "q"]], def: [["click [Place order]", 0.85, "def"]],
+      br: { url: "/", title: "Speculative tab: reopening Home…", e: "↩", msg: "⚑ Home by URL, then click [Categories]" } },
+    { ph: "validate", t: "Validate: the restored page matches its snapshot",
+      d: "Before acting, the restored home page is compared with its snapshot around the Categories link. They match, so Categories is clicked in the new tab, which then replaces the old one.",
+      tree: (s) => { s.reopen = null; s.ok.add("H"); s.run.add("G"); s.cp.add("G"); s.add("T", "G"); s.hl = ["H", "G"]; },
       front: [["click [Reviews]", 0.52, "next"], ["search “chair”", 0.41, "q"], ["click [Coffee Table]", 0.30, "q new"]], def: [["click [Place order]", 0.85, "def"]],
-      br: { url: "/categories", title: "Categories", e: "🗂️", cmp: [["🗂️ Chairs · Tables · Lamps"], ["🗂️ Chairs · Tables · Lamps"], true] } },
+      br: { url: "/categories", title: "Categories", e: "🗂️", cmp: [["🏬 Home · Chairs · Categories"], ["🏬 Home · Chairs · Categories"], true] } },
     { ph: "validate", t: "Meanwhile, the website changes on its own",
-      d: "Another shopper buys the last Modern Chair. Nothing in the agent's tree knows; a naive search would happily return to that product page.",
-      tree: (s) => { s.ok.delete("G"); s.event = true; s.hl = []; },
+      d: "Another shopper buys the last Modern Chair on display (the one in the agent's cart stays reserved). Nothing in the agent's tree knows; a naive search would happily return to that product page.",
+      tree: (s) => { s.ok.delete("H"); s.event = true; s.hl = []; },
       front: [["click [Reviews]", 0.52, "next"], ["search “chair”", 0.41, "q"], ["click [Coffee Table]", 0.30, "q"]], def: [["click [Place order]", 0.85, "def"]],
       br: { url: "/categories", title: "Categories", e: "🗂️", evt: "🛒 Another shopper bought the last Modern Chair" } },
     { ph: "validate", t: "Mismatch: the backtrack is rejected",
-      d: "Next is Reviews on the Modern Chair page. A parallel tab opens Chairs (a checkpoint) and replays one click, but the rebuilt page says “Out of stock” while the snapshot said “In stock”.",
+      d: "Next is Reviews, proposed on the Modern Chair page. A parallel tab opens Chairs (the nearest checkpoint) and replays one click, but the rebuilt page says “Out of stock” where the snapshot said “In stock”.",
       why: "The speculative tab is closed and the original tab is untouched: the stale branch is dropped and nothing else runs there.",
       tree: (s) => { s.replay = ["C", "M"]; s.bad.add("M"); },
       front: [["click [Reviews]", 0.52, "gone", "rejected: page changed"], ["search “chair”", 0.41, "next"], ["click [Coffee Table]", 0.30, "q"]], def: [["click [Place order]", 0.85, "def"]],
       br: { url: "/chairs/modern", title: "Modern Chair", e: "🪑", cmp: [["🪑 In stock"], ["🪑 Out of stock"], false] } },
     { ph: "reroot", t: "The deferred action runs when it is the best remaining option",
-      d: "The remaining reversible options score far lower (0.41, 0.30), so “Place order” leaves the deferred list. Checkout is rebuilt in a parallel tab (its snapshot matches) and the order is placed. The post-execution check confirms a persistent change.",
+      d: "The remaining reversible options score far lower (0.41, 0.30), so “Place order” leaves the deferred list. A parallel tab reopens Checkout from its URL; its snapshot matches, since the cart still holds the reserved chair, and the order is placed. The post-execution check flags a persistent change.",
       why: "Deferral postpones a risky action; it does not forbid it.",
-      tree: (s) => { s.replay = null; s.event = false; s.ghost.delete("P"); s.risky.add("O>P"); s.noReturn = true; s.hl = ["O", "P"]; },
+      tree: (s) => { s.replay = null; s.event = false; s.ok.add("O"); s.ghost.delete("P"); s.run.add("P"); s.risky.add("O>P"); s.noReturn = true; s.hl = ["O", "P"]; },
       front: [["click [Place order]", 0.85, "next", "executed"], ["search “chair”", 0.41, "q"], ["click [Coffee Table]", 0.30, "q"]], def: [],
       br: { url: "/order/AC123456", title: "Order placed", e: "✅", msg: "Order #AC123456", badge: ["warn", "persistent change detected"] } },
     { ph: "reroot", t: "Re-root: a new search tree from the resulting page",
       d: "Pages visited before the order may no longer be valid, so the old branches and their frontier entries are discarded. The order confirmation becomes the new root; search continues to My Orders and reports the number.",
       why: "A new tree after a persistent change: the agent never backtracks across it.",
-      tree: (s) => { ["H", "S", "C", "G", "M", "T", "K", "O"].forEach((k) => s.gone.add(k)); s.newRoot = "P"; s.add("R1", "P"); s.add("R2", "P"); s.hl = ["P", "R1"]; s.bad.delete("M"); },
-      front: [["click [My orders]", 0.82, "next new"], ["click [Account]", 0.40, "q new"], ["search “chair”", 0.41, "gone", "discarded"], ["click [Coffee Table]", 0.30, "gone", "discarded"]], def: [],
+      tree: (s) => { ["H", "S", "C", "G", "M", "T", "K", "O"].forEach((k) => s.gone.add(k)); s.ok.delete("O"); s.newRoot = "P"; s.add("R1", "P"); s.add("R2", "P"); s.add("R3", "P"); s.run.add("R1"); s.hl = ["P", "R1"]; s.bad.delete("M"); },
+      front: [["click [My orders]", 0.82, "next new"], ["search “chair”", 0.41, "gone", "discarded"], ["click [Account]", 0.40, "q new"], ["click [Recommended]", 0.35, "q new"], ["click [Coffee Table]", 0.30, "gone", "discarded"]], def: [],
       br: { url: "/order/AC123456", title: "Order placed · new root", e: "✅", rr: "Persistent change → new search tree" } },
   ];
   let k = 0, timer = null;
   function fresh() {
-    return { nodes: [], edges: [], hl: [], snap: new Set(), cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, event: false, noReturn: false, newRoot: null,
+    return { nodes: [], edges: [], hl: [], run: new Set(), reopen: null, cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, event: false, noReturn: false, newRoot: null,
       add(id, parent, o = {}) { this.nodes.push(id); if (parent) this.edges.push({ a: parent, b: id, ...o }); } };
   }
   const build = (n) => { const s = fresh(); for (let i = 0; i <= n; i++) STEPS[i].tree(s); return s; };
   function edgePath(a, b) { const [x1, y1] = N[a], [x2, y2] = N[b]; const sx = x1 + W / 2, ex = x2 - W / 2, mx = (sx + ex) / 2; return `M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}`; }
+  // A tiny web page inside a node: x, y is the top-left of the body, w its width (about 50 px tall).
+  function miniPage(g, look, x, y, w) {
+    const [kind, a, b, c] = look;
+    const line = (lx, ly, lw) => el("rect", { x: lx, y: ly, width: lw, height: 4, rx: 2, class: "ln" }, g);
+    const txt = (tx, ty, t, cls = "tx", st = "") => (el("text", { x: tx, y: ty, class: cls, style: st }, g).textContent = t);
+    const btn = (bx, by, bw, t, color = "var(--accent)") => { el("rect", { x: bx, y: by, width: bw, height: 12, rx: 3, style: `fill:${color}` }, g); txt(bx + bw / 2, by + 8.6, t, "btx"); };
+    const pic = (px, py, size, e) => { el("rect", { x: px, y: py, width: size, height: size, rx: 4, class: "im" }, g); txt(px + size / 2, py + size / 2 + size * 0.22, e, "em", `font-size:${size * 0.62}px`); };
+    if (kind === "hero") { pic(x, y, 32, a); line(x + 38, y + 3, w - 40); line(x + 38, y + 11, w - 56); btn(x + 38, y + 20, 44, b); }
+    if (kind === "search") { el("rect", { x, y, width: w, height: 11, rx: 3, class: "fld" }, g); txt(x + 4, y + 8, a, "tx"); for (let i = 0; i < 2; i++) { pic(x, y + 16 + i * 18, 14, "🪑"); line(x + 19, y + 20 + i * 18, w - 30); } }
+    if (kind === "tiles") for (let i = 0; i < 3; i++) { const tw = (w - 8) / 3; pic(x + i * (tw + 4), y, tw, a); line(x + i * (tw + 4), y + tw + 5, tw - 4); }
+    if (kind === "list") a.forEach((t, i) => { el("rect", { x, y: y + i * 16, width: w, height: 13, rx: 3, class: "fld" }, g); txt(x + 4, y + i * 16 + 9.2, t); });
+    if (kind === "product") { pic(x, y, 40, a); txt(x + 46, y + 11, b, "tx", "font-weight:800;font-size:10px"); el("rect", { x: x + 46, y: y + 15, width: 40, height: 10, rx: 5, class: "ok" }, g); txt(x + 66, y + 22.4, "In stock", "otx"); btn(x + 46, y + 29, 52, c); }
+    if (kind === "cart") { pic(x, y, 22, a); line(x + 27, y + 5, 34); txt(x + w, y + 14, b, "tx", "text-anchor:end;font-weight:800"); btn(x, y + 31, w, c); }
+    if (kind === "checkout") { line(x, y + 2, w - 30); line(x, y + 10, w - 46); txt(x, y + 26, "Total", "tx"); txt(x + w, y + 26, a, "tx", "text-anchor:end;font-weight:800"); btn(x, y + 32, w, b, "var(--danger)"); }
+    if (kind === "done") { txt(x + w / 2, y + 22, "✅", "em", "font-size:20px"); txt(x + w / 2, y + 38, a, "tx", "text-anchor:middle;font-weight:700"); }
+    if (kind === "order") { pic(x, y, 30, a); txt(x + 35, y + 10, b, "tx", "font-weight:700;font-size:8px"); txt(x + 35, y + 22, c, "tx", "font-weight:800;font-size:10px"); btn(x, y + 36, w, look[4]); }
+    if (kind === "recs") a.forEach((e, i) => { pic(x, y + i * 17, 14, e); line(x + 19, y + i * 17 + 3, w - 24); line(x + 19, y + i * 17 + 9, w - 44); });
+    if (kind === "menu") a.forEach((t, i) => txt(x, y + 5 + i * 9.4, t, "tx", "font-weight:600;font-size:8px;fill:var(--text)"));
+    if (kind === "profile") { pic(x, y, 26, "👤"); txt(x + 32, y + 11, a, "tx", "font-weight:700"); line(x + 32, y + 17, w - 40); line(x, y + 34, w); line(x, y + 42, w - 24); }
+  }
   function drawTree(animateFrom) {
     const s = build(k), before = animateFrom !== null && animateFrom !== undefined ? new Set(build(animateFrom).nodes) : new Set(s.nodes);
     svg.innerHTML = "";
@@ -1177,13 +1214,16 @@ function initHero() {
     }
     if (s.replay) {
       const [a, b] = s.replay, [x1, y1] = N[a], [x2, y2] = N[b];
-      const yb = Math.max(y1, y2) + Hh / 2 + 48;
-      el("path", { d: `M${x1} ${y1 + Hh / 2 + 4} C${x1} ${yb} ${x2} ${yb} ${x2} ${y2 + Hh / 2 + 4}`, class: "pg-edge replay pg-pop" }, gE);
-      el("text", { x: (x1 + x2) / 2, y: yb + 4, class: "pg-note pg-pop", style: "fill:var(--backtrack);text-anchor:middle" }, gO).textContent = "replay";
+      const yb = Math.max(y1, y2) + Hh / 2 + 40;
+      // Arrowhead at the rebuilt page: the replay runs from the checkpoint to the target.
+      const mk = el("marker", { id: "replay-head", viewBox: "0 0 12 12", refX: 10, refY: 6, markerWidth: 13, markerHeight: 13, markerUnits: "userSpaceOnUse", orient: "auto" }, el("defs", {}, svg));
+      el("path", { d: "M2 1.5L10 6L2 10.5", style: "fill:none;stroke:var(--backtrack);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round" }, mk);
+      el("path", { d: `M${x1 + 30} ${y1 + Hh / 2 + 3} C${x1 + 30} ${yb} ${x2 - 30} ${yb} ${x2 - 30} ${y2 + Hh / 2 + 3}`, class: "pg-edge replay pg-pop", "marker-end": "url(#replay-head)" }, gE);
+      el("text", { x: (x1 + x2) / 2, y: yb + 9, class: "pg-note pg-pop", style: "fill:var(--backtrack);text-anchor:middle;font-size:12px" }, gO).textContent = `replay: ${N[a][2]} → ${N[b][2]}`;
     }
     if (s.noReturn) {
       const xr = (X[4] + W / 2 + X[5] - W / 2) / 2; // between Checkout and the order page
-      el("line", { x1: xr, y1: 16, x2: xr, y2: 392, style: "stroke:var(--danger);stroke-width:2.5;stroke-dasharray:8 6" }, gO);
+      el("line", { x1: xr, y1: 16, x2: xr, y2: 440, style: "stroke:var(--danger);stroke-width:2.5;stroke-dasharray:8 6" }, gO);
       el("text", { x: xr - 6, y: 32, class: "pg-note", style: "fill:var(--danger);text-anchor:end" }, gO).textContent = "point of no return";
     }
     for (const id of s.nodes) {
@@ -1191,16 +1231,21 @@ function initHero() {
       const g = el("g", { class: "pg-node" + (s.gone.has(id) ? " gone" : "") + (before.has(id) ? "" : " pg-pop") }, gN);
       const stroke = s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (s.hl.includes(id) ? "var(--explore)" : null);
       const ghost = s.ghost.has(id);
-      el("rect", { x: x - W / 2, y: y - Hh / 2, width: W, height: Hh, rx: 7, class: "page", style: `${stroke ? `stroke:${stroke};stroke-width:2.8;` : ""}${ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : ""}` }, g);
-      el("rect", { x: x - W / 2 + 1, y: y - Hh / 2 + 1, width: W - 2, height: 9, rx: 6, class: "hdr" }, g);
-      el("text", { x, y: y + 4, class: "t" }, g).textContent = ghost ? "Place order?" : label;
+      const cand = !s.run.has(id) && !ghost; // proposed, not visited yet
+      const dash = ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : cand && !stroke ? "stroke:var(--muted);stroke-dasharray:4 3;" : "";
+      el("rect", { x: x - W / 2, y: y - Hh / 2, width: W, height: Hh, rx: 7, class: "page", style: `${stroke ? `stroke:${stroke};stroke-width:2.8;` : ""}${dash}` }, g);
+      el("rect", { x: x - W / 2 + 1, y: y - Hh / 2 + 1, width: W - 2, height: 17, rx: 6, class: "hdr" }, g);
+      el("text", { x: x - W / 2 + 8, y: y - Hh / 2 + 10, class: "t" }, g).textContent = ghost ? "Place order?" : label;
+      if (ghost) el("text", { x, y: y + 14, class: "pg-note", style: "fill:var(--reroot);text-anchor:middle;font-size:22px" }, g).textContent = "?"; // not run yet: its result is unknown
+      else miniPage(el("g", { class: "mini", style: cand ? "opacity:.4" : "" }, g), LOOK[id], x - W / 2 + 7, y - Hh / 2 + 23, W - 14);
       let sub = v !== null ? v.toFixed(2) : "";
       if (id === "H" && !s.gone.has("H")) sub = "root";
       if (s.newRoot === id) sub = "new root";
       if (ghost) sub = "⚠ deferred";
-      if (sub) el("text", { x, y: y + Hh / 2 + 16, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : "" }, g).textContent = sub;
+      if (sub) el("text", { x, y: y + Hh / 2 + 15, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : "" }, g).textContent = sub;
       if (s.cp.has(id) && !s.gone.has(id)) el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
-      if (s.snap.has(id) && !s.gone.has(id)) el("text", { x: x + W / 2 - 30, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "◉";
+      if (s.run.has(id) && !s.gone.has(id)) el("text", { x: x + W / 2 - 30, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "◉";
+      if (s.reopen === id) el("text", { x, y: y + Hh / 2 + 32, class: "pg-note pg-pop", style: "fill:var(--backtrack);text-anchor:middle;font-size:12px" }, g).textContent = "↩ reopened by URL";
       if (s.ok.has(id) || s.bad.has(id)) { // verdict badge on the page's corner
         const good = s.ok.has(id), cx = x + W / 2 - 2, cy = y - Hh / 2 + 2;
         el("circle", { cx, cy, r: 10, class: "pg-pop", style: `fill:${good ? "var(--ok)" : "var(--danger)"};stroke:var(--surface);stroke-width:2.5` }, g);
@@ -1209,8 +1254,8 @@ function initHero() {
     }
     if (s.event) {
       const g = el("g", { class: "pg-pop" }, gO);
-      el("rect", { x: X[2] - 125, y: 14, width: 250, height: 30, rx: 8, style: "fill:color-mix(in srgb, var(--danger) 12%, var(--surface));stroke:var(--danger);stroke-width:1.4" }, g);
-      el("text", { x: X[2], y: 34, class: "pg-note", style: "fill:var(--danger);text-anchor:middle" }, g).textContent = "⏱ the last chair just sold";
+      el("rect", { x: X[3] - 125, y: 14, width: 250, height: 30, rx: 8, style: "fill:color-mix(in srgb, var(--danger) 12%, var(--surface));stroke:var(--danger);stroke-width:1.4" }, g);
+      el("text", { x: X[3], y: 34, class: "pg-note", style: "fill:var(--danger);text-anchor:middle" }, g).textContent = "⏱ the last chair on display just sold";
     }
   }
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
