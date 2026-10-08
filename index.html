@@ -25,7 +25,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
   <style>
     /* ============================================================ tokens */
     :root {
@@ -432,6 +431,11 @@
     .codeblock pre { margin: 0; padding: 14px 72px 14px 16px; overflow-x: auto; font-size: 13.5px; line-height: 1.7; }
     .copy { position: absolute; top: 8px; right: 8px; border: 1px solid #2a3647; background: #162030; color: #aab6c3; border-radius: 7px; padding: 4px 8px; font: 600 12px "Inter", sans-serif; cursor: pointer; }
     .copy:hover { color: #fff; }
+    .codeblock .p { color: #5f6e80; user-select: none; }
+    .codeblock .c { color: #6f8196; }
+    .try-tabs { margin-bottom: 10px; }
+    .try-note { color: var(--text-2); font-size: 14.5px; margin: 12px 0 0; }
+    .try-note code { font: 13px "JetBrains Mono", monospace; background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
 
     footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
     footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
@@ -449,6 +453,7 @@
         <a href="#method">Method</a>
         <a href="#results">Results</a>
         <a href="#webreplaybench">WebReplayBench</a>
+        <a href="#try">Try it</a>
         <a href="#cite">Cite</a>
       </div>
       <div class="right">
@@ -466,10 +471,10 @@
         <p class="subtitle">Action-Aware Tree Search for Autonomous Agents in Web Environment</p>
         <p class="authors" id="authors"></p>
         <div class="btn-row">
-          <a class="btn primary" href="https://www.researchgate.net/publication/398720402_WebOperator_Action-Aware_Tree_Search_for_Autonomous_Agents_in_Web_Environment"><i class="fa-solid fa-file-lines"></i> Paper</a>
-          <a class="btn" href="https://arxiv.org/abs/2512.12692"><i class="ai ai-arxiv"></i> arXiv</a>
+          <a class="btn primary" href="https://arxiv.org/abs/2512.12692"><i class="fa-solid fa-file-lines"></i> Paper</a>
           <a class="btn" href="https://github.com/kagnlp/WebOperator"><i class="fa-brands fa-github"></i> Code</a>
           <a class="btn" href="https://github.com/mahirlabibdihan/WebReplayBench"><i class="fa-solid fa-vial"></i> WebReplayBench</a>
+          <a class="btn" href="#try"><i class="fa-solid fa-terminal"></i> Try it</a>
           <a class="btn" href="#cite"><i class="fa-solid fa-quote-right"></i> BibTeX</a>
         </div>
       </div>
@@ -712,6 +717,32 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ================================================================ TRY IT -->
+  <section id="try">
+    <div class="wrap">
+      <div class="eyebrow">Try it</div>
+      <h2>Run WebOperator</h2>
+      <p class="lead">Give it a start URL and a task in the chat, or run the benchmarks from the paper. It works with OpenRouter, OpenAI and Azure OpenAI models.</p>
+      <div class="seg try-tabs" id="try-tabs"><button class="on" data-c="demo">Demo</button><button data-c="docker">Docker</button><button data-c="wa">WebArena</button><button data-c="wv">WebVoyager</button></div>
+      <div class="codeblock" data-c="demo"><button class="copy">Copy</button><pre><span class="p">$ </span>git clone https://github.com/kagnlp/WebOperator.git && cd WebOperator
+<span class="p">$ </span>pip install -r requirements.txt          <span class="c"># Python 3.12</span>
+<span class="p">$ </span>playwright install chromium --with-deps
+<span class="p">$ </span>cp .env.example .env                     <span class="c"># add your API keys</span>
+<span class="p">$ </span>python demo.py                           <span class="c"># opens a browser and waits for your task</span></pre></div>
+      <div class="codeblock" data-c="docker" style="display:none"><button class="copy">Copy</button><pre><span class="p">$ </span>git clone https://github.com/kagnlp/WebOperator.git && cd WebOperator
+<span class="p">$ </span>cp .env.example .env                     <span class="c"># add your API keys</span>
+<span class="p">$ </span>docker compose run --user $(id -u) weboperator --config weboperator/configs/demo.yml</pre></div>
+      <div class="codeblock" data-c="wa" style="display:none"><button class="copy">Copy</button><pre><span class="c"># host the WebArena sites first, then point WA_SHOPPING, WA_REDDIT, … at them (see README)</span>
+<span class="p">$ </span>python run.py --config weboperator/configs/wa-gpt-4o.yml
+<span class="p">$ </span>python -m utils.move_exp --src_dir results/webarena/gpt-4o --dst_dir experiments/webarena/gpt-4o
+<span class="p">$ </span>python -m utils.eval_exp --results_dir experiments/webarena/gpt-4o --task_type webarena</pre></div>
+      <div class="codeblock" data-c="wv" style="display:none"><button class="copy">Copy</button><pre><span class="p">$ </span>python run.py --config weboperator/configs/wv-gpt-4o.yml
+<span class="p">$ </span>python -m utils.move_exp --src_dir results/webvoyager/gpt-4o --dst_dir experiments/webvoyager/gpt-4o
+<span class="p">$ </span>python -m utils.eval_exp --results_dir experiments/webvoyager/gpt-4o --task_type webvoyager</pre></div>
+      <p class="try-note">No admin rights for Playwright's system packages? Use the Docker tab. Benchmark commands assume the setup from the Demo tab; model, budget and agent options live in the YAML files under <code>weboperator/configs/</code>.</p>
     </div>
   </section>
 
@@ -1456,6 +1487,7 @@ $$(".seg[data-view]").forEach((sg) => segment(sg, "v", (v) => {
   $("#tb-" + id).classList.toggle("on", v === "table");
   const lg = $("#lg-" + id); if (lg) lg.style.display = v === "table" ? "none" : "";
 }));
+segment($("#try-tabs"), "c", (v) => $$(".codeblock[data-c]").forEach((b) => (b.style.display = b.dataset.c === v ? "" : "none")));
 $$(".copy").forEach((b) => b.addEventListener("click", async () => {
   try { await navigator.clipboard.writeText($("pre", b.parentElement).innerText); b.textContent = "Copied"; } catch { b.textContent = "Select & copy"; }
   setTimeout(() => (b.textContent = "Copy"), 1600);
