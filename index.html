@@ -425,6 +425,15 @@
     .shot .bar i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
     .shot .bar span { margin-left: 8px; color: var(--muted); font: 12px "JetBrains Mono", monospace; }
     .shot img { display: block; width: 100%; }
+    .shot .bar .nav { margin-left: auto; display: flex; gap: 4px; }
+    .shot .bar button { width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--text-2); cursor: pointer; font-size: 11px; }
+    .shot .bar button:hover { color: var(--accent); border-color: var(--accent); }
+    .slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+    .slides::-webkit-scrollbar { display: none; }
+    .slides img { flex: 0 0 100%; scroll-snap-align: start; }
+    .dots { display: flex; justify-content: center; gap: 6px; padding: 8px 0 9px; background: var(--surface-2); border-top: 1px solid var(--line); }
+    .dots button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: var(--line); cursor: pointer; transition: width .2s, background .2s; }
+    .dots button.on { width: 20px; border-radius: 4px; background: var(--accent); }
 
 
     .codeblock { position: relative; background: var(--code-bg); color: var(--code-text); border-radius: 12px; border: 1px solid #1f2a38; }
@@ -695,8 +704,17 @@
           </ul>
           <p style="margin-top:12px"><a href="https://github.com/mahirlabibdihan/WebReplayBench"><i class="fa-brands fa-github"></i> mahirlabibdihan/WebReplayBench</a></p>
         </div>
-        <div class="shot"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>webreplaybench</span></div>
-          <img src="assets/webreplaybench_home.png" alt="The WebReplayBench website" loading="lazy" /></div>
+        <div class="shot" id="wrb-shots">
+          <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span id="wrb-url">acme-shop.example/</span>
+            <div class="nav"><button type="button" data-step="-1" aria-label="Previous screenshot"><i class="fa-solid fa-chevron-left"></i></button><button type="button" data-step="1" aria-label="Next screenshot"><i class="fa-solid fa-chevron-right"></i></button></div></div>
+          <div class="slides">
+            <img src="assets/webreplaybench_home.png" alt="WebReplayBench home page" data-url="/" />
+            <img src="assets/webreplaybench_products.png" alt="WebReplayBench product list" data-url="/products" loading="lazy" />
+            <img src="assets/webreplaybench_product.png" alt="WebReplayBench product page" data-url="/products/1" loading="lazy" />
+            <img src="assets/webreplaybench_inbox.png" alt="WebReplayBench inbox" data-url="/inbox" loading="lazy" />
+          </div>
+          <div class="dots"></div>
+        </div>
       </div>
       <div class="grid2">
         <div class="panel">
@@ -1494,6 +1512,34 @@ $$(".copy").forEach((b) => b.addEventListener("click", async () => {
 }));
 renderAuthors(); initTheme(); initHero();
 drawWA(); drawBudget(); drawRuntime(); drawAbl(); drawBT(); drawGen(); drawReplay(); drawDetect();
+
+/* WebReplayBench screenshots: arrows, dots and swipe over a scroll-snapping strip. */
+(() => {
+  const box = document.getElementById("wrb-shots");
+  if (!box) return;
+  const strip = box.querySelector(".slides"), imgs = [...strip.children], dots = box.querySelector(".dots"), url = document.getElementById("wrb-url");
+  let cur = 0, lock = 0;
+  imgs.forEach((im, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("aria-label", im.alt);
+    b.onclick = () => go(i);
+    dots.appendChild(b);
+  });
+  const show = (i) => {
+    cur = i;
+    [...dots.children].forEach((d, j) => d.classList.toggle("on", j === i));
+    url.textContent = "acme-shop.example" + imgs[i].dataset.url;
+  };
+  // While a button scrolls the strip, ignore the intermediate positions it passes through.
+  const go = (i) => { i = (i + imgs.length) % imgs.length; clearTimeout(lock); lock = setTimeout(() => (lock = 0), 600); strip.scrollTo({ left: i * strip.clientWidth }); show(i); };
+  box.querySelectorAll(".bar button").forEach((b) => (b.onclick = () => go(cur + +b.dataset.step)));
+  strip.addEventListener("scroll", () => {
+    if (lock) return;
+    const i = Math.round(strip.scrollLeft / strip.clientWidth);
+    if (i !== cur) show(i);
+  }, { passive: true });
+  show(0);
+})();
 </script>
 </body>
 </html>
