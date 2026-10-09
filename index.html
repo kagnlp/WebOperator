@@ -2431,6 +2431,7 @@ function initHero() {
       requestAnimationFrame(() => w.classList.remove("off"));
       const swap = () => { if (tok !== animToken) return; pg1.replaceWith(pageSvg(ev.to[0], ev.to[1])); if (ev.toUrl) w.querySelector(".who em").textContent = "acme-shop" + ev.toUrl; setTimeout(() => { w.classList.add("off"); setTimeout(() => w.remove(), 450); }, 2200); };
       if (ev.act) setTimeout(() => animateClick(pg1, ev.from[1], ev.act, swap), 400); else setTimeout(swap, 1100);
+      busy((ev.act ? 400 + 1300 : 1100) + 2200 + 450); // the next step waits until the window has played and faded away
     }
     // The snapshot check is shown below the browser, not inside it.
     // Once a backtrack has been accepted and the agent has moved on, the check is history: hide it.
