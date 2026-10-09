@@ -286,13 +286,21 @@
     .rail .ph.on { color: #fff; border-color: transparent; }
     .pg-top { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); }
     .pg-top .lbl { font: 600 12px "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .pg-top #pg-mode { margin-left: auto; }
+    .pg-top #pg-mode { margin-left: 0; }
+    .fs-btn { width: 34px; height: 34px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--text-2); cursor: pointer; }
+    .fs-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .play:fullscreen { overflow: auto; background: var(--bg); border-radius: 0; }
     .rail .ctrls { margin-left: auto; }
-    .rail .naive-note { display: none; font: 600 12.5px "Inter", sans-serif; color: var(--danger); }
+    .pg-task .naive-note { display: none; font: 600 12px "Inter", sans-serif; color: var(--danger); }
+    .pg-task .ctrls { margin-left: auto; }
     .play.naive .rail .ph, .play.naive .rail .sep { display: none; }
-    .play.naive .rail .naive-note { display: inline; }
+    .play.naive .pg-task .naive-note { display: inline; margin-left: 8px; }
     .play.naive #pg-def-sec, .play.naive .legend-row .wo-only, .play:not(.naive) .legend-row .naive-only { display: none; }
     .mini-br .chk { font-size: 10.5px; color: var(--muted); }
+    #pg-check { min-height: 188px; } /* the height of a real comparison */
+    #pg-check.empty { display: grid; place-items: center; background: transparent; border: 1.5px dashed color-mix(in srgb, var(--muted) 55%, transparent); }
+    #pg-check .chk-empty { font: 500 12px/1.5 "Inter", sans-serif; color: var(--muted); text-align: center; padding: 0 18px; }
+    .play.naive #pg-check-sec { display: none; }
     .rail .ph.on[data-ph="explore"] { background: var(--explore); }
     .rail .ph.on[data-ph="defer"] { background: var(--reroot); }
     .rail .ph.on[data-ph="backtrack"] { background: var(--backtrack); }
@@ -301,7 +309,8 @@
     .rail .sep { color: var(--muted); font-size: 12px; }
     .pg-body { display: grid; grid-template-columns: 340px minmax(0, 1fr); border-bottom: 1px solid var(--line); }
     @media (max-width: 900px) { .pg-body { grid-template-columns: 1fr; } .pg-side { border-right: 0 !important; border-bottom: 1px solid var(--line); } }
-    .pg-tree { padding: 10px 6px 0; min-width: 0; position: relative; }
+    .pg-tree { padding: 10px 6px 0; min-width: 0; position: relative; display: flex; flex-direction: column; }
+    .pg-tree > svg#pg { margin: auto 0; } /* the tree sits in the middle of the column's height */
     #pg-stats { position: absolute; top: 8px; right: 12px; display: flex; gap: 6px; z-index: 2; }
     #pg-stats span { font: 500 11.5px "Inter", sans-serif; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
     #pg-stats b { font: 700 12.5px "JetBrains Mono", monospace; color: var(--text); margin-right: 3px; }
@@ -315,7 +324,7 @@
     .evt-win .who em { font-style: normal; margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 500 10px "JetBrains Mono", monospace; color: var(--muted); }
     .evt-win svg { display: block; width: 100%; height: auto; }
     .pg-tree svg { display: block; width: 100%; height: auto; }
-    .pg-task { display: flex; gap: 10px; align-items: baseline; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 600; color: var(--text); }
+    .pg-task { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 600; color: var(--text); }
     .pg-task b { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--accent); padding: 3px 7px; border-radius: 5px; }
     .pg-cap { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 10px; }
     .pg-cap span { text-transform: none; letter-spacing: 0; font: 500 11.5px "Inter", sans-serif; }
@@ -404,7 +413,7 @@
     .narr { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: center; padding: 16px 18px; border-top: 1px solid var(--line); }
     @media (max-width: 640px) { .narr { grid-template-columns: 1fr; } }
     .narr h3 { font-size: 16.5px; margin-bottom: 3px; }
-    .narr p { margin: 0; font-size: 14.5px; color: var(--text-2); min-height: 46px; }
+    .narr p { margin: 0; font-size: 14.5px; color: var(--text-2); }
     .ctrls { display: flex; gap: 8px; align-items: center; }
     .ctrls button { height: 38px; min-width: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; font: 600 14px "Inter", sans-serif; display: inline-flex; align-items: center; gap: 7px; }
     .ctrls button:hover { border-color: var(--accent); }
@@ -418,8 +427,8 @@
     .pg-edge.risky { stroke: var(--danger); stroke-width: 2; }
     .pg-edge.deferred { stroke: var(--reroot); stroke-dasharray: 5 4; stroke-width: 2; }
     .pg-edge.hl { stroke: var(--explore); stroke-width: 4; opacity: .9; }
-    .pg-edge.replay { stroke: var(--backtrack); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0.1 9; fill: none; }
-    .pg-edge.gone, .pg-node.gone { opacity: .15; }
+    .pg-edge.replay { stroke: var(--backtrack); stroke-width: 16; stroke-linecap: round; stroke-opacity: .28; fill: none; } /* a wide band under the replayed edges */
+    .pg-edge.gone, .pg-node.gone { opacity: .3; }
     .pg-node { transition: opacity .4s; }
     .pg-node rect.page { fill: var(--surface); stroke: var(--line); stroke-width: 1.6; }
     .pg-node .hdr { fill: var(--surface-2); }
@@ -654,17 +663,14 @@
       <p class="lead">Three situations that break naive tree search on the web. Pick one, step through WebOperator's search, then switch to naive tree search for the same story.</p>
       <div class="play">
         <div class="pg-top">
-          <span class="lbl">Scenario</span>
-          <div class="seg" id="pg-scen" role="group" aria-label="Scenario"><button class="on" data-s="undo">Irreversible action</button><button data-s="shopper">External update</button><button data-s="shuffle">Randomized content</button></div>
+          <span class="lbl">Agent</span>
           <div class="seg" id="pg-mode" role="group" aria-label="Search strategy"><button class="on" data-m="wo">WebOperator</button><button data-m="naive">Naive tree search</button></div>
+          <span class="lbl" style="margin-left:auto">Scenario</span>
+          <div class="seg" id="pg-scen" role="group" aria-label="Scenario"><button class="on" data-s="undo">Irreversible action</button><button data-s="shopper">External update</button><button data-s="shuffle">Randomized content</button></div>
+          <button class="fs-btn" id="pg-fs" type="button" aria-label="Full screen" title="Full screen"><i class="fa-solid fa-expand"></i></button>
         </div>
-        <div class="rail" id="rail">
-          <span class="ph" data-ph="explore">Explore</span><span class="sep">→</span>
-          <span class="ph" data-ph="defer">Defer</span><span class="sep">→</span>
-          <span class="ph" data-ph="backtrack">Backtrack</span><span class="sep">→</span>
-          <span class="ph" data-ph="validate">Validate</span><span class="sep">→</span>
-          <span class="ph" data-ph="reroot">Re-root</span>
-          <span class="naive-note" id="pg-naive-note">Highest score first · backtrack by replaying from the start · no checks</span>
+        <div class="pg-task"><b>Task</b><span id="pg-task"></span>
+          <span class="naive-note" id="pg-naive-note">Naive: highest score first · replay from the start · no checks</span>
           <div class="ctrls">
             <button id="pg-prev" aria-label="Previous step"><i class="fa-solid fa-backward-step"></i></button>
             <button id="pg-play" class="go" aria-label="Play"><i class="fa-solid fa-play"></i> Play</button>
@@ -672,7 +678,6 @@
             <span class="cnt" id="pg-cnt"></span>
           </div>
         </div>
-        <div class="pg-task"><b>Task</b><span id="pg-task"></span></div>
         <div class="pg-body">
           <aside class="pg-side">
             <div class="side-sec">
@@ -704,17 +709,17 @@
           <div><h3 id="pg-title"></h3><p id="pg-text"></p><p class="why" id="pg-why"></p></div>
         </div>
         <div class="legend-row">
-          <span>🤖 agent's current page</span>
-          <span><i class="lg-line" style="border-color:var(--explore);border-top-width:4px"></i>step just taken</span>
-          <span class="wo-only"><i class="lg-line" style="border-color:var(--reroot);border-top-style:dashed"></i>deferred action</span>
-          <span class="wo-only"><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dashed"></i>jump to a checkpoint by URL</span>
-          <span class="wo-only"><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dotted;border-top-width:3px"></i>step replayed after a checkpoint</span>
-          <span class="naive-only"><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dotted;border-top-width:3px"></i>path replayed from the start</span>
-          <span class="wo-only">⚑ checkpoint (page reachable directly)</span>
-          <span><i class="lg-box" style="border-color:var(--muted);border-style:dashed"></i>proposed action, not run yet</span>
-          <span class="wo-only"><i class="lg-box" style="border-color:var(--ok)"></i>snapshot matches</span>
-          <span class="wo-only"><i class="lg-box" style="border-color:var(--danger)"></i>mismatch: backtrack rejected</span>
-          <span class="naive-only"><i class="lg-box" style="border-color:var(--danger)"></i>harmful result, unnoticed</span>
+          <span>🤖 generating actions</span>
+          <span><i class="lg-line" style="border-color:var(--explore);border-top-width:4px"></i>last step</span>
+          <span class="wo-only"><i class="lg-line" style="border-color:var(--reroot);border-top-style:dashed"></i>deferred</span>
+          <span class="wo-only"><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dashed"></i>URL jump</span>
+          <span class="wo-only"><i class="lg-line" style="border-color:color-mix(in srgb, var(--backtrack) 28%, transparent);border-top-width:9px;border-radius:5px"></i>replayed</span>
+          <span class="naive-only"><i class="lg-line" style="border-color:color-mix(in srgb, var(--backtrack) 28%, transparent);border-top-width:9px;border-radius:5px"></i>replayed from start</span>
+          <span class="wo-only">⚑ checkpoint</span>
+          <span><i class="lg-box" style="border-color:var(--muted);border-style:dashed"></i>proposed</span>
+          <span class="wo-only"><i class="lg-box" style="border-color:var(--ok)"></i>check passed</span>
+          <span class="wo-only"><i class="lg-box" style="border-color:var(--danger)"></i>check failed</span>
+          <span class="naive-only"><i class="lg-box" style="border-color:var(--danger)"></i>harmful</span>
         </div>
       </div>
     </div>
@@ -1886,7 +1891,7 @@ function initHero() {
       el("path", { d: edgePath(e.a, e.b), class: cls + (before.has(e.b) ? "" : " pg-fade"), "data-b": e.b }, gE);
     }
     if (s.replay) { // a naive replay re-executes the stored path from the home page
-      for (let i = 0; i < s.replay.length - 1; i++) el("path", { d: edgePath(s.replay[i], s.replay[i + 1]), class: "pg-edge replay pg-pop" }, gE);
+      for (let i = 0; i < s.replay.length - 1; i++) gE.prepend(el("path", { d: edgePath(s.replay[i], s.replay[i + 1]), class: "pg-edge replay pg-fade" })); // under the edge itself
     }
     // WebOperator's jump: a dashed arrow from the page the agent was on to the checkpoint reopened by URL.
     // Shown only on the sub-step that makes the jump.
@@ -2166,8 +2171,9 @@ function initHero() {
     // Once a backtrack has been accepted and the agent has moved on, the check is history: hide it.
     const done = c ? c.final : spec && !s.bad.size && s.at !== prev;
     const body = $("#pg-br .b"), chk = !done && body && body.innerHTML.trim();
-    $("#pg-check").innerHTML = chk ? `<div class="b">${body.innerHTML}</div>` : "";
-    $("#pg-check-sec").style.display = chk ? "" : "none";
+    // The block keeps its place in every step, so the layout does not jump; without a check it says so.
+    $("#pg-check").innerHTML = chk ? `<div class="b">${body.innerHTML}</div>` : `<div class="chk-empty">No snapshot check in this step.<br>WebOperator checks a page against its snapshot before acting on it during a backtrack.</div>`;
+    $("#pg-check").classList.toggle("empty", !chk);
     if (body) body.remove();
     // Saved snapshot and live page side by side.
     const ck = [...s.bad][0] || [...s.ok].pop(), cm = $("#pg-check .cmpm");
@@ -2227,6 +2233,13 @@ function initHero() {
     }));
   }
   pick("#pg-scen", "s", (v) => (scen = v));
+  // Full screen: the whole walkthrough fills the screen; the icon toggles back.
+  $("#pg-fs").addEventListener("click", () => (document.fullscreenElement ? document.exitFullscreen() : $(".play").requestFullscreen()));
+  document.addEventListener("fullscreenchange", () => {
+    const on = document.fullscreenElement === $(".play");
+    $("#pg-fs").innerHTML = `<i class="fa-solid fa-${on ? "compress" : "expand"}"></i>`;
+    $("#pg-fs").title = $("#pg-fs").ariaLabel = on ? "Exit full screen" : "Full screen";
+  });
   pick("#pg-mode", "m", (v) => (mode = v));
   function play() {
     if (timer) return stop();
