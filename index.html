@@ -336,7 +336,7 @@
     .pg-task b { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--accent); padding: 3px 7px; border-radius: 5px; }
     .pg-cap { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 10px; }
     .pg-cap span { text-transform: none; letter-spacing: 0; font: 500 11.5px "Inter", sans-serif; }
-    .pg-side { border-right: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 9%, var(--surface-2)); padding: 12px 14px; display: grid; gap: 12px; align-content: start; }
+    .pg-side { min-width: 0; grid-template-columns: minmax(0, 1fr); /* a long URL must not widen the browser */ border-right: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 9%, var(--surface-2)); padding: 12px 14px; display: grid; gap: 12px; align-content: start; }
     .side-h { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 6px; }
     .side-h span { text-transform: none; letter-spacing: 0; font: 500 11px "Inter", sans-serif; color: var(--muted); margin-left: 4px; }
     .side-h.warn { color: var(--reroot); }
@@ -442,9 +442,12 @@
     .pg-edge.risky { stroke: var(--danger); stroke-width: 2; }
     .pg-edge.deferred { stroke: var(--reroot); stroke-dasharray: 5 4; stroke-width: 2; }
     .pg-edge.hl { stroke: var(--explore); stroke-width: 4; opacity: .9; }
-    .pg-edge.hl.risky { stroke: var(--danger); } /* an irreversible action stays red on the path */
+    .pg-edge.hl.risky { stroke: var(--danger); }
+    .pg-edge.sel { stroke: var(--select); stroke-width: 2.5; } /* into the selected action */ /* an irreversible action stays red on the path */
+    .bt-goal { fill: var(--backtrack); fill-opacity: .28; stroke: none; } /* behind the backtrack's destination */
     .pg-edge.replay { stroke: var(--backtrack); stroke-width: 16; stroke-linecap: round; stroke-opacity: .28; fill: none; } /* a wide band under the replayed edges */
     .pg-edge.gone, .pg-node.gone { opacity: .3; }
+    .pg-edge.dim, .pg-node.dim { opacity: .2; transition: opacity .5s; } /* after the answer: off the final path */
     .pg-node { transition: opacity .4s; }
     .pg-node rect.page { fill: var(--surface); stroke: var(--line); stroke-width: 1.6; }
     .pg-node .hdr { fill: var(--surface-2); }
@@ -682,7 +685,7 @@
           <span class="lbl">Agent</span>
           <div class="seg" id="pg-mode" role="group" aria-label="Search strategy"><button class="on" data-m="wo">WebOperator</button><button data-m="naive">Naive tree search</button></div>
           <span class="lbl" style="margin-left:auto">Scenario</span>
-          <div class="seg" id="pg-scen" role="group" aria-label="Scenario"><button class="on" data-s="undo">Irreversible action</button><button data-s="shopper">External update</button><button data-s="shuffle">Randomized content</button></div>
+          <div class="seg" id="pg-scen" role="group" aria-label="Scenario"><button class="on" data-s="browse">Read-only task</button><button data-s="undo">Irreversible action</button><button data-s="shopper">External update</button><button data-s="shuffle">Randomized content</button></div>
           <button class="fs-btn" id="pg-fs" type="button" aria-label="Full screen" title="Full screen"><i class="fa-solid fa-expand"></i></button>
         </div>
         <div class="pg-task"><b>Task</b><span id="pg-task"></span>
@@ -727,6 +730,7 @@
         <div class="legend-row">
           <span>🤖 generating actions</span>
           <span><i class="lg-line" style="border-color:var(--explore);border-top-width:4px"></i>current path</span>
+          <span><i class="lg-line" style="border-color:var(--danger);border-top-width:4px"></i>irreversible action</span>
           <span class="wo-only"><i class="lg-line" style="border-color:var(--reroot);border-top-style:dashed"></i>deferred</span>
           <span><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dashed"></i>URL jump</span>
           <span class="wo-only"><i class="lg-line" style="border-color:color-mix(in srgb, var(--backtrack) 28%, transparent);border-top-width:9px;border-radius:5px"></i>replayed</span>
@@ -1218,6 +1222,121 @@ function initHero() {
      A step: ph (phase), t, d, why; tree(s) edits the cumulative tree (verdicts, replays, highlights and the agent's
      position last one step); front/def: [label, score, state, note] with state next | q | def | gone | new; br: the browser panel. */
   const SCEN = {
+    browse: {
+      task: "Find the warranty of the Oak Desk.",
+      ACT: {
+        Ch: "click [Chairs]", Tb: "click [Tables]", Se: "search “oak desk”", Cf: "click [Coffee]", Dk: "click [Desks]",
+        Od: "click [Oak Desk]", Wd: "click [Walnut Desk]", Sc: "scroll down", Rv: "click [Reviews]", Sp: "click [Specs]",
+        N2: "click [Next page]", St: "stop: “5 years”",
+      },
+      N: {
+        H: [X[0], Y[1], "Acme Shop", null],
+        Ch: [X[1], Y[0], "Chairs", 0.35], Tb: [X[1], Y[1], "Tables", 0.78], Se: [X[1], Y[2], "Search", 0.60],
+        Cf: [X[2], Y[0], "Coffee tables", 0.30], Dk: [X[2], Y[1], "Desks", 0.80],
+        Od: [X[3], Y[1], "Oak Desk", 0.82], Wd: [X[3], Y[2], "Walnut Desk", 0.40],
+        Sc: [X[4], Y[1], "Oak Desk · details", 0.76],
+        Rv: [X[5], Y[0], "Reviews", 0.74], Sp: [X[5], Y[2], "Oak Desk · Specs", 0.70],
+        N2: [X[6], Y[0], "Reviews · page 2", 0.30], St: [X[6], Y[2], "Answer", 0.95],
+      },
+      // Only pages with their own URL are checkpoints: the Desks filter stays on /tables; scrolling, Reviews and
+      // Specs stay on the product's URL.
+      URL: { Tb: "/tables", Dk: "/tables", Od: "/oak-desk", Sc: "/oak-desk", Rv: "/oak-desk", Sp: "/oak-desk" },
+      LOOK: {
+        H: ["shophome", [["🪑", "Chairs"], ["🪵", "Tables"], ["💡", "Lamps"]], "Sale"],
+        Tb: ["tiles", [["☕", "Coffee"], ["🖥️", "Desks"], ["🍽️", "Dining"]]],
+        Dk: ["list", ["Oak Desk · $249", "Walnut Desk · $319", "Standing Desk · $399"]],
+        Od: ["product", "🖥️", "$249", "Buy now"], Wd: ["product", "🖥️", "$319", "Buy now"],
+        Sc: ["details"], Rv: ["reviews"], N2: ["reviews"],
+        Sp: ["rows", [["Size · 120 × 60 cm", 0], ["Solid oak, oiled", 0], ["Warranty · 5 years", 0]]],
+        St: ["answer", ["The Oak Desk has", "a 5-year warranty."]],
+      },
+      wo: [
+        { ph: "explore", t: "Start: a read-only task",
+          d: "The task only reads the site: no action here changes anything. The home page is the root, and its candidates are scored into the frontier.",
+          tree: (s) => { s.add("H"); s.run.add("H"); s.cp.add("H"); ["Ch", "Tb", "Se"].forEach((k) => s.add(k, "H")); s.at = "H"; },
+          front: [["click [Tables]", 0.78, "next new"], ["search “oak desk”", 0.60, "q new"], ["click [Chairs]", 0.35, "q new"]],
+          br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Snapshot saved · ⚑ checkpoint" } },
+        { ph: "explore", t: "Tables",
+          d: "Tables has its own URL, so it becomes a checkpoint: the agent can reopen it later without replaying anything.",
+          tree: (s) => { s.run.add("Tb"); s.cp.add("Tb"); ["Cf", "Dk"].forEach((k) => s.add(k, "Tb")); s.at = "Tb"; },
+          front: [["click [Desks]", 0.80, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Chairs]", 0.35, "q"], ["click [Coffee]", 0.30, "q new"]],
+          br: { url: "/tables", title: "Tables", e: "🪵" } },
+        { ph: "explore", t: "Desks: a filter, not a checkpoint",
+          d: "Desks is a filter on the Tables page: the URL stays /tables, so this page is not a checkpoint. The Oak Desk is listed first.",
+          tree: (s) => { s.run.add("Dk"); ["Od", "Wd"].forEach((k) => s.add(k, "Dk")); s.at = "Dk"; },
+          front: [["click [Oak Desk]", 0.82, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q new"], ["click [Chairs]", 0.35, "q"], ["click [Coffee]", 0.30, "q"]],
+          br: { url: "/tables", title: "Desks", e: "🖥️" } },
+        { ph: "explore", t: "The Oak Desk",
+          d: "The product page has its own URL, so it is a checkpoint. The top of the page shows no warranty; the details are further down.",
+          tree: (s) => { s.run.add("Od"); s.cp.add("Od"); s.add("Sc", "Od"); s.at = "Od"; },
+          front: [["scroll down", 0.76, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk", e: "🖥️" } },
+        { ph: "explore", t: "Scroll down: Reviews or Specs?",
+          d: "Scrolling keeps the URL, so the scrolled page is not a checkpoint. It shows two links. The reward model slightly prefers the reviews (0.74) to the specifications (0.70). Scores are imperfect, which is why the search keeps alternatives.",
+          tree: (s) => { s.run.add("Sc"); ["Rv", "Sp"].forEach((k) => s.add(k, "Sc")); s.at = "Sc"; },
+          front: [["click [Reviews]", 0.74, "next new"], ["click [Specs]", 0.70, "q new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk", e: "🖥️" } },
+        { ph: "explore", t: "Reviews: a dead end",
+          d: "The reviews talk about the finish and the delivery, not the warranty, and a second page scores low (0.30). The best action left is Specs, on the scrolled product page.",
+          tree: (s) => { s.run.add("Rv"); s.add("N2", "Rv"); s.at = "Rv"; },
+          front: [["click [Specs]", 0.70, "next"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q new"]],
+          br: { url: "/oak-desk", title: "Reviews", e: "⭐" } },
+        { ph: "backtrack", t: "Backtrack: nearest checkpoint, one replay",
+          d: "The scrolled page has no URL of its own. A parallel tab reopens the nearest checkpoint, the Oak Desk page, by its URL, skipping Tables and the Desks filter, and replays only the scroll. Each step is checked against its snapshot, then Specs runs: the warranty is 5 years.",
+          why: "Naive search restarts from the home page and replays Tables, Desks, Oak Desk and the scroll.",
+          tree: (s) => { s.replay = ["Od", "Sc"]; s.ok.add("Od"); s.ok.add("Sc"); s.run.add("Sp"); s.add("St", "Sp"); s.at = "Sp"; },
+          front: [["stop: “5 years”", 0.95, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk · Specs", e: "📋", chk: "checked before click [Specs]", cmp: [["Reviews › · Specs ›"], ["Reviews › · Specs ›"], true] } },
+        { ph: "explore", t: "Stop: report the warranty",
+          d: "The stop action scores highest, so the search ends and the agent answers: “The Oak Desk has a 5-year warranty.”",
+          tree: (s) => { s.run.add("St"); s.at = "St"; },
+          front: [["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk · Specs", e: "📋" } },
+      ],
+      naive: [
+        { t: "Naive tree search on the same task",
+          d: "Naive tree search runs the highest-scoring action, and backtracks by restarting from the home page and replaying the actions it recorded.",
+          tree: (s) => { s.add("H"); s.run.add("H"); ["Ch", "Tb", "Se"].forEach((k) => s.add(k, "H")); s.at = "H"; },
+          front: [["click [Tables]", 0.78, "next new"], ["search “oak desk”", 0.60, "q new"], ["click [Chairs]", 0.35, "q new"]],
+          br: { url: "/", title: "Acme Shop", e: "🏬" } },
+        { t: "Tables",
+          d: "The same Tables page. Naive search keeps no checkpoints.",
+          tree: (s) => { s.run.add("Tb"); ["Cf", "Dk"].forEach((k) => s.add(k, "Tb")); s.at = "Tb"; },
+          front: [["click [Desks]", 0.80, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Chairs]", 0.35, "q"], ["click [Coffee]", 0.30, "q new"]],
+          br: { url: "/tables", title: "Tables", e: "🪵" } },
+        { t: "Desks",
+          d: "The Oak Desk is listed first.",
+          tree: (s) => { s.run.add("Dk"); ["Od", "Wd"].forEach((k) => s.add(k, "Dk")); s.at = "Dk"; },
+          front: [["click [Oak Desk]", 0.82, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q new"], ["click [Chairs]", 0.35, "q"], ["click [Coffee]", 0.30, "q"]],
+          br: { url: "/tables", title: "Desks", e: "🖥️" } },
+        { t: "The Oak Desk",
+          d: "The details are further down the page.",
+          tree: (s) => { s.run.add("Od"); s.add("Sc", "Od"); s.at = "Od"; },
+          front: [["scroll down", 0.76, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk", e: "🖥️" } },
+        { t: "Scroll down",
+          d: "The reviews score slightly higher (0.74) than the specifications (0.70).",
+          tree: (s) => { s.run.add("Sc"); ["Rv", "Sp"].forEach((k) => s.add(k, "Sc")); s.at = "Sc"; },
+          front: [["click [Reviews]", 0.74, "next new"], ["click [Specs]", 0.70, "q new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk", e: "🖥️" } },
+        { t: "Reviews: a dead end",
+          d: "No warranty in the reviews. The best action left is Specs, on the scrolled product page.",
+          tree: (s) => { s.run.add("Rv"); s.add("N2", "Rv"); s.at = "Rv"; },
+          front: [["click [Specs]", 0.70, "next"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q new"]],
+          br: { url: "/oak-desk", title: "Reviews", e: "⭐" } },
+        { t: "Restart and replay four actions",
+          d: "To reach the scrolled product page again, naive search restarts from the home page and replays Tables, Desks, Oak Desk and the scroll, then clicks Specs. The warranty is 5 years.",
+          why: "WebOperator reopened the Oak Desk page by its URL and replayed only the scroll.",
+          tree: (s) => { s.replay = ["H", "Tb", "Dk", "Od", "Sc"]; s.run.add("Sp"); s.add("St", "Sp"); s.at = "Sp"; },
+          front: [["stop: “5 years”", 0.95, "next new"], ["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk · Specs", e: "📋" } },
+        { t: "Stop: the same answer, more work",
+          d: "The agent answers correctly: “The Oak Desk has a 5-year warranty.” On a read-only task nothing goes wrong, but every backtrack costs a replay from the home page.",
+          tree: (s) => { s.run.add("St"); s.at = "St"; },
+          front: [["search “oak desk”", 0.60, "q"], ["click [Walnut Desk]", 0.40, "q"], ["click [Next page]", 0.30, "q"]],
+          br: { url: "/oak-desk", title: "Oak Desk · Specs", e: "📋" } },
+      ],
+    },
     undo: {
       task: "Buy the Modern Chair and report the order number.",
       // "Order placed" is a confirmation shown on the checkout page, not a page of its own, so it is not a checkpoint.
@@ -1688,7 +1807,8 @@ function initHero() {
     for (let x = cont ? path.length - 1 : 0; x < path.length; x++) {
       const n = path[x], last = x === path.length - 1, a = last ? act : A[path[x + 1]];
       if (last && inProgress) break;
-      const br = x === lastCheck ? { url: st.br.url, chk: st.br.chk, cmp: st.br.cmp } : { url: st.br.url };
+      // every check shows its comparison; the step's own text describes the last one, earlier ones (on replayed hops) match
+      const br = x === lastCheck && st.br.chk ? { url: st.br.url, chk: st.br.chk, cmp: st.br.cmp } : { url: st.br.url, chk: `checked before ${a}`, cmp: [[name(n)], [name(n)], true] };
       if (n === bad) {
         out.push(mk(x, { ok: path.slice(0, x), bad: [n], br, cap: `Before ${a}: compare its target and surroundings with the snapshot of ${name(n)}. They differ.` })); // earlier hops keep their ✓
         // the tab is gone: no verdict, no reopened page, no replay left on the tree
@@ -1707,15 +1827,22 @@ function initHero() {
     return out;
   }
   const cur = () => { const ss = subSteps(k); return ss ? ss[Math.min(j, ss.length - 1)] : null; };
-  let scen = "undo", mode = "wo", k = 0, timer = null;
+  let scen = "browse", mode = "wo", k = 0, timer = null;
   const S = () => SCEN[scen];
   const steps = () => S()[mode];
   function fresh() {
-    return { nodes: [], edges: [], run: new Set(), wrong: new Set(), reopen: null, cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, live: false, at: null, noReturn: null, newRoot: null,
+    return { nodes: [], edges: [], run: new Set(), wrong: new Set(), reopen: null, cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, live: false, at: null, noReturn: null, newRoot: null, reps: {}, repsAt: null,
       add(id, parent, o = {}) { this.nodes.push(id); if (parent) this.edges.push({ a: parent, b: id, ...o }); } };
   }
   // Verdicts, replays, highlights and the live page belong to one step only.
-  const build = (n) => { const s = fresh(), harmed = new Set(); for (let i = 0; i <= n; i++) { s.ok.clear(); s.bad.clear(); s.replay = null; s.reopen = null; s.live = false; steps()[i].tree(s); dropRejected(s, i); if (mode === "naive") { s.wrong.forEach((n) => s.bad.add(n)); Object.keys(S().ISSUE || {}).forEach((n) => { if (harmed.has(n) && s.nodes.includes(n)) s.bad.add(n); }); s.bad.forEach((n) => (S().ISSUE || {})[n] && harmed.add(n)); } } return s; }; // naive harm stays marked
+  // How often each edge has been replayed (an irreversible one replayed means it ran again).
+  function countReplays(s) {
+    s.repsAt = s.replay ? s.replay.join() : null;
+    if (!s.replay) return;
+    s.reps = { ...s.reps };
+    for (let i = 0; i < s.replay.length - 1; i++) { const key = s.replay[i] + ">" + s.replay[i + 1]; s.reps[key] = (s.reps[key] || 0) + 1; }
+  }
+  const build = (n) => { const s = fresh(), harmed = new Set(); for (let i = 0; i <= n; i++) { s.ok.clear(); s.bad.clear(); s.replay = null; s.reopen = null; s.live = false; steps()[i].tree(s); dropRejected(s, i); countReplays(s); if (mode === "naive") { s.wrong.forEach((n) => s.bad.add(n)); Object.keys(S().ISSUE || {}).forEach((n) => { if (harmed.has(n) && s.nodes.includes(n)) s.bad.add(n); }); s.bad.forEach((n) => (S().ISSUE || {})[n] && harmed.add(n)); } } return s; }; // naive harm stays marked
   // A rejected backtrack also discards the action it was for: its proposal box fades out like other discarded pages.
   function dropRejected(s, i) {
     const n = rejectedAction(s, i);
@@ -1806,7 +1933,7 @@ function initHero() {
     if (kind === "list") a.forEach((t, i) => { el("rect", { x, y: y + i * 16, width: w, height: 13, rx: 3, class: "fld" }, g); txt(x + 4, y + i * 16 + 9.2, t, "tx", "font-size:7.5px"); });
     if (kind === "list" && b) txt(x + w, y - 6, b, "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:6.5px"); // a link at the top right, beside the title
     if (kind === "table") { for (let r = 0; r < 4; r++) for (let q = 0; q < 3; q++) el("rect", { x: x + q * (w / 3), y: y + r * 12, width: w / 3 - 3, height: 9, rx: 2, class: r ? "ln" : "im" }, g); txt(x + w, y - 6, "Sort ▾", "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:6.5px"); } // top right, beside the title
-    if (kind === "product") { pic(x, y, 40, a); txt(x + 46, y + 11, b, "tx", "font-weight:800;font-size:10px"); el("rect", { x: x + 46, y: y + 15, width: 40, height: 10, rx: 5, class: "ok" }, g); txt(x + 66, y + 22.4, "In stock", "otx"); btn(x + 46, y + 29, 52, c);  txt(x, y + 49, "★ 4.5 · Reviews ›", "tx", "fill:var(--accent);font-weight:600;font-size:7.5px"); }
+    if (kind === "product") { pic(x, y, 40, a); txt(x + 46, y + 11, b, "tx", "font-weight:800;font-size:10px"); el("rect", { x: x + 46, y: y + 15, width: 40, height: 10, rx: 5, class: "ok" }, g); txt(x + 66, y + 22.4, "In stock", "otx"); btn(x + 46, y + 29, 52, c);  txt(x, y + 49, "★ 4.5 · Reviews ›", "tx", "fill:var(--accent);font-weight:600;font-size:7.5px"); if (look[4]) txt(x + w, y + 49, look[4], "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:7.5px"); }
     if (kind === "checkout" && look[3]) { // the hero's cart/checkout: an item line, the total, the button
       el("rect", { x, y, width: w, height: 16, rx: 4, style: "fill:var(--surface);stroke:var(--line);stroke-width:1" }, g);
       txt(x + 4, y + 11, look[3], "em", "font-size:9px"); txt(x + 16, y + 10.5, "Modern Chair", "tx", "font-size:7px"); txt(x + w - 4, y + 10.5, a, "tx", "text-anchor:end;font-size:7px;font-weight:700");
@@ -1815,6 +1942,11 @@ function initHero() {
     } else if (kind === "checkout") { line(x, y + 2, w - 30); line(x, y + 10, w - 46); txt(x, y + 26, "Total", "tx"); txt(x + w, y + 26, a, "tx", "text-anchor:end;font-weight:800"); btn(x, y + 32, w, b, "var(--danger)"); }
     if (kind === "done") { txt(x + w / 2, y + 17, "✅", "em", "font-size:16px"); txt(x + w / 2, y + 29, a, "tx", "text-anchor:middle;font-weight:700"); }
     if (kind === "done" && b) { btn(x + w / 2 - 26, y + 35, 52, b[0]); if (b[1]) txt(x + w, y - 6, b[1], "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:6.5px"); } // Account: top right, beside the title // the hero's "My orders" button
+    if (kind === "details") {
+      txt(x, y + 6, "Description", "tx", "font-size:6.5px;font-weight:700"); line(x, y + 10, w); line(x, y + 17, w - 14); line(x, y + 24, w - 30);
+      el("rect", { x, y: y + 33, width: 54, height: 13, rx: 6.5, class: "fld" }, g); txt(x + 27, y + 42, "★ Reviews ›", "tx", "text-anchor:middle;font-size:6.5px;font-weight:700;fill:var(--accent)");
+      el("rect", { x: x + w - 44, y: y + 33, width: 44, height: 13, rx: 6.5, class: "fld" }, g); txt(x + w - 22, y + 42, "Specs ›", "tx", "text-anchor:middle;font-size:6.5px;font-weight:700;fill:var(--accent)");
+    }
     if (kind === "reviews") for (let i = 0; i < 3; i++) { txt(x, y + 8 + i * 15, "★★★★☆".slice(0, 5 - (i % 2)), "tx", "fill:#e0a100;font-size:8px"); line(x + 34, y + 4 + i * 15, w - 36); }
     if (kind === "reviews") txt(x + w, y + 49, "Next page ›", "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:7.5px");
     if (kind === "order" && look[5]) { // the hero's My Orders: an item line with its number and status
@@ -1841,6 +1973,7 @@ function initHero() {
   // The real action behind a readable one: click [Chairs] -> click('101')
   function apiOf(id) {
     const act = (S().ACT || {})[id] || "", bid = bids()[id], q = (/“(.*)”/.exec(act) || [])[1];
+    if (/^scroll/.test(act)) return "scroll(0, 400)";
     if (/^stop/.test(act)) return `stop("${q.length > 9 ? q.slice(0, 8) + "…" : q}")`;
     if (/^search/.test(act)) return `fill('${bid}', "${q.length > 6 ? q.slice(0, 5) + "…" : q}")`;
     if (/^select/.test(act)) return `select_option('${bid}', "${(/: (.*)\]/.exec(act) || [])[1]}")`;
@@ -1876,7 +2009,7 @@ function initHero() {
   // Small id tags on the page's clickable elements.
   function tagIds(svgEl, look, page, only) {
     const N = S().N, ACT = S().ACT || {};
-    lastState.edges.filter((e) => e.a === page && (!only || e.b === only) && ACT[e.b] && !/^stop/.test(ACT[e.b])).forEach((e) => {
+    lastState.edges.filter((e) => e.a === page && (!only || e.b === only) && ACT[e.b] && !/^(stop|scroll)/.test(ACT[e.b])).forEach((e) => {
       const [tx, ty] = tagAt(look, ACT[e.b]), b = bids()[e.b], g = el("g", { class: "bid" + (only ? " hot" : "") }, svgEl);
       el("rect", { x: tx - 7, y: ty - 3.5, width: 14, height: 7, rx: 2 }, g);
       el("text", { x: tx, y: ty + 1.9 }, g).textContent = b;
@@ -1916,16 +2049,39 @@ function initHero() {
     const headLg = el("marker", { id: "edge-head-lg", viewBox: "0 0 10 10", refX: 0, refY: 5, markerWidth: 15, markerHeight: 15, markerUnits: "userSpaceOnUse", orient: "auto" }, defs);
     el("path", { d: "M0 1L10 5L0 9z", style: "fill:context-stroke" }, headLg); // for the thick, highlighted edges
     const gE = el("g", {}, svg), gN = el("g", {}, svg), gO = el("g", {}, svg), gA = el("g", {}, svg); // gA: the agent icon, above everything
-    // Highlight the path from the root (or the new root) to the current page.
+    // Highlight the path from the root to the current page; past a new root it runs on through the discarded
+    // pages, which keep their low opacity.
     const path = [];
-    for (let a = s.at, e; a; a = a === s.newRoot ? null : (e = s.edges.find((x) => x.b === a)) && e.a) path.unshift(a);
+    for (let a = s.at, e; a && !path.includes(a); a = (e = s.edges.find((x) => x.b === a)) && e.a) path.unshift(a);
     const hl = new Set(); for (let i = 0; i < path.length - 1; i++) hl.add(path[i] + ">" + path[i + 1]);
     const isHl = (e) => hl.has(e.a + ">" + e.b);
-    for (const e of [...s.edges].sort((p, q) => isHl(p) - isHl(q))) { // highlighted edges on top of the others
+    // Times an edge's action has run: once, plus each replay through it (including one still in progress).
+    const runsOf = (a, b) => {
+      let n = 1 + (s.reps[a + ">" + b] || 0);
+      if (s.replay && s.replay.join() !== s.repsAt) { const i = s.replay.indexOf(a); if (i >= 0 && s.replay[i + 1] === b) n++; }
+      return n;
+    };
+    // Once the answer is given, only the path from the root to it stays in full: everything else is dimmed.
+    const finished = k === steps().length - 1 && (!cur() || cur().final) && /^stop/.test((S().ACT || {})[s.at] || "");
+    const top = (e) => isHl(e) || e.b === s.sel;
+    for (const e of [...s.edges].sort((p, q) => top(p) - top(q))) { // highlighted and selected edges on top of the others
       const key = e.a + ">" + e.b;
-      const cls = ["pg-edge", e.deferred && s.ghost.has(e.b) ? "deferred" : "", s.risky.has(key) ? "risky" : "", hl.has(key) ? "hl" : "", s.gone.has(e.a) || s.gone.has(e.b) ? "gone" : ""].join(" ");
+      const cls = ["pg-edge", e.deferred && s.ghost.has(e.b) ? "deferred" : "", s.risky.has(key) ? "risky" : "", hl.has(key) ? "hl" : "", s.sel === e.b ? "sel" : "", finished ? (hl.has(key) ? "" : "dim") : s.gone.has(e.a) || s.gone.has(e.b) ? "gone" : ""].join(" ");
+      // An irreversible action that ran again (a replay through it) is drawn twice, one line above and one below
+      // the edge's own line, with smaller heads so the two stay apart, and its count.
+      const runs = s.risky.has(key) ? runsOf(e.a, e.b) : 1;
+      if (runs > 1) {
+        const o = hl.has(key) ? 5 : 4, [x1] = N[e.a], [x2, y2] = N[e.b];
+        [-o, o].forEach((dy, i) => el("path", { d: edgePath(e.a, e.b, 9), transform: `translate(0 ${dy})`, class: cls + " pg-fade", ...(i ? { "data-b": e.b } : {}), "marker-end": "url(#edge-head)" }, gE));
+        el("text", { x: (x1 + x2) / 2, y: y2 - o - 9, class: "pg-note pg-pop", style: "fill:var(--danger);text-anchor:middle;font-size:11px;font-weight:800;paint-order:stroke;stroke:var(--surface);stroke-width:3px" }, gO).textContent = `×${runs}`;
+        continue;
+      }
       el("path", { d: edgePath(e.a, e.b, hl.has(key) ? 15 : 9), class: cls + (before.has(e.b) ? "" : " pg-fade"), "data-b": e.b, "marker-end": hl.has(key) ? "url(#edge-head-lg)" : "url(#edge-head)" }, gE);
     }
+    // The backtrack's destination: the page the selected action was proposed on, when the agent is elsewhere.
+    // A pad in the replay bands' colour sits behind it from the selection on, so the jump has a visible goal.
+    // (Drawn after the pages, once it is known which labels sit above and below it.)
+    const goal = s.sel && (s.edges.find((x) => x.b === s.sel) || {}).a, labelled = {};
     if (s.replay) { // a naive replay re-executes the stored path from the home page
       for (let i = 0; i < s.replay.length - 1; i++) gE.prepend(el("path", { d: edgePath(s.replay[i], s.replay[i + 1]), class: "pg-edge replay pg-fade" })); // under the edge itself
     }
@@ -1945,15 +2101,21 @@ function initHero() {
       // The last control point leans back towards the agent, so the line (and its head) lands at a slight angle
       // that follows the arc instead of turning straight down at the very end.
       const lean = dir * Math.min(36, Math.abs(ex - sx) * 0.22);
-      const d0 = `M${sx} ${sy} C${sx} ${top} ${ex - lean} ${top} ${ex} ${ey}`;
-      const mk = el("marker", { id: "jump-head", viewBox: "0 0 12 12", refX: 10.5, refY: 6, markerWidth: 13, markerHeight: 13, markerUnits: "userSpaceOnUse", orient: "auto" }, el("defs", {}, svg));
+      // The line stops where the arrowhead begins (pulled back along its final direction); the head, anchored at its
+      // base, reaches the box.
+      const tlx = ex - (ex - lean), tly = ey - top, tl = Math.hypot(tlx, tly) || 1, HL = 10 * 13 / 12;
+      const lx = ex - (tlx / tl) * HL, ly = ey - (tly / tl) * HL;
+      const d0 = `M${sx} ${sy} C${sx} ${top} ${ex - lean} ${top} ${lx} ${ly}`;
+      const mk = el("marker", { id: "jump-head", viewBox: "0 0 12 12", refX: 1, refY: 6, markerWidth: 13, markerHeight: 13, markerUnits: "userSpaceOnUse", orient: "auto" }, el("defs", {}, svg));
+      mk.setAttribute("overflow", "visible");
+      el("path", { d: "M1 1.2L11 6L1 10.8L3.6 6z", style: "fill:var(--surface);stroke:var(--surface);stroke-width:4;stroke-linejoin:round;opacity:.9" }, mk); // halo, as the line has
       el("path", { d: "M1 1.2L11 6L1 10.8L3.6 6z", style: "fill:var(--backtrack);stroke:var(--backtrack);stroke-width:0.8;stroke-linejoin:round" }, mk);
       const d = d0;
       el("path", { d, class: "pg-pop", style: "fill:none;stroke:var(--surface);stroke-width:6;stroke-linecap:round;opacity:.9" }, gO); // halo over the tree
-      el("path", { d, class: "pg-pop", "marker-end": "url(#jump-head)", style: "fill:none;stroke:var(--backtrack);stroke-width:2;stroke-linecap:round;stroke-dasharray:5 5" }, gO);
+      el("path", { d, class: "pg-pop", "marker-end": "url(#jump-head)", style: "fill:none;stroke:var(--backtrack);stroke-width:2;stroke-linecap:butt;stroke-dasharray:5 5" }, gO);
       // No label on the arc: the checkpoint itself reads "↩ reopened by URL".
     }
-    if (s.noReturn) {
+    if (s.noReturn && !finished) {
       // The line comes down from its label onto the new root.
       const [, b] = s.noReturn, [xr, yr] = N[b], st = "stroke:var(--danger);stroke-width:2.5;stroke-dasharray:8 6";
       el("line", { x1: xr, y1: 14, x2: xr, y2: yr - Hh / 2 - 6, style: st }, gE);
@@ -1967,10 +2129,10 @@ function initHero() {
     const gen = cs ? !!cs.expand : s.nodes.some((n) => !prevNodes.has(n) && !s.run.has(n) && !s.ghost.has(n)) && [...s.run].every((n) => prevS.run.has(n));
     for (const id of s.nodes) {
       const [x, y, label, v] = N[id];
-      const g = el("g", { class: "pg-node" + (s.gone.has(id) ? " gone" : "") + (before.has(id) ? "" : gen && !s.run.has(id) ? " pg-pop gen-late" : " pg-pop"), "data-id": id }, gN);
+      const g = el("g", { class: "pg-node" + (finished ? (path.includes(id) ? "" : " dim") : s.gone.has(id) ? " gone" : "") + (before.has(id) ? "" : gen && !s.run.has(id) ? " pg-pop gen-late" : " pg-pop"), "data-id": id }, gN);
       if (!before.has(id) && gen && !s.run.has(id) && fwd) busy(1100); // the proposals pop in after the agent icon
       if (!before.has(id) && gen && !s.run.has(id)) svg.querySelectorAll(`path[data-b="${id}"]`).forEach((p) => p.classList.add("gen-late"));
-      const stroke = s.sel === id ? "var(--select)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (path.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
+      const stroke = s.sel === id ? "var(--select)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id && !finished ? "var(--reroot)" : (path.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
       const ghost = s.ghost.has(id), cand = !s.run.has(id) && !ghost; // cand: proposed, not visited yet
       const dash = s.sel === id ? "stroke-dasharray:6 4;stroke-width:3;fill:color-mix(in srgb, var(--select) 8%, var(--surface));" : ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : cand && !stroke ? "stroke:var(--muted);stroke-dasharray:4 3;" : "";
       const wrong = s.wrong.has(id) && WRONG[id];
@@ -1983,16 +2145,21 @@ function initHero() {
         (LOOK[id][1] || []).forEach((t, i) => (el("text", { x, y: y + 4 + i * 13, class: "t", style: "text-anchor:middle;font-weight:600;font-size:10px" }, g).textContent = t));
       } else nodeBox(g, x, y, wrong ? wrong[0] : label, wrong ? wrong[1] : LOOK[id], boxStyle, false);
       let sub = v !== null && !s.run.has(id) ? v.toFixed(2) : ""; // an executed action's page no longer shows its score
-      if (id === "H" && !s.gone.has("H")) sub = "root";
-      if (s.newRoot === id) sub = "new root";
+      if (id === "H" && (finished || !s.gone.has("H"))) sub = "root";
+      if (s.newRoot === id && !finished) sub = "new root";
       if (ghost) sub = v !== null ? `⚠ deferred · ${v.toFixed(2)}` : "⚠ deferred";
       if (s.reopen === id) sub = "↩ reopened by URL";
       if (s.sel === id) sub = v !== null ? `▶ selected · ${v.toFixed(2)}` : "▶ selected";
       if (s.replay && s.replay[0] === id) sub = mode === "wo" ? `↩ by URL, replay ${s.replay.length - 1}` : s.replay.length > 1 ? `↩ restart, replay ${s.replay.length - 1}` : "↩ restart";
       if (sub) el("text", { x, y: y + Hh / 2 + 15, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : s.reopen === id || (s.replay && s.replay[0] === id) ? "fill:var(--backtrack);font-weight:700;font-family:Inter,sans-serif" : s.sel === id ? "fill:var(--select);font-weight:700;font-family:Inter,sans-serif" : "" }, g).textContent = sub;
       const issue = mode === "naive" && s.bad.has(id) && (S().ISSUE || {})[id];
+      labelled[id] = { below: !!sub, above: !!issue || (s.cp.has(id) && !s.gone.has(id)) };
       if (issue) issue.split(": ").forEach((line, n, all) => (el("text", { x, y: y - Hh / 2 - 14 - (all.length - 1 - n) * 13, class: "pg-note pg-pop issue", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, g).textContent = n < all.length - 1 ? line + ":" : line)); // one line per part, centred above the card
-      if (!issue && s.cp.has(id) && !s.gone.has(id)) el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
+      if (!issue && s.cp.has(id) && !s.gone.has(id)) {
+        el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
+        const u = urlOf(id); // the checkpoint's URL, the address a backtrack reopens; long ones are cut short
+        el("text", { x: x - W / 2 + 15, y: y - Hh / 2 - 6.5, class: "pg-note", style: "fill:var(--backtrack);font:500 9.5px 'JetBrains Mono',monospace" }, g).textContent = u.length > 18 ? u.slice(0, 17) + "…" : u;
+      }
       if (mode === "wo" && backtracking && s.at === id) { // the original tab stays on this page until the backtrack ends
         el("rect", { x: x - W / 2 - 5, y: y - Hh / 2 - 5, width: W + 10, height: Hh + 10, rx: 10, class: "pg-pop", style: "fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:4 4" }, gA);
         el("text", { x, y: y - Hh / 2 - 10, class: "pg-note pg-pop", style: "fill:var(--accent);text-anchor:middle;font-size:11px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, gA).textContent = "original tab";
@@ -2014,6 +2181,11 @@ function initHero() {
       if (cx !== x) el("path", { d: `M${x + W / 2} ${y + 12} C${x + W / 2 + 16} ${y + 12} ${cx - W / 2 - 18} ${cy - Hh / 2 + 16} ${cx - W / 2} ${cy - Hh / 2 + 16}`, style: "fill:none;stroke:var(--danger);stroke-width:1.6;stroke-dasharray:2 4" }, g);
       el("text", { x, y: y - Hh / 2 - 8, class: "pg-note", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px" }, g).textContent = `⚠ ${live.title}, live now`;
       drawLive(g, x, y, s);
+    }
+    if (goal && goal !== s.at && N[goal] && !finished) {
+      // the pad takes in the labels above (checkpoint URL, issue) and below (score, "reopened by URL") only if they exist
+      const [gx, gy] = N[goal], lb = labelled[goal] || {}, top = lb.above ? 24 : 9, bottom = lb.below ? 24 : 9;
+      gE.prepend(el("rect", { x: gx - W / 2 - 10, y: gy - Hh / 2 - top, width: W + 20, height: Hh + top + bottom, rx: 14, class: "bt-goal pg-fade" }));
     }
     // Pop in only what is new: anything that was already shown in the previous step stays still.
     const sig = (e) => e.tagName + "|" + ["x", "y", "cx", "cy", "d", "class"].map((a) => e.getAttribute(a)).join("|") + "|" + (e.tagName === "g" ? e.textContent : e.textContent || "");
@@ -2080,19 +2252,20 @@ function initHero() {
     if (kind === "tiles") { const tw = 98 / 3, i = Array.isArray(a) ? Math.max(0, a.findIndex((t) => name.includes(t[1].toLowerCase()))) : 1; return [6 + i * (tw + 4) + tw / 2, 29 + tw / 2]; }
     if (kind === "table") return [104, 21];
     if (kind === "done" && look[2]) return /account/.test(name) ? [100, 21] : [59, 70];
-    if (kind === "product") return /review/i.test(act) ? [26, 76] : [78, 64]; // the "Reviews ›" link under the image, else Buy now
+    if (kind === "product") return /review/i.test(act) ? [26, 76] : /specs/i.test(act) ? [100, 76] : [78, 64]; // the "Reviews ›" link under the image, else Buy now
     if (kind === "reviews") return [100, 76]; // "Next page ›"
+    if (kind === "details") return /review/i.test(act) ? [33, 68.5] : [90, 68.5];
     if (kind === "pick") return [86, 65];
     if (kind === "checkout") return [59, 67];
     if (kind === "order") return [59, 71];
     return [59, 50];
   }
   // A cursor glides to the target, clicks (a ripple), then the next page replaces this one.
-  function animateClick(svgEl, look, act, done) {
+  function animateClick(svgEl, look, act, done, toPage) {
     // a search clicks into the field, then types its query before the results load
     const query = /^search/.test(act) ? (/“(.*)”/.exec(act) || [])[1] || "" : "", field = query && svgEl.querySelector(".sq");
     busy(1100 + (field ? query.length * 55 + 350 : 0));
-    const [tx, ty] = clickTarget(look, act), g = el("g", { class: "cursor" }, svgEl);
+    const [tx, ty] = /^scroll/.test(act) ? [98, 37] : clickTarget(look, act), g = el("g", { class: "cursor" }, svgEl); // a scroll: in the empty space beside the price, away from buttons
     el("path", { d: "M0 0L0 9.5L2.6 7.2L4.4 11L6 10.3L4.2 6.6L7.6 6.4Z", style: "fill:#111;stroke:#fff;stroke-width:0.8;stroke-linejoin:round" }, g);
     const sx = W - 14, sy = 80, t0 = performance.now(), dur = 650;
     const ease = (u) => (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
@@ -2100,6 +2273,34 @@ function initHero() {
       const u = Math.min(1, (now - t0) / dur), e = ease(u);
       g.setAttribute("transform", `translate(${sx + (tx - sx) * e} ${sy + (ty - sy) * e})`);
       if (u < 1) return requestAnimationFrame(frame);
+      if (/^scroll/.test(act)) { // a scroll: the content slides up under the fixed shop header
+        const pg = svgEl.matches(".pv-page") ? svgEl : svgEl.querySelector(".pv-page");
+        if (!pg) return setTimeout(done, 120);
+        const head = [...pg.children].slice(0, 3), body = [...pg.children].slice(3), D = 70; // header: bar, brand, cart
+        const strip = el("g", { class: "scroll-strip" }, pg);
+        body.forEach((n) => strip.appendChild(n));
+        if (toPage) { // the scrolled-to content follows from below and ends exactly where the next page has it
+          const next = el("g", { transform: `translate(0 ${D})` }, strip);
+          [...toPage.querySelector(".pv-page").children].slice(3).forEach((n) => next.appendChild(n.cloneNode(true)));
+        }
+        head.forEach((n) => pg.appendChild(n)); // the header stays on top
+        // chevrons roll down beside the cursor while the page scrolls
+        const marks = [0, 1, 2].map((i) => el("text", { x: tx + 9, y: ty - 2 + i * 6, class: "click-ring", style: "font:700 8px Inter,sans-serif;fill:var(--accent);opacity:0" }, svgEl));
+        marks.forEach((m) => (m.textContent = "⌄"));
+        svgEl.appendChild(g);
+        const s0 = performance.now();
+        return (function roll(n) {
+          const v = Math.min(1, (n - s0) / 700), e = ease(v);
+          strip.setAttribute("transform", `translate(0 ${-D * e})`);
+          marks.forEach((m, i) => (m.style.opacity = Math.max(0, Math.sin(Math.PI * Math.min(1, Math.max(0, v * 1.6 - i * 0.25))))));
+          if (v < 1) return requestAnimationFrame(roll);
+          setTimeout(() => {
+            done();
+            // the tree's page goes back to its own content once the new page has loaded
+            if (pg === svgEl) setTimeout(() => { body.forEach((n) => pg.insertBefore(n, head[0])); strip.remove(); }, 250);
+          }, 150);
+        })(s0);
+      }
       const ring = el("circle", { cx: tx, cy: ty, r: 1, class: "click-ring", style: "fill:none;stroke:var(--accent);stroke-width:1.2" }, svgEl);
       svgEl.appendChild(g);
       const r0 = performance.now();
@@ -2207,8 +2408,8 @@ function initHero() {
         omni.textContent = "acme-shop" + urlOf(parent);
         // the same click on the parent's page in the tree; its cursor goes away once the new page has loaded
         const treePage = svg.querySelector(`.pg-node[data-id="${parent}"] .pv-page`);
-        if (treePage) animateClick(treePage, LOOK[parent], act, () => treePage.querySelectorAll(".cursor, .click-ring").forEach((n) => n.remove()));
-        animateClick(from, LOOK[parent], act, () => { if (token !== animToken) return; from.replaceWith(newPage); if (tt) tt.textContent = newTitle; omni.textContent = "acme-shop" + urlOf(id); doneLoading(id); });
+        if (treePage) animateClick(treePage, LOOK[parent], act, () => treePage.querySelectorAll(".cursor, .click-ring").forEach((n) => n.remove()), newPage);
+        animateClick(from, LOOK[parent], act, () => { if (token !== animToken) return; from.replaceWith(newPage); if (tt) tt.textContent = newTitle; omni.textContent = "acme-shop" + urlOf(id); doneLoading(id); }, newPage);
       }
       shownBefore = id;
     }
