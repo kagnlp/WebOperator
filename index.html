@@ -170,7 +170,11 @@
     .shop-h .cart { font-size: 12px; color: #48505c; font-weight: 600; }
     .pg { padding: 12px 14px; }
     .pg h4 { margin: 0 0 8px; font-size: 15px; }
+    .pg h4 + .srow { margin-top: 18px; }
     .pg .sub { font-size: 11.5px; color: #6b7480; margin: -4px 0 10px; }
+    .srow { display: flex; gap: 8px; margin-bottom: 22px; } /* room for the score chips above the tiles */
+    .srow .sfield { flex: 1; min-width: 0; padding: 6px 10px; border: 1px solid #d5dae1; border-radius: 999px; font-size: 12px; color: #6b7480; background: #fff; }
+    .srow .obtn { padding: 6px 12px; border: 1.5px solid #2a78d6; border-radius: 999px; font-size: 12px; font-weight: 700; color: #2a78d6; background: #eaf2fc; white-space: nowrap; }
     .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .tile { background: #fff; border: 1px solid #e4e7ec; border-radius: 10px; padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 600; }
     .tile .e { display: block; font-size: 26px; line-height: 1.2; margin-bottom: 4px; }
@@ -300,7 +304,6 @@
     #pg-check { min-height: 188px; } /* the height of a real comparison */
     #pg-check.empty { display: grid; place-items: center; background: transparent; border: 1.5px dashed color-mix(in srgb, var(--muted) 55%, transparent); }
     #pg-check .chk-empty { font: 500 12px/1.5 "Inter", sans-serif; color: var(--muted); text-align: center; padding: 0 18px; }
-    .play.naive #pg-check-sec { display: none; }
     .rail .ph.on[data-ph="explore"] { background: var(--explore); }
     .rail .ph.on[data-ph="defer"] { background: var(--reroot); }
     .rail .ph.on[data-ph="backtrack"] { background: var(--backtrack); }
@@ -328,7 +331,7 @@
     .pg-task b { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--accent); padding: 3px 7px; border-radius: 5px; }
     .pg-cap { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 10px; }
     .pg-cap span { text-transform: none; letter-spacing: 0; font: 500 11.5px "Inter", sans-serif; }
-    .pg-side { border-right: 1px solid var(--line); background: var(--surface-2); padding: 12px 14px; display: grid; gap: 12px; align-content: start; }
+    .pg-side { border-right: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 9%, var(--surface-2)); padding: 12px 14px; display: grid; gap: 12px; align-content: start; }
     .side-h { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 6px; }
     .side-h span { text-transform: none; letter-spacing: 0; font: 500 11px "Inter", sans-serif; color: var(--muted); margin-left: 4px; }
     .side-h.warn { color: var(--reroot); }
@@ -354,10 +357,16 @@
     .fi.def .note { color: var(--reroot); }
     .fi.gone .note { color: var(--danger); }
     .mini-br { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); font-size: 12px; }
+    #pg-br { box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--text) 30%, transparent), 0 1px 3px color-mix(in srgb, var(--text) 12%, transparent); }
     .mini-br .u { display: flex; align-items: center; gap: 5px; padding: 5px 8px; background: var(--surface-2); border-bottom: 1px solid var(--line); font: 500 10.5px "JetBrains Mono", monospace; color: var(--muted); }
     .mini-br .u i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
     .mini-br .b { padding: 8px 10px; display: grid; gap: 6px; }
     .mini-br svg.pv { display: block; width: 100%; height: auto; padding: 0; box-sizing: border-box; }
+    #pg .pg-node.loading-node .verdict, #pg .pg-node.loading-node .issue { visibility: hidden; }
+    #pg .pg-node.loading-node rect.page { stroke: var(--accent) !important; }
+    #pg .agent-out { transform-box: fill-box; transform-origin: center; animation: agentout .35s ease-in forwards; }
+    #pg .agent-out .pg-pop { animation: none; }
+    @keyframes agentout { to { transform: scale(0); opacity: 0; } }
     #pg .loading .spin { transform-box: fill-box; transform-origin: center; animation: pgspin .8s linear infinite; }
     @keyframes pgspin { to { transform: rotate(360deg); } }
     .mini-br .omni.typing::after { content: ""; display: inline-block; width: 1px; height: 11px; margin-left: 1px; background: var(--text); vertical-align: -1px; animation: blink .6s steps(1) infinite; }
@@ -366,8 +375,9 @@
     .tabs-strip { display: flex; align-items: flex-end; gap: 2px; padding: 6px 6px 0; background: var(--surface-2); }
     .tabs-strip .dots { display: flex; gap: 5px; align-self: center; padding: 0 6px 4px 2px; }
     .tabs-strip .dots i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .btab { flex: 0 1 112px; min-width: 0; display: flex; flex-direction: column; padding: 5px 10px 4px; border-radius: 8px 8px 0 0; font: 600 10.5px "Inter", sans-serif; color: var(--muted); background: transparent; white-space: nowrap; overflow: hidden; }
-    .btab .tt { overflow: hidden; text-overflow: ellipsis; }
+    .btab { flex: 0 1 112px; min-width: 0; display: flex; align-items: center; gap: 6px; padding: 5px 7px 4px 10px; border-radius: 8px 8px 0 0; font: 600 10.5px "Inter", sans-serif; color: var(--muted); background: transparent; white-space: nowrap; overflow: hidden; }
+    .btab .tt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .btab .x { flex: none; font: 400 12px/1 "Inter", sans-serif; color: var(--muted); opacity: .8; }
     .mini-br .toolbar { display: flex; align-items: center; gap: 8px; padding: 5px 8px; background: var(--surface); border-bottom: 1px solid var(--line); }
     .mini-br .toolbar .nav { font: 600 12px "Inter", sans-serif; color: var(--muted); letter-spacing: 3px; white-space: nowrap; }
     .mini-br .toolbar .omni { flex: 1; min-width: 0; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); font: 500 10.5px "JetBrains Mono", monospace; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -423,10 +433,11 @@
     .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
     .lg-box { width: 16px; height: 11px; border-radius: 3px; display: inline-block; border: 1.5px solid; }
     .lg-line { width: 18px; height: 0; border-top: 2px solid; display: inline-block; }
-    .pg-edge { stroke: var(--muted); stroke-width: 1.6; fill: none; transition: opacity .4s; }
+    .pg-edge { stroke: var(--muted); stroke-width: 1.6; fill: none; stroke-linejoin: round; transition: opacity .4s; }
     .pg-edge.risky { stroke: var(--danger); stroke-width: 2; }
     .pg-edge.deferred { stroke: var(--reroot); stroke-dasharray: 5 4; stroke-width: 2; }
     .pg-edge.hl { stroke: var(--explore); stroke-width: 4; opacity: .9; }
+    .pg-edge.hl.risky { stroke: var(--danger); } /* an irreversible action stays red on the path */
     .pg-edge.replay { stroke: var(--backtrack); stroke-width: 16; stroke-linecap: round; stroke-opacity: .28; fill: none; } /* a wide band under the replayed edges */
     .pg-edge.gone, .pg-node.gone { opacity: .3; }
     .pg-node { transition: opacity .4s; }
@@ -1031,8 +1042,9 @@ function initTheme() {
 /* hero: a small shop website that the agent drives */
 const SHOP = {
   home: () => `<div class="shop-h"><span class="lg">◆</span> Acme Shop<span class="sp"></span><span class="cart">🛒 0</span></div>
-    <div class="pg"><h4>Welcome to Acme Shop</h4><div class="sub">Furniture for every room</div>
-    <div class="tiles"><div class="tile" data-t="chairs"><span class="e">🪑</span>Chairs</div><div class="tile" data-t="cats"><span class="e">🗂️</span>Categories</div><div class="tile" data-t="search"><span class="e">🔍</span>Search</div></div></div>`,
+    <div class="pg"><h4>Welcome to Acme Shop</h4>
+    <div class="srow"><span class="sfield" data-t="search">🔍 Search…</span><span class="obtn" data-t="cats">Categories</span></div>
+    <div class="tiles"><div class="tile" data-t="chairs"><span class="e">🪑</span>Chairs</div><div class="tile"><span class="e">🪵</span>Tables</div><div class="tile"><span class="e">💡</span>Lamps</div></div></div>`,
   chairs: () => `<div class="shop-h"><span class="lg">◆</span> Acme Shop<span class="sp"></span><span class="cart">🛒 0</span></div>
     <div class="pg"><h4>Chairs</h4><div class="pcards">
       <div class="pcard" data-t="modern"><div class="im">🪑</div><b>Modern Chair</b><span class="pr">$129.00</span></div>
@@ -1185,7 +1197,7 @@ function initHero() {
   const svg = $("#pg");
   const W = 118, Hh = 84;
   // seven evenly spaced columns, so every connector has room to curve
-  const X = [72, 222, 372, 522, 672, 852, 1008];
+  const X = [72, 228, 384, 540, 696, 852, 1008]; // evenly spaced levels
   const Y = [62, 204, 346]; // three rows, room for the score and the agent icon between them
 
   /* Three short scenarios, each played by WebOperator and by naive tree search.
@@ -1233,41 +1245,41 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Snapshot saved · ⚑ checkpoint: its own URL, unchanged after a refresh" } },
         { ph: "explore", t: "Explore: the best action, wherever it is",
           d: "Chairs scores highest. Its page adds three more candidates. Every page reached is saved as a snapshot.",
-          tree: (s) => { s.run.add("Ch"); s.cp.add("Ch"); ["Lo", "Mo"].forEach((k) => s.add(k, "Ch")); s.hl = ["H", "Ch"]; s.at = "Ch"; },
+          tree: (s) => { s.run.add("Ch"); s.cp.add("Ch"); ["Lo", "Mo"].forEach((k) => s.add(k, "Ch")); s.at = "Ch"; },
           front: [["click [Modern Chair]", 0.80, "next new"], ["click [Lounge Chair]", 0.60, "q new"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/chairs", title: "Chairs", e: "🪑" } },
         { ph: "explore", t: "Deeper: the Modern Chair",
           d: "The Modern Chair page adds its own candidates. The frontier now holds actions from three different pages.",
-          tree: (s) => { s.run.add("Mo"); s.cp.add("Mo"); ["Ck", "Rv"].forEach((k) => s.add(k, "Mo")); s.hl = ["H", "Ch", "Mo"]; s.at = "Mo"; },
+          tree: (s) => { s.run.add("Mo"); s.cp.add("Mo"); ["Ck", "Rv"].forEach((k) => s.add(k, "Mo")); s.at = "Mo"; },
           front: [["click [Buy now]", 0.84, "next new"], ["click [Reviews]", 0.62, "q new"], ["click [Lounge Chair]", 0.60, "q"], ["click [Categories]", 0.55, "q"]],
           br: { url: "/chairs/modern", title: "Modern Chair · $129", e: "🪑" } },
         { ph: "defer", t: "Defer: the best action may not be undoable",
           d: "Buy now opens Checkout. Its candidate “Place order” scores highest of all (0.90), but the agent predicts it may change the site for good, so it is deferred. The best reversible action is Reviews, back on the Modern Chair page.",
           why: "Running it now could invalidate every other branch before it is explored.",
-          tree: (s) => { s.run.add("Ck"); s.cp.add("Ck"); s.add("P", "Ck", { deferred: true }); s.ghost.add("P"); s.hl = ["H", "Ch", "Mo", "Ck"]; s.at = "Ck"; },
+          tree: (s) => { s.run.add("Ck"); s.cp.add("Ck"); s.add("P", "Ck", { deferred: true }); s.ghost.add("P"); s.at = "Ck"; },
           front: [["click [Reviews]", 0.62, "next"], ["click [Lounge Chair]", 0.60, "q"], ["click [Categories]", 0.55, "q"]],
           def: [["click [Place order]", 0.90, "def new", "may change the site for good"]],
           br: { url: "/checkout", title: "Checkout · $129", e: "🧾", badge: ["warn", "⚠ Place order may be irreversible"] } },
         { ph: "backtrack", t: "Backtrack 1: one level up",
           d: "A parallel tab reopens the Modern Chair page by its URL, checks the Reviews link against the snapshot, and clicks it. The new tab then replaces the old one. The reviews do not help with the task.",
           why: "The original tab stays on Checkout until the new one is confirmed.",
-          tree: (s) => { s.reopen = "Mo"; s.ok.add("Mo"); s.run.add("Rv"); s.add("Np", "Rv"); s.hl = ["Mo", "Rv"]; s.at = "Rv"; },
+          tree: (s) => { s.reopen = "Mo"; s.ok.add("Mo"); s.run.add("Rv"); s.add("Np", "Rv"); s.at = "Rv"; },
           front: [["click [Lounge Chair]", 0.60, "next"], ["click [Categories]", 0.55, "q"], ["click [Next page]", 0.20, "q new"]], def: [["click [Place order]", 0.90, "def"]],
           br: { url: "/chairs/modern/reviews", title: "Reviews", e: "⭐", chk: "checked before click [Reviews]", cmp: [["Reviews · Specs · Buy now"], ["Reviews · Specs · Buy now"], true] } },
         { ph: "backtrack", t: "Backtrack 2: a different branch",
           d: "Lounge Chair was proposed on the Chairs page, in another branch. A parallel tab reopens Chairs, checks the link, and opens the Lounge Chair: not the chair the task asks for.",
-          tree: (s) => { s.reopen = "Ch"; s.ok.add("Ch"); s.run.add("Lo"); s.cp.add("Lo"); s.add("Lr", "Lo"); s.hl = ["Ch", "Lo"]; s.at = "Lo"; },
+          tree: (s) => { s.reopen = "Ch"; s.ok.add("Ch"); s.run.add("Lo"); s.cp.add("Lo"); s.add("Lr", "Lo"); s.at = "Lo"; },
           front: [["click [Categories]", 0.55, "next"], ["click [Next page]", 0.20, "q"], ["click [Lounge reviews]", 0.15, "q new"]], def: [["click [Place order]", 0.90, "def"]],
           br: { url: "/chairs/lounge", title: "Lounge Chair · $149", e: "🛋️", chk: "checked before click [Lounge Chair]", cmp: [["Lounge Chair · $149"], ["Lounge Chair · $149"], true] } },
         { ph: "backtrack", t: "Backtrack 3: all the way to the root",
           d: "Categories was proposed on the home page. A parallel tab reopens it, checks the link, and opens Categories. It lists rooms, not chairs: another dead end.",
-          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Ca"); s.cp.add("Ca"); s.add("Of", "Ca"); s.hl = ["H", "Ca"]; s.at = "Ca"; },
+          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Ca"); s.cp.add("Ca"); s.add("Of", "Ca"); s.at = "Ca"; },
           front: [["click [Next page]", 0.20, "q"], ["click [Tables]", 0.18, "q new"], ["click [Lounge reviews]", 0.15, "q"]], def: [["click [Place order]", 0.90, "def"]],
           br: { url: "/categories", title: "Categories", e: "🗂️", chk: "checked before click [Categories]", cmp: [["Chairs · Categories · Search"], ["Chairs · Categories · Search"], true] } },
         { ph: "defer", t: "The deferred action runs last",
           d: "Every reversible option left scores far below “Place order”, so it is selected. A parallel tab reopens Checkout, checks the button against its snapshot, and places the order.",
           why: "Deferral postpones a risky action until exploring further is no longer worth it; it does not forbid it.",
-          tree: (s) => { s.reopen = "Ck"; s.ok.add("Ck"); s.ghost.delete("P"); s.run.add("P"); s.risky.add("Ck>P"); s.hl = ["Ck", "P"]; s.at = "P"; },
+          tree: (s) => { s.reopen = "Ck"; s.ok.add("Ck"); s.ghost.delete("P"); s.run.add("P"); s.risky.add("Ck>P"); s.at = "P"; },
           front: [["click [Next page]", 0.20, "q"], ["click [Tables]", 0.18, "q"], ["click [Lounge reviews]", 0.15, "q"]], def: [["click [Place order]", 0.90, "next", "executed"]],
           br: { url: "/order/AC123456", title: "Order #AC123456 placed", e: "✅", chk: "checked before click [Place order]", cmp: [["Total $129 · Place order"], ["Total $129 · Place order"], true] } },
         { ph: "reroot", t: "Persistent change: discard the old tree",
@@ -1283,12 +1295,12 @@ function initHero() {
           br: { url: "/order/AC123456", title: "Order #AC123456 placed", e: "✅" } },
         { ph: "explore", t: "Find the order number",
           d: "My orders shows the new order with its number, so the agent proposes to stop and report it.",
-          tree: (s) => { s.run.add("R1"); s.cp.add("R1"); s.add("St", "R1"); s.hl = ["P", "R1"]; s.at = "R1"; },
+          tree: (s) => { s.run.add("R1"); s.cp.add("R1"); s.add("St", "R1"); s.at = "R1"; },
           front: [["stop: “AC123456”", 0.95, "next new"], ["click [Account]", 0.40, "q"]],
           br: { url: "/orders", title: "My Orders", e: "📦" } },
         { ph: "explore", t: "Stop: report the order number",
           d: "The stop action scores highest, so the search ends and the agent answers: “Your order number is AC123456.”",
-          tree: (s) => { s.run.add("St"); s.hl = ["R1", "St"]; s.at = "St"; },
+          tree: (s) => { s.run.add("St"); s.at = "St"; },
           front: [["click [Account]", 0.40, "q"]],
           br: { url: "/orders", title: "My Orders", e: "📦" } },
       ],
@@ -1300,33 +1312,33 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬" } },
         { t: "Chairs: the highest score",
           d: "Chairs scores highest, so it runs. Its page proposes two more actions.",
-          tree: (s) => { s.run.add("Ch"); ["Lo", "Mo"].forEach((k) => s.add(k, "Ch")); s.hl = ["H", "Ch"]; s.at = "Ch"; },
+          tree: (s) => { s.run.add("Ch"); ["Lo", "Mo"].forEach((k) => s.add(k, "Ch")); s.at = "Ch"; },
           front: [["click [Modern Chair]", 0.80, "next new"], ["click [Lounge Chair]", 0.60, "q new"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/chairs", title: "Chairs", e: "🪑" } },
         { t: "Modern Chair",
           d: "Modern Chair scores highest next. Its page proposes Buy now and Reviews.",
-          tree: (s) => { s.run.add("Mo"); ["Ck", "Rv"].forEach((k) => s.add(k, "Mo")); s.hl = ["Ch", "Mo"]; s.at = "Mo"; },
+          tree: (s) => { s.run.add("Mo"); ["Ck", "Rv"].forEach((k) => s.add(k, "Mo")); s.at = "Mo"; },
           front: [["click [Buy now]", 0.84, "next new"], ["click [Reviews]", 0.62, "q new"], ["click [Lounge Chair]", 0.60, "q"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/chairs/modern", title: "Modern Chair", e: "🪑" } },
         { t: "Checkout",
           d: "Buy now opens Checkout. Its “Place order” scores 0.90, the highest in the frontier, and naive search does not treat it differently from any other action.",
-          tree: (s) => { s.run.add("Ck"); s.add("P", "Ck"); s.hl = ["Mo", "Ck"]; s.at = "Ck"; },
+          tree: (s) => { s.run.add("Ck"); s.add("P", "Ck"); s.at = "Ck"; },
           front: [["click [Place order]", 0.90, "next new"], ["click [Reviews]", 0.62, "q"], ["click [Lounge Chair]", 0.60, "q"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/checkout", title: "Checkout · $129", e: "🧾" } },
         { t: "Highest score first: the order is placed at once",
           d: "“Place order” runs immediately. The order is real, but the search does not notice: the other branches stay in the frontier, and My orders (0.58) ranks below Reviews and Lounge Chair.",
           why: "WebOperator would have deferred it and explored the reversible options first.",
-          tree: (s) => { s.run.add("P"); s.risky.add("Ck>P"); s.add("R1", "P"); s.hl = ["Ck", "P"]; s.at = "P"; },
+          tree: (s) => { s.run.add("P"); s.risky.add("Ck>P"); s.add("R1", "P"); s.at = "P"; },
           front: [["click [Reviews]", 0.62, "next"], ["click [Lounge Chair]", 0.60, "q"], ["click [My orders]", 0.58, "q new"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/order/AC123456", title: "Order #AC123456 placed", e: "✅" } },
         { t: "Backtrack: restart and replay, in the main tab",
           d: "Reviews was proposed on the Modern Chair page. Naive search reopens the home page and replays Chairs and Modern Chair in the main tab, then clicks Reviews. Nothing is checked along the way.",
-          tree: (s) => { s.replay = ["H", "Ch", "Mo"]; s.run.add("Rv"); s.add("Np", "Rv"); s.hl = ["Mo", "Rv"]; s.at = "Rv"; },
+          tree: (s) => { s.replay = ["H", "Ch", "Mo"]; s.run.add("Rv"); s.add("Np", "Rv"); s.at = "Rv"; },
           front: [["click [Lounge Chair]", 0.60, "next"], ["click [My orders]", 0.58, "q"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"], ["click [Next page]", 0.20, "q new"]],
           br: { url: "/chairs/modern/reviews", title: "Reviews", e: "⭐" } },
         { t: "Another restart for another branch",
           d: "Lounge Chair was proposed on the Chairs page: restart, replay Chairs, click Lounge Chair.",
-          tree: (s) => { s.replay = ["H", "Ch"]; s.run.add("Lo"); s.add("Lr", "Lo"); s.hl = ["Ch", "Lo"]; s.at = "Lo"; },
+          tree: (s) => { s.replay = ["H", "Ch"]; s.run.add("Lo"); s.add("Lr", "Lo"); s.at = "Lo"; },
           front: [["click [My orders]", 0.58, "next"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"], ["click [Next page]", 0.20, "q"], ["click [Lounge reviews]", 0.15, "q new"]],
           br: { url: "/chairs/lounge", title: "Lounge Chair", e: "🛋️" } },
         { t: "Replaying the path places a second order",
@@ -1337,12 +1349,12 @@ function initHero() {
           br: { url: "/order/AC123457", title: "Order #AC123457 placed", e: "⚠️", badge: ["out", "duplicate order: charged twice"] } },
         { t: "My orders: two orders",
           d: "My orders now lists two orders for the same chair. The agent proposes to stop and report the order number.",
-          tree: (s) => { s.run.add("R1"); s.wrong.add("R1"); s.bad.add("R1"); s.add("St", "R1"); s.hl = ["P", "R1"]; s.at = "R1"; },
+          tree: (s) => { s.run.add("R1"); s.wrong.add("R1"); s.bad.add("R1"); s.add("St", "R1"); s.at = "R1"; },
           front: [["stop: “AC123456”", 0.95, "next new"], ["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"], ["click [Next page]", 0.20, "q"], ["click [Lounge reviews]", 0.15, "q"]],
           br: { url: "/orders", title: "My Orders", e: "📦" } },
         { t: "Stop: same answer, twice the cost",
           d: "The agent reports the order number, but the user has been charged twice. WebOperator, on the same story, placed one order and never replayed it.",
-          tree: (s) => { s.run.add("St"); s.bad.add("R1"); s.bad.add("St"); s.hl = ["R1", "St"]; s.at = "St"; },
+          tree: (s) => { s.run.add("St"); s.bad.add("R1"); s.bad.add("St"); s.at = "St"; },
           front: [["click [Categories]", 0.55, "q"], ["search “modern chair”", 0.50, "q"]],
           br: { url: "/orders", title: "My Orders", e: "📦" } },
       ],
@@ -1379,12 +1391,12 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Snapshot saved · ⚑ checkpoint" } },
         { ph: "explore", t: "The Chairs page: three candidates",
           d: "Chairs lists three items; the Lounge Chair is the second. The reward model slightly prefers a comparison page (0.70) to the Lounge Chair itself (0.66). Scores are imperfect, which is why the search keeps alternatives.",
-          tree: (s) => { s.run.add("Ch"); s.cp.add("Ch"); ["Cm", "Lo"].forEach((k) => s.add(k, "Ch")); s.hl = ["H", "Ch"]; s.at = "Ch"; },
+          tree: (s) => { s.run.add("Ch"); s.cp.add("Ch"); ["Cm", "Lo"].forEach((k) => s.add(k, "Ch")); s.at = "Ch"; },
           front: [["click [Compare chairs]", 0.70, "next new"], ["click [Lounge Chair]", 0.66, "q new"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"]],
           br: { url: "/chairs", title: "Chairs", e: "🪑", msg: "Modern Chair · Lounge Chair · Lounge Chair XL" } },
         { ph: "explore", t: "A detour that does not help",
           d: "The comparison table does not help with the task, and its own candidates score low. The best action is now the Lounge Chair, back on the Chairs page.",
-          tree: (s) => { s.run.add("Cm"); s.cp.add("Cm"); s.add("Ts", "Cm"); s.hl = ["Ch", "Cm"]; s.at = "Cm"; },
+          tree: (s) => { s.run.add("Cm"); s.cp.add("Cm"); s.add("Ts", "Cm"); s.at = "Cm"; },
           front: [["click [Lounge Chair]", 0.66, "next"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"], ["sort the table", 0.20, "q new"]],
           br: { url: "/chairs/compare", title: "Compare chairs", e: "📊" } },
         { ph: "validate", t: "Meanwhile, another shopper buys the last Lounge Chair",
@@ -1400,12 +1412,12 @@ function initHero() {
           br: { url: "/chairs", title: "Parallel tab: reopening Chairs", e: "↩", chk: "checked before click [Lounge Chair]", cmp: [["Lounge Chair · $149"], ["Lounge Chair XL · $349"], false] } },
         { ph: "backtrack", t: "Backtrack to the root: search instead",
           d: "The next action, a search from the home page, passes its check. The results show the Lounge Chair as sold out, so the agent reports that it cannot be bought, instead of buying something else.",
-          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Se"); s.add("An", "Se"); s.cp.add("Se"); s.hl = ["H", "Se"]; s.at = "Se"; },
+          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Se"); s.add("An", "Se"); s.cp.add("Se"); s.at = "Se"; },
           front: [["stop: “sold out”", 0.92, "next new"], ["click [Sale]", 0.40, "q"], ["sort the table", 0.20, "q"]],
           br: { url: "/search?q=lounge+chair", title: "Search results", e: "🔍", chk: "checked before typing in [Search]", cmp: [["Search box · Chairs · Sale"], ["Search box · Chairs · Sale"], true], rr: "No wrong purchase", msg: "stop: “The Lounge Chair is sold out.”" } },
         { ph: "explore", t: "Stop: report that it is sold out",
           d: "The stop action scores highest, so the search ends and the agent answers: “The Lounge Chair is sold out.” It bought nothing.",
-          tree: (s) => { s.run.add("An"); s.hl = ["Se", "An"]; s.at = "An"; },
+          tree: (s) => { s.run.add("An"); s.at = "An"; },
           front: [["click [Sale]", 0.40, "q"], ["sort the table", 0.20, "q"]],
           br: { url: "/search?q=lounge+chair", title: "Search results", e: "🔍" } },
       ],
@@ -1417,12 +1429,12 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬" } },
         { t: "The Chairs page",
           d: "Chairs lists the Lounge Chair second. The comparison page scores slightly higher (0.70).",
-          tree: (s) => { s.run.add("Ch"); ["Cm", "Lo"].forEach((k) => s.add(k, "Ch")); s.hl = ["H", "Ch"]; s.at = "Ch"; },
+          tree: (s) => { s.run.add("Ch"); ["Cm", "Lo"].forEach((k) => s.add(k, "Ch")); s.at = "Ch"; },
           front: [["click [Compare chairs]", 0.70, "next new"], ["click [Lounge Chair]", 0.66, "q new"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"]],
           br: { url: "/chairs", title: "Chairs", e: "🪑" } },
         { t: "The same detour",
           d: "The comparison table does not help with the task, and its own candidates score low.",
-          tree: (s) => { s.run.add("Cm"); s.add("Ts", "Cm"); s.hl = ["Ch", "Cm"]; s.at = "Cm"; },
+          tree: (s) => { s.run.add("Cm"); s.add("Ts", "Cm"); s.at = "Cm"; },
           front: [["click [Lounge Chair]", 0.66, "next"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"], ["sort the table", 0.20, "q new"]],
           br: { url: "/chairs/compare", title: "Compare chairs", e: "📊" } },
         { t: "Meanwhile, another shopper buys the last Lounge Chair",
@@ -1433,18 +1445,18 @@ function initHero() {
         { t: "No check: the same click, a different chair",
           d: "Naive search restarts, replays Chairs, and runs the action it recorded, click('122'): element 122 is the second row of the list, which is now the Lounge Chair XL. It records the page as the Lounge Chair.",
           why: "WebOperator compared the target with its snapshot and rejected this backtrack before clicking.",
-          tree: (s) => { s.live = true; s.replay = ["H", "Ch"]; s.run.add("Lo"); s.wrong.add("Lo"); s.bad.add("Lo"); s.add("B", "Lo"); s.hl = ["Ch", "Lo"]; s.at = "Lo"; },
+          tree: (s) => { s.live = true; s.replay = ["H", "Ch"]; s.run.add("Lo"); s.wrong.add("Lo"); s.bad.add("Lo"); s.add("B", "Lo"); s.at = "Lo"; },
           front: [["click [Buy now]", 0.86, "next new"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"]],
           br: { url: "/chairs/lounge-xl", title: "Lounge Chair XL · $349", e: "🛋️", msg: "Recorded as the Lounge Chair" } },
         { t: "…and buys the wrong chair",
           d: "Buy now scores highest, so it runs: the search orders the Lounge Chair XL for $349 and proposes to stop.",
           why: "WebOperator never clicked it, found out from a fresh search that the Lounge Chair is sold out, and bought nothing.",
-          tree: (s) => { s.run.add("B"); s.risky.add("Lo>B"); s.bad.add("Lo"); s.bad.add("B"); s.wrong.add("B"); s.add("Sb", "B"); s.hl = ["Lo", "B"]; s.at = "B"; },
+          tree: (s) => { s.run.add("B"); s.risky.add("Lo>B"); s.bad.add("Lo"); s.bad.add("B"); s.wrong.add("B"); s.add("Sb", "B"); s.at = "B"; },
           front: [["stop: “bought it”", 0.93, "next new"], ["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"]],
           br: { url: "/order/AC123458", title: "Order placed", e: "⚠️", badge: ["out", "wrong item: $349 instead of $149"], rr: "Wrong chair bought", msg: "WebOperator: no wrong purchase" } },
         { t: "Stop: a wrong report",
           d: "The agent reports that it bought the Lounge Chair. The user was charged $349 for the XL instead.",
-          tree: (s) => { s.run.add("Sb"); s.wrong.add("Sb"); s.hl = ["B", "Sb"]; s.at = "Sb"; },
+          tree: (s) => { s.run.add("Sb"); s.wrong.add("Sb"); s.at = "Sb"; },
           front: [["search “lounge chair”", 0.45, "q"], ["click [Sale]", 0.40, "q"]],
           br: { url: "/order/AC123458", title: "Order placed", e: "⚠️" } },
       ],
@@ -1479,12 +1491,12 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Snapshot saved · ⚑ checkpoint" } },
         { ph: "explore", t: "Open the picks: a page without its own URL",
           d: "The picks open on the same URL, so this page is not a checkpoint: reopening the URL shows the closed home page. The lamp is the first pick right now.",
-          tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.hl = ["H", "Rc"]; s.at = "Rc"; },
+          tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.at = "Rc"; },
           front: [["click [Lamps]", 0.80, "next"], ["click [Arc Floor Lamp]", 0.78, "q new", "the first pick"], ["search “arc floor lamp”", 0.60, "q"]],
           br: { url: "/", title: "Acme Shop · picks", e: "🏬", msg: "1. Arc Floor Lamp · 2. Ceramic Vase · 3. Velvet Loveseat · same URL: not a checkpoint" } },
         { ph: "backtrack", t: "Backtrack to Lamps: a dead end",
           d: "Lamps scores slightly higher. A parallel tab reopens the home page by URL, checks the Lamps link, and clicks it. Lamps lists only desk and reading lamps: the Arc Floor Lamp is filed elsewhere.",
-          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Lp"); s.cp.add("Lp"); s.add("Dk", "Lp"); s.hl = ["H", "Lp"]; s.at = "Lp"; },
+          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Lp"); s.cp.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q new"]],
           br: { url: "/lamps", title: "Lamps", e: "💡", chk: "checked before click [Lamps]", cmp: [["Show picks · Lamps · Search"], ["Show picks · Lamps · Search"], true] } },
         { ph: "validate", t: "Meanwhile, the picks are reshuffled",
@@ -1507,17 +1519,17 @@ function initHero() {
         { ph: "backtrack", t: "Backtrack to the root: search instead",
           d: "The search box is also on the home page. The picks have reshuffled again, but they are not near the search box, so its check passes and the search runs.",
           why: "Comparing the whole page would reject every visit here; comparing the action's target and its surroundings tolerates unrelated randomness.",
-          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Se"); s.cp.add("Se"); s.add("A2", "Se"); s.hl = ["H", "Se"]; s.at = "Se"; },
+          tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Se"); s.cp.add("Se"); s.add("A2", "Se"); s.at = "Se"; },
           front: [["click [Arc Floor Lamp]", 0.85, "next new"], ["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/search?q=arc+floor+lamp", title: "Search results", e: "🔍", chk: "checked before typing in [Search]", cmp: [["Show picks · Lamps · Search"], ["Show picks · Lamps · Search"], true] } },
         { ph: "explore", t: "The right answer",
           d: "The search result leads to the Arc Floor Lamp, and the agent reports its price: $34.",
-          tree: (s) => { s.run.add("A2"); s.cp.add("A2"); s.add("St", "A2"); s.hl = ["Se", "A2"]; s.at = "A2"; },
+          tree: (s) => { s.run.add("A2"); s.cp.add("A2"); s.add("St", "A2"); s.at = "A2"; },
           front: [["stop: “$34”", 0.95, "next new"], ["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/decor/arc-floor-lamp", title: "Arc Floor Lamp · $34", e: "💡" } },
         { ph: "explore", t: "Stop: report the price",
           d: "The stop action scores highest, so the search ends and the agent answers: “The Arc Floor Lamp costs $34.”",
-          tree: (s) => { s.run.add("St"); s.hl = ["A2", "St"]; s.at = "St"; },
+          tree: (s) => { s.run.add("St"); s.at = "St"; },
           front: [["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/decor/arc-floor-lamp", title: "Arc Floor Lamp · $34", e: "💡" } },
       ],
@@ -1529,12 +1541,12 @@ function initHero() {
           br: { url: "/", title: "Acme Shop", e: "🏬" } },
         { t: "Open the picks",
           d: "The lamp is the first pick right now.",
-          tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.hl = ["H", "Rc"]; s.at = "Rc"; },
+          tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.at = "Rc"; },
           front: [["click [Lamps]", 0.80, "next"], ["click [Arc Floor Lamp]", 0.78, "q new", "the first pick"], ["search “arc floor lamp”", 0.60, "q"]],
           br: { url: "/", title: "Acme Shop · picks", e: "🏬" } },
         { t: "Restart for Lamps: a dead end",
           d: "Naive search restarts from the home page and clicks Lamps, which lists only desk and reading lamps.",
-          tree: (s) => { s.replay = ["H"]; s.run.add("Lp"); s.add("Dk", "Lp"); s.hl = ["H", "Lp"]; s.at = "Lp"; },
+          tree: (s) => { s.replay = ["H"]; s.run.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q new"]],
           br: { url: "/lamps", title: "Lamps", e: "💡" } },
         { t: "Meanwhile, the picks are reshuffled",
@@ -1545,13 +1557,13 @@ function initHero() {
         { t: "No checks: restart, replay, click the first pick",
           d: "Naive search restarts, replays “Show picks”, and runs the action it recorded, click('111'): element 111 is the first pick, now the Velvet Loveseat. It records the page as the Arc Floor Lamp.",
           why: "WebOperator checked this hop against the picks snapshot and rejected it before clicking.",
-          tree: (s) => { s.live = true; s.replay = ["H", "Rc"]; s.run.add("Ar"); s.wrong.add("Ar"); s.bad.add("Ar"); s.add("Sw", "Ar"); s.hl = ["Rc", "Ar"]; s.at = "Ar"; },
+          tree: (s) => { s.live = true; s.replay = ["H", "Rc"]; s.run.add("Ar"); s.wrong.add("Ar"); s.bad.add("Ar"); s.add("Sw", "Ar"); s.at = "Ar"; },
           front: [["stop: “$199”", 0.90, "next new"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/living-room/velvet-loveseat", title: "Velvet Loveseat · $199", e: "🛋️", msg: "Recorded as the Arc Floor Lamp" } },
         { t: "A wrong answer",
           d: "The page shows a price, $199, and the search reports it as the Arc Floor Lamp's price.",
           why: "WebOperator rejected the stale click at hop 2, searched instead, and answered $34.",
-          tree: (s) => { s.bad.add("Ar"); s.run.add("Sw"); s.wrong.add("Sw"); s.hl = ["Ar", "Sw"]; s.at = "Sw"; },
+          tree: (s) => { s.bad.add("Ar"); s.run.add("Sw"); s.wrong.add("Sw"); s.at = "Sw"; },
           front: [["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/living-room/velvet-loveseat", title: "Velvet Loveseat · $199", e: "⚠️", rr: "Wrong answer: $199 (the lamp costs $34)", msg: "WebOperator: $34" } },
       ],
@@ -1636,7 +1648,7 @@ function initHero() {
     const selNode = p.nodes.find((n) => !p.run.has(n) && A[n] === act) || null;
     const mk = (pos, o) => {
       const t = clone(p);
-      t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.hl = []; t.live = s.live; t.reopen = null; t.sel = selNode;
+      t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.live = s.live; t.reopen = null; t.sel = selNode;
       t.replay = path.slice(0, pos + 1);
       return { s: t, tab: path[pos], cap: o.cap, br: { url: st.br.url }, jump: o.jump, naive: true };
     };
@@ -1658,7 +1670,7 @@ function initHero() {
     const inProgress = !bad && !accepted, lastCheck = inProgress ? path.length - 2 : path.length - 1;
     const mk = (pos, o) => {
       const t = clone(p);
-      t.ok.clear(); t.bad.clear(); t.hl = []; t.live = s.live; t.replay = null; t.reopen = null;
+      t.ok.clear(); t.bad.clear(); t.live = s.live; t.replay = null; t.reopen = null;
       if (pos > 0) t.replay = path.slice(0, pos + 1); else t.reopen = path[0];
       t.sel = selNode; // the selected action stays highlighted while the backtrack runs
       (o.ok || []).forEach((n) => t.ok.add(n)); (o.bad || []).forEach((n) => t.bad.add(n));
@@ -1692,11 +1704,11 @@ function initHero() {
   const S = () => SCEN[scen];
   const steps = () => S()[mode];
   function fresh() {
-    return { nodes: [], edges: [], hl: [], run: new Set(), wrong: new Set(), reopen: null, cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, live: false, at: null, noReturn: null, newRoot: null,
+    return { nodes: [], edges: [], run: new Set(), wrong: new Set(), reopen: null, cp: new Set(), ok: new Set(), bad: new Set(), gone: new Set(), ghost: new Set(), risky: new Set(), replay: null, live: false, at: null, noReturn: null, newRoot: null,
       add(id, parent, o = {}) { this.nodes.push(id); if (parent) this.edges.push({ a: parent, b: id, ...o }); } };
   }
   // Verdicts, replays, highlights and the live page belong to one step only.
-  const build = (n) => { const s = fresh(), harmed = new Set(); for (let i = 0; i <= n; i++) { s.ok.clear(); s.bad.clear(); s.replay = null; s.reopen = null; s.live = false; s.hl = []; steps()[i].tree(s); dropRejected(s, i); if (mode === "naive") { s.wrong.forEach((n) => s.bad.add(n)); Object.keys(S().ISSUE || {}).forEach((n) => { if (harmed.has(n) && s.nodes.includes(n)) s.bad.add(n); }); s.bad.forEach((n) => (S().ISSUE || {})[n] && harmed.add(n)); } } return s; }; // naive harm stays marked
+  const build = (n) => { const s = fresh(), harmed = new Set(); for (let i = 0; i <= n; i++) { s.ok.clear(); s.bad.clear(); s.replay = null; s.reopen = null; s.live = false; steps()[i].tree(s); dropRejected(s, i); if (mode === "naive") { s.wrong.forEach((n) => s.bad.add(n)); Object.keys(S().ISSUE || {}).forEach((n) => { if (harmed.has(n) && s.nodes.includes(n)) s.bad.add(n); }); s.bad.forEach((n) => (S().ISSUE || {})[n] && harmed.add(n)); } } return s; }; // naive harm stays marked
   // A rejected backtrack also discards the action it was for: its proposal box fades out like other discarded pages.
   function dropRejected(s, i) {
     const n = rejectedAction(s, i);
@@ -1729,7 +1741,15 @@ function initHero() {
     });
     return (layouts[key] = out);
   }
-  function edgePath(a, b) { const N = L(), [x1, y1] = N[a], [x2, y2] = N[b]; const sx = x1 + W / 2, ex = x2 - W / 2, mx = (sx + ex) / 2; return `M${sx} ${y1} C${mx} ${y1} ${mx} ${y2} ${ex} ${y2}`; }
+  // A short straight run into the child's box; `head` stops the line where an arrowhead starts, so the head ends at the box.
+  function edgePath(a, b, head = 0) {
+    // An elbow: out of the parent, a smooth turn down (or up) close to it, straight to the child's row,
+    // then a tight 90-degree turn into a straight run that ends at the arrowhead.
+    const N = L(), [x1, y1] = N[a], [x2, y2] = N[b], sx = x1 + W / 2, ex = x2 - W / 2 - head, dy = y2 - y1;
+    if (Math.abs(dy) < 1) return `M${sx} ${y1} L${ex} ${y2}`;
+    const v = Math.sign(dy), vx = sx + 12, r1 = Math.min(10, Math.abs(dy) / 2), r2 = Math.min(4, Math.abs(dy) / 2);
+    return `M${sx} ${y1} L${vx - r1} ${y1} Q${vx} ${y1} ${vx} ${y1 + v * r1} L${vx} ${y2 - v * r2} Q${vx} ${y2} ${vx + r2} ${y2} L${ex} ${y2}`;
+  }
   // A tiny web page inside a node: x, y is the top-left of the body, w its width (about 50 px tall).
   function miniPage(g, look, x, y, w) {
     const [kind, a, b, c] = look;
@@ -1752,7 +1772,7 @@ function initHero() {
     // the home page, as in the hero animation: a tagline and three labelled tiles
     // the shop's home page: a search bar, a button, and product cards
     if (kind === "shophome") {
-      el("rect", { x, y, width: 70, height: 11, rx: 5.5, class: "fld" }, g); txt(x + 5, y + 7.8, "🔍 Search…", "tx", "font-size:6.5px;fill:var(--muted)");
+      el("rect", { x, y, width: 70, height: 11, rx: 5.5, class: "fld" }, g); txt(x + 5, y + 7.8, "🔍 Search…", "tx sq", "font-size:6.5px;fill:var(--muted)");
       el("rect", { x: x + 73, y, width: w - 73, height: 11, rx: 5.5, style: "fill:var(--accent-soft);stroke:var(--accent);stroke-width:.8" }, g);
       txt(x + 73 + (w - 73) / 2, y + 7.4, b, "tx", "text-anchor:middle;font-size:5px;font-weight:700;fill:var(--accent)");
       const tw = (w - 8) / 3;
@@ -1881,14 +1901,23 @@ function initHero() {
     const { LOOK, WRONG = {}, live } = S(), N = L();
     const c = cur(), s = c ? c.s : build(k), before = fwd && lastNodes ? lastNodes : animateFrom !== null && animateFrom !== undefined ? new Set(build(animateFrom).nodes) : new Set(s.nodes);
     lastNodes = new Set(s.nodes);
+    const oldAgent = fwd ? svg.querySelector(".agent-icon") : null; // shrinks away below if the agent has finished
     svg.innerHTML = "";
     lastState = s;
+    const defs = el("defs", {}, svg), head = el("marker", { id: "edge-head", viewBox: "0 0 10 10", refX: 0, refY: 5, markerWidth: 9, markerHeight: 9, markerUnits: "userSpaceOnUse", orient: "auto" }, defs);
+    el("path", { d: "M0 1L10 5L0 9z", style: "fill:context-stroke" }, head); // the arrowhead takes its edge's colour
+    const headLg = el("marker", { id: "edge-head-lg", viewBox: "0 0 10 10", refX: 0, refY: 5, markerWidth: 15, markerHeight: 15, markerUnits: "userSpaceOnUse", orient: "auto" }, defs);
+    el("path", { d: "M0 1L10 5L0 9z", style: "fill:context-stroke" }, headLg); // for the thick, highlighted edges
     const gE = el("g", {}, svg), gN = el("g", {}, svg), gO = el("g", {}, svg), gA = el("g", {}, svg); // gA: the agent icon, above everything
-    const hl = new Set(); for (let i = 0; i < s.hl.length - 1; i++) hl.add(s.hl[i] + ">" + s.hl[i + 1]);
-    for (const e of s.edges) {
+    // Highlight the path from the root (or the new root) to the current page.
+    const path = [];
+    for (let a = s.at, e; a; a = a === s.newRoot ? null : (e = s.edges.find((x) => x.b === a)) && e.a) path.unshift(a);
+    const hl = new Set(); for (let i = 0; i < path.length - 1; i++) hl.add(path[i] + ">" + path[i + 1]);
+    const isHl = (e) => hl.has(e.a + ">" + e.b);
+    for (const e of [...s.edges].sort((p, q) => isHl(p) - isHl(q))) { // highlighted edges on top of the others
       const key = e.a + ">" + e.b;
       const cls = ["pg-edge", e.deferred && s.ghost.has(e.b) ? "deferred" : "", s.risky.has(key) ? "risky" : "", hl.has(key) ? "hl" : "", s.gone.has(e.a) || s.gone.has(e.b) ? "gone" : ""].join(" ");
-      el("path", { d: edgePath(e.a, e.b), class: cls + (before.has(e.b) ? "" : " pg-fade"), "data-b": e.b }, gE);
+      el("path", { d: edgePath(e.a, e.b, hl.has(key) ? 15 : 9), class: cls + (before.has(e.b) ? "" : " pg-fade"), "data-b": e.b, "marker-end": hl.has(key) ? "url(#edge-head-lg)" : "url(#edge-head)" }, gE);
     }
     if (s.replay) { // a naive replay re-executes the stored path from the home page
       for (let i = 0; i < s.replay.length - 1; i++) gE.prepend(el("path", { d: edgePath(s.replay[i], s.replay[i + 1]), class: "pg-edge replay pg-fade" })); // under the edge itself
@@ -1918,9 +1947,10 @@ function initHero() {
       // No label on the arc: the checkpoint itself reads "↩ reopened by URL".
     }
     if (s.noReturn) {
-      const [a, b] = s.noReturn, xr = (N[a][0] + W / 2 + N[b][0] - W / 2) / 2;
-      el("line", { x1: xr, y1: 16, x2: xr, y2: 410, style: "stroke:var(--danger);stroke-width:2.5;stroke-dasharray:8 6" }, gO);
-      el("text", { x: xr + 8, y: 6, class: "pg-note", style: "fill:var(--danger);text-anchor:start" }, gO).textContent = "point of no return";
+      // The line comes down from its label onto the new root.
+      const [, b] = s.noReturn, [xr, yr] = N[b], st = "stroke:var(--danger);stroke-width:2.5;stroke-dasharray:8 6";
+      el("line", { x1: xr, y1: 14, x2: xr, y2: yr - Hh / 2 - 6, style: st }, gE);
+      el("text", { x: xr, y: 4, class: "pg-note", style: "fill:var(--danger);text-anchor:middle" }, gO).textContent = "point of no return";
     }
     // The page in the active browser tab: the parallel tab's page during a backtrack, else the agent's page.
     const cs = cur(), backtracking = cs && !cs.final && !cs.closed, shown = backtracking ? cs.tab : s.at;
@@ -1933,7 +1963,7 @@ function initHero() {
       const g = el("g", { class: "pg-node" + (s.gone.has(id) ? " gone" : "") + (before.has(id) ? "" : gen && !s.run.has(id) ? " pg-pop gen-late" : " pg-pop"), "data-id": id }, gN);
       if (!before.has(id) && gen && !s.run.has(id) && fwd) busy(1100); // the proposals pop in after the agent icon
       if (!before.has(id) && gen && !s.run.has(id)) svg.querySelectorAll(`path[data-b="${id}"]`).forEach((p) => p.classList.add("gen-late"));
-      const stroke = s.sel === id ? "var(--accent)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (s.hl.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
+      const stroke = s.sel === id ? "var(--accent)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (path.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
       const ghost = s.ghost.has(id), cand = !s.run.has(id) && !ghost; // cand: proposed, not visited yet
       const dash = s.sel === id ? "stroke-dasharray:6 4;stroke-width:3;" : ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : cand && !stroke ? "stroke:var(--muted);stroke-dasharray:4 3;" : "";
       const wrong = s.wrong.has(id) && WRONG[id];
@@ -1945,29 +1975,30 @@ function initHero() {
         el("text", { x, y: y - Hh / 2 + 18, class: "t", style: `text-anchor:middle;fill:${s.bad.has(id) ? "var(--danger)" : "var(--ok)"}` }, g).textContent = "To the user";
         (LOOK[id][1] || []).forEach((t, i) => (el("text", { x, y: y + 4 + i * 13, class: "t", style: "text-anchor:middle;font-weight:600;font-size:10px" }, g).textContent = t));
       } else nodeBox(g, x, y, wrong ? wrong[0] : label, wrong ? wrong[1] : LOOK[id], boxStyle, false);
-      let sub = v !== null ? v.toFixed(2) : "";
+      let sub = v !== null && !s.run.has(id) ? v.toFixed(2) : ""; // an executed action's page no longer shows its score
       if (id === "H" && !s.gone.has("H")) sub = "root";
       if (s.newRoot === id) sub = "new root";
       if (ghost) sub = "⚠ deferred";
       if (s.reopen === id) sub = "↩ reopened by URL";
-      if (s.sel === id) sub = "▶ selected";
+      if (s.sel === id) sub = v !== null ? `▶ selected · ${v.toFixed(2)}` : "▶ selected";
       if (s.replay && s.replay[0] === id) sub = mode === "wo" ? `↩ by URL, replay ${s.replay.length - 1}` : s.replay.length > 1 ? `↩ restart, replay ${s.replay.length - 1}` : "↩ restart";
       if (sub) el("text", { x, y: y + Hh / 2 + 15, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : s.reopen === id || (s.replay && s.replay[0] === id) ? "fill:var(--backtrack);font-weight:700;font-family:Inter,sans-serif" : s.sel === id ? "fill:var(--accent);font-weight:700;font-family:Inter,sans-serif" : "" }, g).textContent = sub;
       const issue = mode === "naive" && s.bad.has(id) && (S().ISSUE || {})[id];
-      if (issue) issue.split(": ").forEach((line, n, all) => (el("text", { x, y: y - Hh / 2 - 14 - (all.length - 1 - n) * 13, class: "pg-note pg-pop", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, g).textContent = n < all.length - 1 ? line + ":" : line)); // one line per part, centred above the card
+      if (issue) issue.split(": ").forEach((line, n, all) => (el("text", { x, y: y - Hh / 2 - 14 - (all.length - 1 - n) * 13, class: "pg-note pg-pop issue", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, g).textContent = n < all.length - 1 ? line + ":" : line)); // one line per part, centred above the card
       if (!issue && s.cp.has(id) && !s.gone.has(id)) el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
       if (mode === "wo" && backtracking && s.at === id) { // the original tab stays on this page until the backtrack ends
         el("rect", { x: x - W / 2 - 5, y: y - Hh / 2 - 5, width: W + 10, height: Hh + 10, rx: 10, class: "pg-pop", style: "fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:4 4" }, gA);
         el("text", { x, y: y - Hh / 2 - 10, class: "pg-note pg-pop", style: "fill:var(--accent);text-anchor:middle;font-size:11px;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, gA).textContent = "original tab";
       }
       if (gen && s.at === id) { // the agent is generating actions for this page: on the right edge, where its edges start
-        el("circle", { cx: x + W / 2, cy: y, r: 12, class: "pg-pop", style: "fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5" }, gA);
-        el("text", { x: x + W / 2, y: y + 5, class: "pg-pop", style: "text-anchor:middle;font-size:14px" }, gA).textContent = "🤖";
+        const ag = el("g", { class: "agent-icon", "data-at": id }, gA);
+        el("circle", { cx: x + W / 2, cy: y, r: 12, class: "pg-pop", style: "fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5" }, ag);
+        el("text", { x: x + W / 2, y: y + 5, class: "pg-pop", style: "text-anchor:middle;font-size:14px" }, ag).textContent = "🤖";
       }
       if (s.ok.has(id) || s.bad.has(id)) { // verdict badge on the page's corner
         const good = s.ok.has(id), cx = x + W / 2 - 2, cy = y - Hh / 2 + 2;
-        el("circle", { cx, cy, r: 10, class: "pg-pop", style: `fill:${good ? "var(--ok)" : "var(--danger)"};stroke:var(--surface);stroke-width:2.5` }, g);
-        el("text", { x: cx, y: cy + 4.5, class: "pg-note pg-pop", style: "fill:#fff;text-anchor:middle;font-size:13px;font-weight:800" }, g).textContent = good ? "✓" : mode === "naive" ? "!" : "✗";
+        el("circle", { cx, cy, r: 10, class: "pg-pop verdict", style: `fill:${good ? "var(--ok)" : "var(--danger)"};stroke:var(--surface);stroke-width:2.5` }, g);
+        el("text", { x: cx, y: cy + 4.5, class: "pg-note pg-pop verdict", style: "fill:#fff;text-anchor:middle;font-size:13px;font-weight:800" }, g).textContent = good ? "✓" : mode === "naive" ? "!" : "✗";
       }
     }
     if (s.live && live) {
@@ -1982,6 +2013,11 @@ function initHero() {
     const now = new Set();
     svg.querySelectorAll(".pg-pop, .pg-fade").forEach((e) => { const k = sig(e); now.add(k); if (lastPops.has(k)) e.classList.remove("pg-pop", "pg-fade", "gen-late"); });
     lastPops = now;
+    // The agent has finished generating: its icon shrinks away instead of vanishing.
+    if (oldAgent && !svg.querySelector(`.agent-icon[data-at="${oldAgent.dataset.at}"]`)) {
+      oldAgent.classList.add("agent-out"); svg.appendChild(oldAgent);
+      setTimeout(() => oldAgent.remove(), 400);
+    }
   }
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   function frontHtml(list) {
@@ -2011,10 +2047,11 @@ function initHero() {
     const g = svg.querySelector(`.pg-node[data-id="${id}"]`), N = L();
     if (!g || !N[id]) return;
     const [x, y] = N[id], o = el("g", { class: "loading" }, g);
+    g.classList.add("loading-node"); // its verdict and issue label wait until the page has loaded
     el("rect", { x: x - W / 2 + 1.5, y: y - Hh / 2 + 1.5, width: W - 3, height: Hh - 3, rx: 6, style: "fill:var(--surface)" }, o);
     el("circle", { cx: x, cy: y, r: 9, class: "spin", style: "fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:38 20" }, o);
   }
-  function doneLoading(id) { const o = svg.querySelector(`.pg-node[data-id="${id}"] .loading`); if (o) o.remove(); }
+  function doneLoading(id) { const g = svg.querySelector(`.pg-node[data-id="${id}"]`); if (!g) return; g.querySelector(".loading")?.remove(); g.classList.remove("loading-node"); }
   // Where the clicked element sits in a page drawn by drawPage (content starts at (6, 29), 106 wide).
   function clickTarget(look, act) {
     const [kind, a] = look, name = ((/\[(.*)\]/.exec(act) || [])[1] || "").toLowerCase();
@@ -2045,7 +2082,9 @@ function initHero() {
   }
   // A cursor glides to the target, clicks (a ripple), then the next page replaces this one.
   function animateClick(svgEl, look, act, done) {
-    busy(1100);
+    // a search clicks into the field, then types its query before the results load
+    const query = /^search/.test(act) ? (/“(.*)”/.exec(act) || [])[1] || "" : "", field = query && svgEl.querySelector(".sq");
+    busy(1100 + (field ? query.length * 55 + 350 : 0));
     const [tx, ty] = clickTarget(look, act), g = el("g", { class: "cursor" }, svgEl);
     el("path", { d: "M0 0L0 9.5L2.6 7.2L4.4 11L6 10.3L4.2 6.6L7.6 6.4Z", style: "fill:#111;stroke:#fff;stroke-width:0.8;stroke-linejoin:round" }, g);
     const sx = W - 14, sy = 80, t0 = performance.now(), dur = 650;
@@ -2054,7 +2093,7 @@ function initHero() {
       const u = Math.min(1, (now - t0) / dur), e = ease(u);
       g.setAttribute("transform", `translate(${sx + (tx - sx) * e} ${sy + (ty - sy) * e})`);
       if (u < 1) return requestAnimationFrame(frame);
-      const ring = el("circle", { cx: tx, cy: ty, r: 1, style: "fill:none;stroke:var(--accent);stroke-width:1.2" }, svgEl);
+      const ring = el("circle", { cx: tx, cy: ty, r: 1, class: "click-ring", style: "fill:none;stroke:var(--accent);stroke-width:1.2" }, svgEl);
       svgEl.appendChild(g);
       const r0 = performance.now();
       (function ripple(n) {
@@ -2062,7 +2101,15 @@ function initHero() {
         ring.setAttribute("r", 1 + 7 * v); ring.style.opacity = 1 - v;
         g.setAttribute("transform", `translate(${tx} ${ty}) scale(${v < 0.4 ? 0.85 : 1})`);
         if (v < 1) return requestAnimationFrame(ripple);
-        setTimeout(done, 120);
+        if (!field) return setTimeout(done, 120);
+        field.style.fill = "var(--text)";
+        let typed = 0;
+        (function type() {
+          if (!svgEl.isConnected) return;
+          field.textContent = "🔍 " + query.slice(0, ++typed) + (typed < query.length ? "|" : "");
+          if (typed < query.length) return setTimeout(type, 55);
+          setTimeout(done, 350);
+        })();
       })(r0);
     })(t0);
   }
@@ -2110,7 +2157,7 @@ function initHero() {
     const top = document.createElement("div");
     top.className = "tabs-strip";
     top.innerHTML = '<span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>' +
-      tabs.filter((t) => !t.cls.includes("closing")).map((t) => `<span class="btab ${t.cls}"><span class="tt">${esc(t.t.replace(/^Acme Shop · picks$/, "Your picks"))}</span></span>`).join("");
+      tabs.filter((t) => !t.cls.includes("closing")).map((t) => `<span class="btab ${t.cls}"><span class="tt">${esc(t.t.replace(/^Acme Shop · picks$/, "Your picks"))}</span><span class="x">×</span></span>`).join("");
     u.className = "toolbar";
     u.innerHTML = `<span class="nav">‹ › ⟳</span><span class="omni">${esc(url)}</span>`;
     $("#pg-br").prepend(top);
@@ -2150,6 +2197,9 @@ function initHero() {
         const tt = $("#pg-br .btab.on .tt"), newTitle = tt && tt.textContent;
         if (tt) tt.textContent = pageTitle(N[parent][2]).replace(/^Welcome to Acme Shop$/, "Acme Shop");
         omni.textContent = "acme-shop" + urlOf(parent);
+        // the same click on the parent's page in the tree; its cursor goes away once the new page has loaded
+        const treePage = svg.querySelector(`.pg-node[data-id="${parent}"] .pv-page`);
+        if (treePage) animateClick(treePage, LOOK[parent], act, () => treePage.querySelectorAll(".cursor, .click-ring").forEach((n) => n.remove()));
         animateClick(from, LOOK[parent], act, () => { if (token !== animToken) return; from.replaceWith(newPage); if (tt) tt.textContent = newTitle; omni.textContent = "acme-shop" + urlOf(id); doneLoading(id); });
       }
       shownBefore = id;
@@ -2172,7 +2222,7 @@ function initHero() {
     const done = c ? c.final : spec && !s.bad.size && s.at !== prev;
     const body = $("#pg-br .b"), chk = !done && body && body.innerHTML.trim();
     // The block keeps its place in every step, so the layout does not jump; without a check it says so.
-    $("#pg-check").innerHTML = chk ? `<div class="b">${body.innerHTML}</div>` : `<div class="chk-empty">No snapshot check in this step.<br>WebOperator checks a page against its snapshot before acting on it during a backtrack.</div>`;
+    $("#pg-check").innerHTML = chk ? `<div class="b">${body.innerHTML}</div>` : `<div class="chk-empty">${mode === "naive" ? "Naive tree search never checks a snapshot.<br>It replays its actions and acts on whatever page it reaches." : "No snapshot check in this step.<br>WebOperator checks a page against its snapshot before acting on it during a backtrack."}</div>`;
     $("#pg-check").classList.toggle("empty", !chk);
     if (body) body.remove();
     // Saved snapshot and live page side by side.
