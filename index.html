@@ -44,6 +44,7 @@
       --reroot: #d9822b;
       --danger: #d93b3b;
       --ok: #1a9a5a;
+      --select: #d6338a; /* the selected action: apart from the blue path */
       --code-bg: #0f1520;
       --code-text: #d7e0ea;
       /* validated categorical slots (light) */
@@ -58,7 +59,7 @@
         --bg: #0a0f16; --surface: #111822; --surface-2: #17202c;
         --text: #eef2f6; --text-2: #b6bfcb; --muted: #8892a0; --line: #232e3d;
         --accent: #4ea8e6; --accent-soft: #10243a; --lime: #a6d93a;
-        --explore: #4ea8e6; --backtrack: #a08bf0; --reroot: #f0a35a; --danger: #f06b6b; --ok: #3ccf86;
+        --explore: #4ea8e6; --backtrack: #a08bf0; --reroot: #f0a35a; --danger: #f06b6b; --ok: #3ccf86; --select: #f06aae;
         --code-bg: #0b111a;
         --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s-other: #6f7885;
         --grid: #1d2734;
@@ -70,7 +71,7 @@
       --bg: #0a0f16; --surface: #111822; --surface-2: #17202c;
       --text: #eef2f6; --text-2: #b6bfcb; --muted: #8892a0; --line: #232e3d;
       --accent: #4ea8e6; --accent-soft: #10243a; --lime: #a6d93a;
-      --explore: #4ea8e6; --backtrack: #a08bf0; --reroot: #f0a35a; --danger: #f06b6b; --ok: #3ccf86;
+      --explore: #4ea8e6; --backtrack: #a08bf0; --reroot: #f0a35a; --danger: #f06b6b; --ok: #3ccf86; --select: #f06aae;
       --code-bg: #0b111a;
       --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s-other: #6f7885;
       --grid: #1d2734;
@@ -318,14 +319,18 @@
     #pg-stats span { font: 500 11.5px "Inter", sans-serif; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
     #pg-stats b { font: 700 12.5px "JetBrains Mono", monospace; color: var(--text); margin-right: 3px; }
     #pg-stats span.warn b { color: var(--danger); }
-    .evt-win { position: absolute; right: 14px; bottom: 14px; width: 320px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(0,0,0,.18); transition: opacity .4s, transform .4s; z-index: 3; }
+    .evt-win { position: absolute; right: 14px; bottom: 14px; width: 320px; border: 1px solid var(--line); border-radius: 10px; overflow: visible; background: var(--surface); box-shadow: 0 10px 30px rgba(0,0,0,.18); transition: opacity .4s, transform .4s; z-index: 3; }
     .evt-win.off { opacity: 0; transform: translateY(8px); }
     .evt-win .who { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: var(--surface-2); border-bottom: 1px solid var(--line); font: 600 10.5px "Inter", sans-serif; color: var(--text-2); }
     .evt-win .who i { flex: none; width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
     .evt-win .who b { flex: none; font-weight: 600; margin-left: 4px; }
     .evt-win .who { white-space: nowrap; }
     .evt-win .who em { font-style: normal; margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 500 10px "JetBrains Mono", monospace; color: var(--muted); }
-    .evt-win svg { display: block; width: 100%; height: auto; }
+    .evt-win svg { display: block; width: 100%; height: auto; border-radius: 0 0 9px 9px; }
+    .evt-win .who { border-radius: 9px 9px 0 0; padding-left: 34px; }
+    /* who makes the outside change: an avatar on the window's corner, in a colour apart from the agent's blue */
+    .evt-win .avatar { position: absolute; left: -20px; top: -20px; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; line-height: 1; overflow: hidden;
+      background: color-mix(in srgb, #f08a24 18%, var(--surface)); border: 2.5px solid #f08a24; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
     .pg-tree svg { display: block; width: 100%; height: auto; }
     .pg-task { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 600; color: var(--text); }
     .pg-task b { font: 700 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--accent); padding: 3px 7px; border-radius: 5px; }
@@ -650,7 +655,7 @@
         <div class="card">
           <div class="cid">OBSTACLE 1 · IRREVERSIBLE ACTIONS</div>
           <h3>Some actions change the website for good</h3>
-          <p>Submitting a form, deleting an item, changing a setting or logging out modify data that outlives the page. After such an action, earlier pages are no longer valid alternatives, and replaying a path that contains one repeats it.</p>
+          <p>Submitting a form, deleting an item, changing a setting or logging out modify data that outlives the page. Backtracking replays the path to an earlier page, and a path that contains such an action repeats it: a second order, a second deletion.</p>
           <div class="fix"><div class="ic"><i class="fa-solid fa-hourglass-half"></i></div><div><b>Action-aware selection</b><span>Best-first search ranks actions by reward and reversibility: likely-destructive actions are deferred while reversible alternatives remain.</span></div></div>
           <div class="fix" style="border-top:0;padding-top:10px"><div class="ic"><i class="fa-solid fa-seedling"></i></div><div><b>Re-rooting</b><span>When a post-execution check flags a persistent change, earlier branches are discarded and a new tree starts from the resulting page.</span></div></div>
         </div>
@@ -721,13 +726,14 @@
         </div>
         <div class="legend-row">
           <span>🤖 generating actions</span>
-          <span><i class="lg-line" style="border-color:var(--explore);border-top-width:4px"></i>last step</span>
+          <span><i class="lg-line" style="border-color:var(--explore);border-top-width:4px"></i>current path</span>
           <span class="wo-only"><i class="lg-line" style="border-color:var(--reroot);border-top-style:dashed"></i>deferred</span>
-          <span class="wo-only"><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dashed"></i>URL jump</span>
+          <span><i class="lg-line" style="border-color:var(--backtrack);border-top-style:dashed"></i>URL jump</span>
           <span class="wo-only"><i class="lg-line" style="border-color:color-mix(in srgb, var(--backtrack) 28%, transparent);border-top-width:9px;border-radius:5px"></i>replayed</span>
           <span class="naive-only"><i class="lg-line" style="border-color:color-mix(in srgb, var(--backtrack) 28%, transparent);border-top-width:9px;border-radius:5px"></i>replayed from start</span>
           <span class="wo-only">⚑ checkpoint</span>
           <span><i class="lg-box" style="border-color:var(--muted);border-style:dashed"></i>proposed</span>
+          <span><i class="lg-box" style="border-color:var(--select);border-style:dashed;background:color-mix(in srgb, var(--select) 8%, var(--surface))"></i>selected</span>
           <span class="wo-only"><i class="lg-box" style="border-color:var(--ok)"></i>check passed</span>
           <span class="wo-only"><i class="lg-box" style="border-color:var(--danger)"></i>check failed</span>
           <span class="naive-only"><i class="lg-box" style="border-color:var(--danger)"></i>harmful</span>
@@ -1383,7 +1389,7 @@ function initHero() {
       WRONG: { Lo: ["Lounge Chair XL", ["product", "🛋️", "$349", "Buy now"]] },
       live: { of: "Ch", title: "Chairs", rows: [["Modern Chair · $129", 0], ["Lounge XL · $349", 1]], link: "Compare chairs ›" },
       // The outside change, played in a small window over the tree when it happens.
-      event: { who: "Another shopper", url: "/lounge-chair", from: ["Lounge Chair", ["product", "🛋️", "$149", "Buy now"]], act: "click [Buy now]", to: ["Order placed", ["done", "Lounge Chair · $149"]] },
+      event: { who: "Another shopper", url: "/lounge-chair", toUrl: "/order-placed", from: ["Lounge Chair", ["product", "🛋️", "$149", "Buy now"]], act: "click [Buy now]", to: ["Order placed", ["done", "Lounge Chair · $149"]] },
       wo: [
         { ph: "explore", t: "Start: the home page and its candidates",
           d: "The home page is the root; its candidates are scored into the frontier. Dashed boxes are pages not visited yet.",
@@ -1483,7 +1489,7 @@ function initHero() {
       ISSUE: { Ar: "⚠ a different product", Sw: "⚠ wrong price" },
       WRONG: { Ar: ["Velvet Loveseat", ["product", "🛋️", "$199", "Buy now"]] },
       live: { of: "Rc", title: "Acme Shop · picks", rows: [["1. Velvet Loveseat", 1], ["2. Ceramic Vase", 0], ["3. Arc Floor Lamp", 0]] },
-      event: { who: "The shop", url: "/", from: ["Acme Shop · picks", ["list", ["1. Arc Floor Lamp", "2. Ceramic Vase", "3. Velvet Loveseat"]]], to: ["Acme Shop · picks", ["list", ["1. Velvet Loveseat", "2. Ceramic Vase", "3. Arc Floor Lamp"]]] },
+      event: { who: "The shop", avatar: "🏪", url: "/", from: ["Acme Shop · picks", ["list", ["1. Arc Floor Lamp", "2. Ceramic Vase", "3. Velvet Loveseat"]]], to: ["Acme Shop · picks", ["list", ["1. Velvet Loveseat", "2. Ceramic Vase", "3. Arc Floor Lamp"]]] },
       wo: [
         { ph: "explore", t: "Start: a home page with personal picks",
           d: "The home page has a “Show picks” button that opens a list of personal recommendations, reshuffled on every visit. Three candidates are scored.",
@@ -1923,9 +1929,9 @@ function initHero() {
     if (s.replay) { // a naive replay re-executes the stored path from the home page
       for (let i = 0; i < s.replay.length - 1; i++) gE.prepend(el("path", { d: edgePath(s.replay[i], s.replay[i + 1]), class: "pg-edge replay pg-fade" })); // under the edge itself
     }
-    // WebOperator's jump: a dashed arrow from the page the agent was on to the checkpoint reopened by URL.
-    // Shown only on the sub-step that makes the jump.
-    const target = mode === "wo" && cur() && cur().jump && (s.reopen || (s.replay && s.replay[0]));
+    // A URL jump: a dashed arrow from the page the agent was on to the page reopened by URL (WebOperator's
+    // checkpoint, or the home page a naive restart goes back to). Shown only on the sub-step that makes the jump.
+    const target = cur() && cur().jump && (s.reopen || (s.replay && s.replay[0]));
     const origin = s.at;
     if (target && origin && origin !== target && N[origin] && !s.gone.has(origin)) {
       const [x1, y1] = N[origin], [x2, y2] = N[target];
@@ -1964,9 +1970,9 @@ function initHero() {
       const g = el("g", { class: "pg-node" + (s.gone.has(id) ? " gone" : "") + (before.has(id) ? "" : gen && !s.run.has(id) ? " pg-pop gen-late" : " pg-pop"), "data-id": id }, gN);
       if (!before.has(id) && gen && !s.run.has(id) && fwd) busy(1100); // the proposals pop in after the agent icon
       if (!before.has(id) && gen && !s.run.has(id)) svg.querySelectorAll(`path[data-b="${id}"]`).forEach((p) => p.classList.add("gen-late"));
-      const stroke = s.sel === id ? "var(--accent)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (path.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
+      const stroke = s.sel === id ? "var(--select)" : s.bad.has(id) ? "var(--danger)" : s.ok.has(id) ? "var(--ok)" : s.newRoot === id ? "var(--reroot)" : (path.includes(id) || id === shown ? "var(--explore)" : null); // the page in the active browser tab is outlined
       const ghost = s.ghost.has(id), cand = !s.run.has(id) && !ghost; // cand: proposed, not visited yet
-      const dash = s.sel === id ? "stroke-dasharray:6 4;stroke-width:3;" : ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : cand && !stroke ? "stroke:var(--muted);stroke-dasharray:4 3;" : "";
+      const dash = s.sel === id ? "stroke-dasharray:6 4;stroke-width:3;fill:color-mix(in srgb, var(--select) 8%, var(--surface));" : ghost ? "stroke:var(--reroot);stroke-dasharray:5 4;" : cand && !stroke ? "stroke:var(--muted);stroke-dasharray:4 3;" : "";
       const wrong = s.wrong.has(id) && WRONG[id];
       const boxStyle = `${stroke ? `stroke:${stroke};stroke-width:2.8;` : ""}${dash}`;
       if (cand || ghost) actionBox(g, x, y, S().ACT[id], boxStyle, ghost ? "var(--reroot)" : null, id);
@@ -1979,11 +1985,11 @@ function initHero() {
       let sub = v !== null && !s.run.has(id) ? v.toFixed(2) : ""; // an executed action's page no longer shows its score
       if (id === "H" && !s.gone.has("H")) sub = "root";
       if (s.newRoot === id) sub = "new root";
-      if (ghost) sub = "⚠ deferred";
+      if (ghost) sub = v !== null ? `⚠ deferred · ${v.toFixed(2)}` : "⚠ deferred";
       if (s.reopen === id) sub = "↩ reopened by URL";
       if (s.sel === id) sub = v !== null ? `▶ selected · ${v.toFixed(2)}` : "▶ selected";
       if (s.replay && s.replay[0] === id) sub = mode === "wo" ? `↩ by URL, replay ${s.replay.length - 1}` : s.replay.length > 1 ? `↩ restart, replay ${s.replay.length - 1}` : "↩ restart";
-      if (sub) el("text", { x, y: y + Hh / 2 + 15, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : s.reopen === id || (s.replay && s.replay[0] === id) ? "fill:var(--backtrack);font-weight:700;font-family:Inter,sans-serif" : s.sel === id ? "fill:var(--accent);font-weight:700;font-family:Inter,sans-serif" : "" }, g).textContent = sub;
+      if (sub) el("text", { x, y: y + Hh / 2 + 15, class: "v", style: s.newRoot === id || ghost ? "fill:var(--reroot);font-weight:700" : s.reopen === id || (s.replay && s.replay[0] === id) ? "fill:var(--backtrack);font-weight:700;font-family:Inter,sans-serif" : s.sel === id ? "fill:var(--select);font-weight:700;font-family:Inter,sans-serif" : "" }, g).textContent = sub;
       const issue = mode === "naive" && s.bad.has(id) && (S().ISSUE || {})[id];
       if (issue) issue.split(": ").forEach((line, n, all) => (el("text", { x, y: y - Hh / 2 - 14 - (all.length - 1 - n) * 13, class: "pg-note pg-pop issue", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, g).textContent = n < all.length - 1 ? line + ":" : line)); // one line per part, centred above the card
       if (!issue && s.cp.has(id) && !s.gone.has(id)) el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note", style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
@@ -2169,7 +2175,8 @@ function initHero() {
       const title = isLive ? live.title : w ? w[0] : N[id][2];
       const look = isLive ? (live.rows ? ["rows", live.rows, live.link] : ["home", live.homes[s.live === 2 ? 1 : 0]]) : w ? w[1] : LOOK[id];
       const newPage = pageSvg(title, look);
-      tagIds(newPage, LOOK[id] || look, id);
+      // while an action is being selected, tag only that action (if it is on this page), not every element
+      if (c && c.select) { if (s.sel) tagIds(newPage, LOOK[id] || look, id, s.sel); } else tagIds(newPage, LOOK[id] || look, id);
       $("#pg-br .toolbar").after(newPage);
       const omni = $("#pg-br .omni");
       omni.textContent = "acme-shop" + urlOf(id);
@@ -2206,16 +2213,21 @@ function initHero() {
       shownBefore = id;
     }
     // An outside change: play it in a small window at the bottom right of the tree, then let it fade away.
+    // The other shopper: head and shoulders, cut off by the round frame.
+    const PERSON = `<svg viewBox="0 0 46 46" width="100%" height="100%"><defs><clipPath id="av-clip"><circle cx="23" cy="23" r="23"/></clipPath></defs><g clip-path="url(#av-clip)">
+      <path d="M5 50 C5 36 13 30.5 23 30.5 C33 30.5 41 36 41 50 Z" fill="#f08a24"/><path d="M18.5 30.8 L23 36 L27.5 30.8 Z" fill="#fff"/>
+      <rect x="19.6" y="24" width="6.8" height="7.5" rx="2" fill="#e8b48a"/><circle cx="23" cy="18" r="8.2" fill="#f2c39c"/>
+      <path d="M14.6 17.5 C14 10.5 18.5 8 23.2 8 C28.5 8 32.2 11 31.4 17.5 C29.5 13.8 26.5 13 23 13.2 C19.5 13.4 16.6 14 14.6 17.5 Z" fill="#5a3a22"/></g></svg>`;
     $$(".evt-win").forEach((w) => w.remove());
     const ev = S().event;
     if (fwd && ev && s.live && !(k ? build(k - 1).live : false) && !c) {
       const w = document.createElement("div"), tok = animToken;
       w.className = "evt-win off";
-      w.innerHTML = `<div class="who"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><b>${esc(ev.who)}</b><em>acme-shop${esc(ev.url)}</em></div>`;
+      w.innerHTML = `<span class="avatar">${ev.avatar || PERSON}</span><div class="who"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><b>${esc(ev.who)}</b><em>acme-shop${esc(ev.url)}</em></div>`;
       const pg1 = pageSvg(ev.from[0], ev.from[1]);
       w.appendChild(pg1); $(".pg-tree").appendChild(w);
       requestAnimationFrame(() => w.classList.remove("off"));
-      const swap = () => { if (tok !== animToken) return; pg1.replaceWith(pageSvg(ev.to[0], ev.to[1])); setTimeout(() => { w.classList.add("off"); setTimeout(() => w.remove(), 450); }, 2200); };
+      const swap = () => { if (tok !== animToken) return; pg1.replaceWith(pageSvg(ev.to[0], ev.to[1])); if (ev.toUrl) w.querySelector(".who em").textContent = "acme-shop" + ev.toUrl; setTimeout(() => { w.classList.add("off"); setTimeout(() => w.remove(), 450); }, 2200); };
       if (ev.act) setTimeout(() => animateClick(pg1, ev.from[1], ev.act, swap), 400); else setTimeout(swap, 1100);
     }
     // The snapshot check is shown below the browser, not inside it.
