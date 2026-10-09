@@ -1136,19 +1136,20 @@ function initHero() {
     cap("defer", "“Place order” could change the site for good: deferred while reversible options remain");
     await sleep(2600); if (!alive(g)) return;
 
-    // speculative backtrack #1: rebuilt in a parallel tab, kept because it matches
+    // speculative backtrack #1: back to the home page, where "Categories" was proposed; kept because it matches
     const main1 = active;
-    cap("backtrack", "Backtrack to Categories by rebuilding it in a new tab; the current tab is left alone");
+    cap("backtrack", "Backtrack to the home page, where “Categories” was proposed, in a new tab; the current tab is left alone");
     await sleep(700); await openTab(true); tabNote("Backtracking in a new tab · the original stays untouched"); await show("home", "", null); if (!alive(g)) return;
     await sleep(900); hideNote();
-    cap("backtrack", "Jump to the nearest checkpoint URL, then replay one click");
-    await sleep(500); await click("cats"); await show("cats", "categories"); if (!alive(g)) return;
-    compare("Categories", ["🗂️", "Chairs · Tables · Lamps"], ["🗂️", "Chairs · Tables · Lamps"], true);
-    cap("validate", "The rebuilt page matches its snapshot");
+    compare("Home page", ["🏠", "Chairs · Tables · Lamps"], ["🏠", "Chairs · Tables · Lamps"], true);
+    cap("validate", "The rebuilt home page matches its snapshot");
     await sleep(2200); cmp.classList.remove("on"); if (!alive(g)) return;
     cap("commit", "Commit: close the old tab and continue in the rebuilt one");
     tabNote("✓ Snapshot matched: switching to this tab", "ok"); await sleep(1100);
-    await closeTab(main1); tab(active).spec = false; drawTabs(); hideNote(); await sleep(900); if (!alive(g)) return;
+    await closeTab(main1); tab(active).spec = false; drawTabs(); hideNote(); await sleep(600); if (!alive(g)) return;
+    cap("explore", "Run the next best action: “Categories”");
+    chip("cats", "0.58", "top"); await sleep(900); await click("cats"); await show("cats", "categories"); if (!alive(g)) return;
+    await sleep(900); if (!alive(g)) return;
 
     toast.textContent = "🛒 Another shopper just bought the last Modern Chair"; toast.classList.add("on");
     cap("validate", "Meanwhile, the website changes on its own");
