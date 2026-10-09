@@ -2072,7 +2072,7 @@ function initHero() {
       const runs = s.risky.has(key) ? runsOf(e.a, e.b) : 1;
       if (runs > 1) {
         const o = hl.has(key) ? 5 : 4, [x1] = N[e.a], [x2, y2] = N[e.b];
-        [-o, o].forEach((dy, i) => el("path", { d: edgePath(e.a, e.b, 9), transform: `translate(0 ${dy})`, class: cls + " pg-fade", ...(i ? { "data-b": e.b } : {}), "marker-end": "url(#edge-head)" }, gE));
+        [-o, o].forEach((dy, i) => el("path", { d: edgePath(e.a, e.b, 9), transform: `translate(0 ${dy})`, style: "stroke-width:2.2", class: cls + " pg-fade", ...(i ? { "data-b": e.b } : {}), "marker-end": "url(#edge-head)" }, gE));
         el("text", { x: (x1 + x2) / 2, y: y2 - o - 9, class: "pg-note pg-pop", style: "fill:var(--danger);text-anchor:middle;font-size:11px;font-weight:800;paint-order:stroke;stroke:var(--surface);stroke-width:3px" }, gO).textContent = `×${runs}`;
         continue;
       }
