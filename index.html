@@ -462,12 +462,12 @@
     .pg-edge.gone, .pg-node.gone { opacity: .3; }
     .mini-br .rl { display: inline-block; transform-origin: 50% 50%; }
     .mini-br .rl.spin { animation: pgspin .6s linear infinite; color: var(--accent); }
-    #pg .cp-late { animation: cplate .3s ease-out 1.7s backwards; } /* the flag waits for the reload */
     #pg-br { position: relative; }
-    .html-cursor { position: absolute; z-index: 5; pointer-events: none; transition: left .65s ease-in-out, top .65s ease-in-out; }
-    .html-ripple { position: absolute; z-index: 4; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; border: 1.5px solid var(--accent); pointer-events: none; animation: htmlripple .45s ease-out forwards; }
-    @keyframes htmlripple { to { transform: scale(7); opacity: 0; } }
-    @keyframes cplate { from { opacity: 0; } }
+    .btab.bgtab { flex: 0 1 112px; gap: 6px; color: var(--muted); font-style: italic; border: 1px dashed color-mix(in srgb, var(--muted) 60%, transparent); border-bottom: 0; animation: bgtabin .25s ease-out; } /* the checkpoint test's background tab */
+    #pg .cp-wait { visibility: hidden; }
+    .btab.bgtab .rl { font-size: 9px; color: var(--accent); }
+    .btab.bgtab.closing { opacity: 0; transition: opacity .3s; text-decoration: none; }
+    @keyframes bgtabin { from { opacity: 0; transform: translateY(4px); } }
     .pg-edge.dim, .pg-node.dim { opacity: .2; transition: opacity .5s; } /* after the answer: off the final path */
     .pg-node { transition: opacity .4s; }
     .pg-node rect.page { fill: var(--surface); stroke: var(--line); stroke-width: 1.6; }
@@ -1423,7 +1423,7 @@ function initHero() {
         { ph: "backtrack", t: "Backtrack 1: one level up",
           d: "A parallel tab reopens the Modern Chair page by its URL, checks the Reviews link against the snapshot, and clicks it. The new tab then replaces the old one. The reviews do not help with the task.",
           why: "The original tab stays on Checkout until the new one is confirmed.",
-          tree: (s) => { s.reopen = "Mo"; s.ok.add("Mo"); s.run.add("Rv"); s.add("Np", "Rv"); s.at = "Rv"; },
+          tree: (s) => { s.reopen = "Mo"; s.ok.add("Mo"); s.run.add("Rv"); s.cp.add("Rv"); s.add("Np", "Rv"); s.at = "Rv"; },
           front: [["click [Lounge Chair]", 0.60, "next"], ["click [Categories]", 0.55, "q"], ["click [Next page]", 0.20, "q new"]], def: [["click [Place order]", 0.90, "def"]],
           br: { url: "/chairs/modern/reviews", title: "Reviews", e: "⭐", chk: "checked before click [Reviews]", cmp: [["Reviews · Specs · Buy now"], ["Reviews · Specs · Buy now"], true] } },
         { ph: "backtrack", t: "Backtrack 2: a different branch",
@@ -1642,24 +1642,27 @@ function initHero() {
       ISSUE: { Ar: "⚠ a different product", Sw: "⚠ wrong price" },
       WRONG: { Ar: ["Velvet Loveseat", ["product", "🛋️", "$199", "Buy now"]] },
       live: { of: "Rc", title: "Acme Shop · picks", rows: [["1. Velvet Loveseat", 1], ["2. Ceramic Vase", 0], ["3. Arc Floor Lamp", 0]] },
+      URL: { Rc: "/picks" },
+      // what the checkpoint test's second visit shows: the picks reshuffled, so they are not a checkpoint
+      SECOND: { Rc: ["Acme Shop · picks", ["list", ["1. Ceramic Vase", "2. Arc Floor Lamp", "3. Velvet Loveseat"]]] },
       wo: [
         { ph: "explore", t: "Start: a home page with personal picks",
           d: "The home page has a “Show picks” button that opens a list of personal recommendations, reshuffled on every visit. Three candidates are scored.",
           tree: (s) => { s.add("H"); s.run.add("H"); s.cp.add("H"); ["Rc", "Lp", "Se"].forEach((k) => s.add(k, "H")); s.at = "H"; },
           front: [["click [Show picks]", 0.82, "next new"], ["click [Lamps]", 0.80, "q new"], ["search “arc floor lamp”", 0.60, "q new"]],
           br: { url: "/", title: "Acme Shop", e: "🏬", msg: "Snapshot saved · ⚑ checkpoint" } },
-        { ph: "explore", t: "Open the picks: a page without its own URL",
-          d: "The picks open on the same URL, so this page is not a checkpoint: reopening the URL shows the closed home page. The lamp is the first pick right now.",
+        { ph: "explore", t: "Open the picks: not a checkpoint",
+          d: "The picks open at their own URL, /picks. The lamp is the first pick right now.",
           tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.at = "Rc"; },
           front: [["click [Lamps]", 0.80, "next"], ["click [Arc Floor Lamp]", 0.78, "q new", "the first pick"], ["search “arc floor lamp”", 0.60, "q"]],
-          br: { url: "/", title: "Acme Shop · picks", e: "🏬", msg: "1. Arc Floor Lamp · 2. Ceramic Vase · 3. Velvet Loveseat · same URL: not a checkpoint" } },
+          br: { url: "/picks", title: "Acme Shop · picks", e: "🏬", msg: "1. Arc Floor Lamp · 2. Ceramic Vase · 3. Velvet Loveseat" } },
         { ph: "backtrack", t: "Backtrack to Lamps: a dead end",
           d: "Lamps scores slightly higher. A parallel tab reopens the home page by URL, checks the Lamps link, and clicks it. Lamps lists only desk and reading lamps: the Arc Floor Lamp is filed elsewhere.",
           tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Lp"); s.cp.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q new"]],
           br: { url: "/lamps", title: "Lamps", e: "💡", chk: "checked before click [Lamps]", cmp: [["Show picks · Lamps · Search"], ["Show picks · Lamps · Search"], true] } },
         { ph: "backtrack", t: "Backtrack, hop 1: checkpoint, check, replay",
-          d: "The lamp was proposed on the picks page, which has no URL. A parallel tab jumps to the nearest checkpoint, the home page, then must replay “Show picks”. Before replaying it, the button and its surroundings are compared with the home page's snapshot: they match, so the click is replayed.",
+          d: "The lamp was proposed on the picks page, which is not a checkpoint. A parallel tab jumps to the nearest checkpoint, the home page, then must replay “Show picks”. Before replaying it, the button and its surroundings are compared with the home page's snapshot: they match, so the click is replayed.",
           why: "Each replayed step is checked before it runs, not just the final page.",
           tree: (s) => { s.replay = ["H", "Rc"]; s.ok.add("H"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next", "backtracking: hop 1 of 2"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
@@ -1697,7 +1700,7 @@ function initHero() {
           d: "The lamp is the first pick right now.",
           tree: (s) => { s.run.add("Rc"); s.add("Ar", "Rc"); s.at = "Rc"; },
           front: [["click [Lamps]", 0.80, "next"], ["click [Arc Floor Lamp]", 0.78, "q new", "the first pick"], ["search “arc floor lamp”", 0.60, "q"]],
-          br: { url: "/", title: "Acme Shop · picks", e: "🏬" } },
+          br: { url: "/picks", title: "Acme Shop · picks", e: "🏬" } },
         { t: "Restart for Lamps: a dead end",
           d: "Naive search restarts from the home page and clicks Lamps, which lists only desk and reading lamps.",
           tree: (s) => { s.replay = ["H"]; s.run.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
@@ -1739,27 +1742,30 @@ function initHero() {
     const out = sel ? [sel, ...(parts || [{ s: build(i), final: true, br: st.br, cap: st.d }])] : parts;
     return mode === "wo" ? withCheckpointTest(i, out) : out;
   }
-  // WebOperator tests every page it reaches for the first time: it reloads the page's URL and compares the result with
-  // the page before the reload. The same page means the URL restores it, so it is a checkpoint (⚑); a different one
-  // (a filter, a panel, a list opened on the same URL) means reaching it again needs a replay.
+  // The checkpoint test: when the agent reaches a page whose URL differs from its parent's, that URL is opened in a
+  // background tab (the live tab is left alone) and compared with the page; the same content makes it a checkpoint (⚑),
+  // which a backtrack can reopen by URL. A page on its parent's URL is never a checkpoint, so it is not tested, and
+  // neither is the root.
   function withCheckpointTest(i, out) {
-    if (!out) return out;
-    const s = build(i), p = i ? build(i - 1) : fresh(), n = s.at, A = S().ACT || {}, N = S().N;
-    if (!i || !n || !s.run.has(n) || p.run.has(n) || /^stop/.test(A[n] || "")) return out; // the root (the start URL) is always a checkpoint: no test
-    const x = out.findIndex((c) => c.expand);
+    if (!out || !i) return out;
+    const s = build(i), p = build(i - 1), n = s.at, A = S().ACT || {}, N = S().N;
+    if (!n || !s.run.has(n) || p.run.has(n) || /^stop/.test(A[n] || "")) return out;
+    const pe = s.edges.find((y) => y.b === n);
+    if (!pe || urlOfIn(s, n) === urlOfIn(s, pe.a)) return out;
+    const x = out.findIndex((sub) => sub.expand);
     if (x < 1) return out;
-    const before = out[x - 1], ok = s.cp.has(n), url = urlOfIn(s, n);
-    before.s = clone(before.s); before.s.cp.delete(n); // the flag appears only once the test has passed
-    let after = n; // what reloading the URL shows: the page itself, or the nearest checkpoint above it with that URL
-    if (!ok) for (let a = n, e; (e = s.edges.find((y) => y.b === a)); a = e.a) if (s.cp.has(e.a) && urlOfIn(s, e.a) === url) { after = e.a; break; }
+    const before = out[x - 1], ok = s.cp.has(n), name = pageTitle(N[n][2]);
+    before.s = clone(before.s); before.s.cp.delete(n); // the flag appears once the test has passed
     const t = clone(before.s); if (ok) t.cp.add(n);
-    const name = (m) => pageTitle(N[m][2]);
-    out.splice(x, 0, { s: t, final: true, br: before.br, cpTest: { id: n, after, ok },
-      cap: ok ? `Checkpoint test: reload acme-shop${url} and compare with the page before the reload. The content is the same, so ${name(n)} becomes a checkpoint (⚑): a backtrack can reopen it by its URL.`
-              : `Checkpoint test: reloading acme-shop${url} shows different content${after === n ? "" : ` (${name(after)})`}, not ${name(n)}. It is not a checkpoint: reaching it again needs a replay.` });
+    out.splice(x, 0, { s: t, final: true, br: before.br, front: before.front, def: before.def, cpTest: { id: n, ok },
+      cap: `Checkpoint test: ${name} has a new URL, so acme-shop${urlOfIn(s, n)} is opened in a background tab and compared with the page. ` +
+        (ok ? `The page is consistent across visits, so it becomes a checkpoint (⚑) that a backtrack can reopen by URL. The live tab is untouched.`
+            : `The second visit shows different content, so ${name} is not a checkpoint: reaching it again means replaying the actions that led to it. The live tab is untouched.`) });
     return out;
   }
   const urlOfIn = (s, id) => ((S().URL || {})[id]) || (/^Acme Shop/.test(S().N[id][2]) ? "/" : "/" + S().N[id][2].toLowerCase().replace(/ · /g, "/").replace(/[^a-z0-9/]+/g, "-"));
+  // The proposal an action label refers to: not run yet and not discarded; the newest if several share the label.
+  const proposalOf = (p, label) => p.nodes.filter((n) => !p.run.has(n) && !p.gone.has(n) && (S().ACT || {})[n] === label).pop() || null;
   function selectStep(i) {
     if (!i) return null;
     const s = build(i), p = build(i - 1), prev = steps()[i - 1], A = S().ACT || {};
@@ -1770,12 +1776,12 @@ function initHero() {
     if (!pick) return null;
     // the same action was already selected a step earlier and is still pending (e.g. run after a replay): no new selection
     const prev2 = i > 1 ? [...(steps()[i - 2].front || []), ...(steps()[i - 2].def || [])].find((x) => x[2].includes("next")) : null;
-    const pickNode = p.nodes.find((n) => (S().ACT || {})[n] === pick[0]);
+    const pickNode = proposalOf(p, pick[0]);
     const selectedBefore = prev2 && prev2[0] === pick[0] && (subSteps(i - 1) || []).some((c) => c.select && c.s.sel === pickNode);
     if (selectedBefore && pickNode && !p.run.has(pickNode)) return null;
     const t = clone(p);
     t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.replay = null; t.reopen = null; t.live = s.live && p.live; // a change shows only once it has been seen // keeps the path just taken highlighted; the live card only if this step still shows it
-    t.sel = p.nodes.find((n) => !p.run.has(n) && A[n] === pick[0]) || null;
+    t.sel = proposalOf(p, pick[0]);
     const why = mode === "naive" ? "the highest score in the frontier" : p.ghost.has(t.sel) ? "the deferred action, now the best option left" : "the best reversible score in the frontier";
     return { s: t, closed: true, select: true, br: { url: prev.br.url }, front: prev.front, def: prev.def,
       cap: `Select the next action: ${pick[0]} (${pick[1].toFixed(2)}), ${why}.` };
@@ -1814,7 +1820,7 @@ function initHero() {
     if (!s.replay) return null;
     const p = build(i - 1), st = steps()[i], A = S().ACT || {}, path = s.replay;
     const act = ([...steps()[i - 1].front, ...(st.def || [])].find((x) => x[2].includes("next")) || ["the next action"])[0];
-    const selNode = p.nodes.find((n) => !p.run.has(n) && A[n] === act) || null;
+    const selNode = proposalOf(p, act);
     const mk = (pos, o) => {
       const t = clone(p);
       t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.reopen = null; t.sel = selNode;
@@ -1836,7 +1842,7 @@ function initHero() {
     const path = s.replay ? s.replay : [s.reopen], bad = [...s.bad][0], accepted = !bad && s.at !== p.at;
     const cont = p.replay && s.replay && p.replay.join() === s.replay.join() && !p.bad.size; // a backtrack begun in the previous step
     const act = ([...steps()[i - 1].front, ...(st.def || [])].find((x) => x[2].includes("next")) || ["the next action"])[0];
-    const selNode = p.nodes.find((n) => !p.run.has(n) && A[n] === act) || null;
+    const selNode = proposalOf(p, act);
     const inProgress = !bad && !accepted, lastCheck = inProgress ? path.length - 2 : path.length - 1;
     const mk = (pos, o) => {
       const t = clone(p);
@@ -2206,8 +2212,7 @@ function initHero() {
       labelled[id] = { below: !!sub, above: !!issue || (s.cp.has(id) && !s.gone.has(id)) };
       if (issue) issue.split(": ").forEach((line, n, all) => (el("text", { x, y: y - Hh / 2 - 14 - (all.length - 1 - n) * 13, class: "pg-note pg-pop issue", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px" }, g).textContent = n < all.length - 1 ? line + ":" : line)); // one line per part, centred above the card
       if (!issue && s.cp.has(id) && !s.gone.has(id)) {
-        // a page that just passed its checkpoint test gets its flag only after the reload has played
-        const late = fwd && cs && cs.cpTest && cs.cpTest.id === id ? " cp-late" : "";
+        const late = fwd && cs && cs.cpTest && cs.cpTest.id === id ? " cp-wait" : ""; // shown once the test passes
         el("text", { x: x - W / 2 + 2, y: y - Hh / 2 - 6, class: "pg-note" + late, style: "fill:var(--backtrack);font-size:12px" }, g).textContent = "⚑";
         const u = urlOf(id); // the checkpoint's URL, the address a backtrack reopens; long ones are cut short
         el("text", { x: x - W / 2 + 15, y: y - Hh / 2 - 6.5, class: "pg-note" + late, style: "fill:var(--backtrack);font:500 9.5px 'JetBrains Mono',monospace" }, g).textContent = u.length > 18 ? u.slice(0, 17) + "…" : u;
@@ -2505,39 +2510,45 @@ function initHero() {
       // Only the two pages and their labels: drop the text summary.
       [a, b].forEach((d, i) => { [...d.childNodes].forEach((n) => n.nodeType === 3 && n.remove()); d.querySelector(".k").textContent = i ? "live page now" : "saved snapshot (first visit)"; });
     }
-    // A checkpoint test: the page before and after reloading its URL, side by side.
+    // A checkpoint test: the saved snapshot against the same URL loaded in a background tab, around the target element.
     if (c && c.cpTest) {
-      const { id: tid, after, ok } = c.cpTest;
+      const { id: tid, ok } = c.cpTest, second = (S().SECOND || {})[tid] || [N[tid][2], LOOK[tid]];
       $("#pg-check").classList.remove("empty");
-      $("#pg-check").innerHTML = `<div class="b"><div class="chk">checkpoint test: reload acme-shop${esc(urlOf(tid))}</div><div class="cmpm"><div><span class="k">before reload</span></div><b class="muted">vs</b><div><span class="k">after reload</span></div></div><div class="res ${ok ? "ok" : "bad"}">${ok ? "✓ same content: a checkpoint ⚑" : "✗ different content: not a checkpoint"}</div></div>`;
-      const [a, b] = $$("#pg-check .cmpm > div");
-      a.prepend(pageSvg(N[tid][2], LOOK[tid])); b.prepend(pageSvg(N[after][2], LOOK[after]));
-      if (fwd) { // play the reload: the cursor clicks ⟳, the page blanks while it spins, then the reloaded page and the verdict appear
-        const res = $("#pg-check .res"), br = $("#pg-br"), rl = $("#pg-br .rl"), tok = animToken;
+      $("#pg-check").innerHTML = `<div class="b"><div class="chk">checkpoint test: acme-shop${esc(urlOf(tid))} in a background tab</div><div class="cmpm"><div><span class="k">saved snapshot (first visit)</span></div><b class="muted">vs</b><div><span class="k">second visit (new tab)</span></div></div><div class="res ${ok ? "ok" : "bad"}">${ok ? "✓ consistent across visits: a checkpoint ⚑" : "✗ inconsistent across visits: not a checkpoint"}</div></div>`;
+      const [a, b] = $$("#pg-check .cmpm > div"), pa = pageSvg(N[tid][2], LOOK[tid]), pb = pageSvg(second[0], second[1]);
+      a.prepend(pa); b.prepend(pb);
+      if (fwd) { // a new tab opens beside the live one, its URL is typed and loaded, the verdict appears, and the tab closes
+        const res = $("#pg-check .res"), strip = $("#pg-br .tabs-strip"), omni = $("#pg-br .omni"), live = $("#pg-br svg.pv"), tok = animToken;
+        const url = "acme-shop" + urlOf(tid), liveUrl = omni ? omni.textContent : "", onTab = strip ? strip.querySelector(".btab.on") : null;
         b.style.visibility = res.style.visibility = "hidden";
-        busy(2300);
-        const cur = document.createElement("div"); cur.className = "html-cursor";
-        cur.innerHTML = '<svg viewBox="0 0 8 11.5" width="13" height="19"><path d="M0 0L0 9.5L2.6 7.2L4.4 11L6 10.3L4.2 6.6L7.6 6.4Z" style="fill:#111;stroke:#fff;stroke-width:0.8;stroke-linejoin:round"/></svg>';
-        const R = br.getBoundingClientRect(), T = rl ? rl.getBoundingClientRect() : R;
-        cur.style.left = R.width * 0.6 + "px"; cur.style.top = R.height * 0.7 + "px";
-        br.appendChild(cur);
-        requestAnimationFrame(() => requestAnimationFrame(() => { cur.style.left = T.left - R.left + T.width / 2 - 2 + "px"; cur.style.top = T.top - R.top + T.height / 2 - 2 + "px"; }));
-        setTimeout(() => { // the click: a ripple on ⟳, then the reload
-          if (tok !== animToken) return cur.remove();
-          const rp = document.createElement("div"); rp.className = "html-ripple";
-          rp.style.left = T.left - R.left + T.width / 2 + "px"; rp.style.top = T.top - R.top + T.height / 2 + "px";
-          br.appendChild(rp); setTimeout(() => rp.remove(), 500);
-          if (rl) rl.classList.add("spin");
-          const blank = el("svg", { viewBox: `0 0 ${W} 82`, class: "pv" }), pv = $("#pg-br svg.pv");
-          if (pv) pv.replaceWith(blank);
-          setTimeout(() => {
-            cur.remove();
+        busy(url.length * 45 + 2300);
+        const bg = document.createElement("span"); bg.className = "btab bgtab on";
+        bg.innerHTML = `<span class="tt">New Tab</span><span class="x">×</span>`;
+        if (onTab) onTab.classList.remove("on");
+        if (strip) strip.appendChild(bg);
+        const blank = el("svg", { viewBox: `0 0 ${W} 82`, class: "pv" });
+        if (live) live.replaceWith(blank);
+        if (omni) { omni.textContent = ""; omni.classList.add("typing"); }
+        let n = 0;
+        setTimeout(function type() {
+          if (tok !== animToken) return;
+          if (omni) omni.textContent = url.slice(0, ++n);
+          if (n < url.length) return setTimeout(type, 45);
+          if (omni) omni.classList.remove("typing");
+          setTimeout(() => { // loaded: the page, then the verdict
             if (tok !== animToken) return;
-            if (rl) rl.classList.remove("spin");
-            blank.replaceWith(pageSvg(N[after][2], LOOK[after]));
+            blank.replaceWith(Object.assign(pageSvg(second[0], second[1]), { id: "bg-page" }));
+            bg.querySelector(".tt").textContent = pageTitle(N[tid][2]);
             b.style.visibility = res.style.visibility = "";
-          }, 900);
-        }, 750);
+            svg.querySelectorAll(".cp-wait").forEach((m) => m.classList.remove("cp-wait")); // now the page earns its flag
+            setTimeout(() => { // close it: back to the live tab, as it was
+              if (tok !== animToken) return;
+              bg.remove(); if (onTab) onTab.classList.add("on");
+              const pg = $("#bg-page"); if (pg && live) pg.replaceWith(live);
+              if (omni) omni.textContent = liveUrl;
+            }, 1000);
+          }, 350);
+        }, 300);
       }
     }
     // Running cost so far: new actions run, actions replayed to backtrack, and jumps/restarts by URL.
