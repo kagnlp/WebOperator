@@ -2503,7 +2503,7 @@ function initHero() {
       if (target) { tagIds(pa, LOOK[ck], ck, target); tagIds(pb, LOOK[ck], ck, target); }
       a.prepend(pa); b.prepend(pb);
       // Only the two pages and their labels: drop the text summary.
-      [a, b].forEach((d, i) => { [...d.childNodes].forEach((n) => n.nodeType === 3 && n.remove()); d.querySelector(".k").textContent = i ? "live page now" : "saved snapshot"; });
+      [a, b].forEach((d, i) => { [...d.childNodes].forEach((n) => n.nodeType === 3 && n.remove()); d.querySelector(".k").textContent = i ? "live page now" : "saved snapshot (first visit)"; });
     }
     // A checkpoint test: the page before and after reloading its URL, side by side.
     if (c && c.cpTest) {
@@ -2606,11 +2606,11 @@ function initHero() {
     $$(`${sel} button`).forEach((b) => b.addEventListener("click", () => {
       stop(); unhold(); set(b.dataset[attr]); k = 0; j = 0;
       $$(`${sel} button`).forEach((x) => x.classList.toggle("on", x === b));
-      render();
+      render(); autoplay();
     }));
   }
   $("#pg-scen").value = scen; // browsers may restore a previous choice on reload: keep the field in step with the walkthrough
-  $("#pg-scen").addEventListener("change", (e) => { stop(); unhold(); scen = e.target.value; k = 0; j = 0; render(); });
+  $("#pg-scen").addEventListener("change", (e) => { stop(); unhold(); scen = e.target.value; k = 0; j = 0; render(); autoplay(); });
   // Full screen: the walkthrough covers the whole page (not the browser's full screen); the icon toggles back.
   // ?view=method (where /method leads) opens it this way, so the view can be shared.
   const maxed = (on) => {
@@ -2648,6 +2648,14 @@ function initHero() {
   if (deep || q) k = Math.max(0, Math.min(steps().length - 1, +(deep || q)[1] - 1));
   if (deep) setTimeout(() => $("#method").scrollIntoView(), 0);
   render();
+  // Plays by default: from the first time the walkthrough comes into view (at once on /method); Pause stops it.
+  // Switching scenario or agent plays the new run. Not for readers who ask for reduced motion.
+  function autoplay() { if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !timer) play(); }
+  if ($(".play").classList.contains("maxed")) setTimeout(autoplay, 600);
+  else if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); autoplay(); } }, { threshold: 0.4 });
+    io.observe($(".play"));
+  }
 })();
 
 /* ===================================================================================================================== chart: WebArena (horizontal bars, re-sorted per site) */
