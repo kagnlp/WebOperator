@@ -296,6 +296,7 @@
     html.pg-maxed, html.pg-maxed body { overflow: hidden; }
     .rail .ctrls { margin-left: auto; }
     .pg-cap .naive-note { display: none; font: 600 12px "Inter", sans-serif; color: var(--danger); }
+    .task-line { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .pg-task .top-fold { margin-left: auto; position: relative; width: 320px; font-size: 13px; font-weight: 500; } /* the pill and its panel share one width */
     .pg-task .top-fold summary { padding: 6px 10px; height: 34px; box-sizing: border-box; }
     .pg-task .top-fold[open] summary { margin-bottom: 0; }
@@ -580,6 +581,16 @@
     footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
     footer .sp { margin-left: auto; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+    /* phones: scenario and full screen, then the task, then the frontier */
+    @media (max-width: 700px) {
+      .pg-task { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+      .pg-task .scen-pick { grid-column: 1; grid-row: 1; }
+      .pg-task .scen-pick select { width: 100%; }
+      .pg-task #pg-fs { grid-column: 2; grid-row: 1; }
+      .pg-task .task-line { grid-column: 1 / -1; grid-row: 2; }
+      .pg-task .top-fold { grid-column: 1 / -1; grid-row: 3; width: auto; margin-left: 0; }
+      #pg-stats { display: none; } /* no room beside the agent toggle */
+    }
   </style>
 </head>
 <body>
@@ -705,7 +716,7 @@
           <label class="scen-pick"><span class="sr-only">Scenario</span>
             <select id="pg-scen" aria-label="Scenario" autocomplete="off"><option value="browse">Read-only task</option><option value="undo">Irreversible action</option><option value="shopper">External update</option><option value="shuffle">Randomized content</option></select>
             <i class="fa-solid fa-chevron-down"></i></label>
-          <b>Task</b><span id="pg-task"></span>
+          <div class="task-line"><b>Task</b><span id="pg-task"></span></div>
           <details class="fold top-fold">
             <summary><span class="side-h">Frontier</span><span class="cnt-pill" id="pg-front-n"></span></summary>
             <div class="fold-pop"><!-- drops over the canvas instead of growing the bar -->
