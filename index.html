@@ -296,7 +296,12 @@
     html.pg-maxed, html.pg-maxed body { overflow: hidden; }
     .rail .ctrls { margin-left: auto; }
     .pg-cap .naive-note { display: none; font: 600 12px "Inter", sans-serif; color: var(--danger); }
-    .pg-task #pg-fs { margin-left: auto; }
+    .pg-task .top-fold { margin-left: auto; position: relative; width: 320px; font-size: 13px; font-weight: 500; } /* the pill and its panel share one width */
+    .pg-task .top-fold summary { padding: 6px 10px; height: 34px; box-sizing: border-box; }
+    .pg-task .top-fold[open] summary { margin-bottom: 0; }
+    .pg-task .top-fold summary .side-h { flex: none; } /* the count sits right after the label; Show/Hide at the far end */
+    .pg-task .top-fold summary::after { margin-left: auto; }
+    .pg-task .top-fold .fold-pop { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30; box-sizing: border-box; max-height: 60vh; overflow: auto; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.18); }
     .pg-tree > .ctrls { justify-content: center; padding: 6px 0 12px; } /* steps: bottom centre of the canvas, under the tree */
     .play.naive .rail .ph, .play.naive .rail .sep { display: none; }
     .play.naive .pg-cap .naive-note { display: inline; }
@@ -415,7 +420,7 @@
     details.fold summary::-webkit-details-marker { display: none; }
     details.fold summary .side-h { margin: 0; flex: 1; min-width: 0; }
     details.fold summary .cnt-pill { font: 700 11px "JetBrains Mono", monospace; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 1px 8px; }
-    details.fold summary::after { content: "Show ▾"; font: 600 12px "Inter", sans-serif; color: var(--accent); white-space: nowrap; }
+    details.fold summary::after { content: "Show ▾"; font: 600 12px "Inter", sans-serif; color: var(--accent); white-space: nowrap; display: inline-block; width: 46px; text-align: right; } /* fixed width: Show/Hide don't resize it */
     details.fold[open] summary::after { content: "Hide ▴"; }
     details.fold[open] summary { margin-bottom: 8px; }
     details.fold .fold-note { font: 500 11.5px "Inter", sans-serif; color: var(--muted); margin: 0 2px 6px; }
@@ -698,9 +703,20 @@
       <div class="play">
         <div class="pg-task">
           <label class="scen-pick"><span class="sr-only">Scenario</span>
-            <select id="pg-scen" aria-label="Scenario"><option value="browse">Read-only task</option><option value="undo">Irreversible action</option><option value="shopper">External update</option><option value="shuffle">Randomized content</option></select>
+            <select id="pg-scen" aria-label="Scenario" autocomplete="off"><option value="browse">Read-only task</option><option value="undo">Irreversible action</option><option value="shopper">External update</option><option value="shuffle">Randomized content</option></select>
             <i class="fa-solid fa-chevron-down"></i></label>
           <b>Task</b><span id="pg-task"></span>
+          <details class="fold top-fold">
+            <summary><span class="side-h">Frontier</span><span class="cnt-pill" id="pg-front-n"></span></summary>
+            <div class="fold-pop"><!-- drops over the canvas instead of growing the bar -->
+              <div class="fold-note" id="pg-front-h">next action = best reversible score</div>
+              <ol class="front" id="pg-front"></ol>
+              <div id="pg-def-sec" class="def-in">
+                <div class="side-h warn">Deferred <span>may change the site for good</span></div>
+                <ol class="front" id="pg-def"></ol>
+              </div>
+            </div>
+          </details>
           <button class="fs-btn" id="pg-fs" type="button" aria-label="Full screen" title="Full screen"><i class="fa-solid fa-expand"></i></button>
         </div>
         <div class="pg-body">
@@ -712,17 +728,6 @@
             <div class="side-sec" id="pg-check-sec">
               <div class="side-h">Snapshot check <span>before the action runs</span></div>
               <div class="mini-br" id="pg-check"></div>
-            </div>
-            <div class="side-sec">
-              <details class="fold">
-                <summary><span class="side-h">Frontier</span><span class="cnt-pill" id="pg-front-n"></span></summary>
-                <div class="fold-note" id="pg-front-h">next action = best reversible score</div>
-                <ol class="front" id="pg-front"></ol>
-                <div id="pg-def-sec" class="def-in">
-                  <div class="side-h warn">Deferred <span>may change the site for good</span></div>
-                  <ol class="front" id="pg-def"></ol>
-                </div>
-              </details>
             </div>
           </aside>
           <div class="pg-tree">
@@ -1626,7 +1631,6 @@ function initHero() {
       ISSUE: { Ar: "⚠ a different product", Sw: "⚠ wrong price" },
       WRONG: { Ar: ["Velvet Loveseat", ["product", "🛋️", "$199", "Buy now"]] },
       live: { of: "Rc", title: "Acme Shop · picks", rows: [["1. Velvet Loveseat", 1], ["2. Ceramic Vase", 0], ["3. Arc Floor Lamp", 0]] },
-      event: { who: "The shop", avatar: "🏪", url: "/", from: ["Acme Shop · picks", ["list", ["1. Arc Floor Lamp", "2. Ceramic Vase", "3. Velvet Loveseat"]]], to: ["Acme Shop · picks", ["list", ["1. Velvet Loveseat", "2. Ceramic Vase", "3. Arc Floor Lamp"]]] },
       wo: [
         { ph: "explore", t: "Start: a home page with personal picks",
           d: "The home page has a “Show picks” button that opens a list of personal recommendations, reshuffled on every visit. Three candidates are scored.",
@@ -1643,19 +1647,14 @@ function initHero() {
           tree: (s) => { s.reopen = "H"; s.ok.add("H"); s.run.add("Lp"); s.cp.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q new"]],
           br: { url: "/lamps", title: "Lamps", e: "💡", chk: "checked before click [Lamps]", cmp: [["Show picks · Lamps · Search"], ["Show picks · Lamps · Search"], true] } },
-        { ph: "validate", t: "Meanwhile, the picks are reshuffled",
-          d: "The next time the picks open, the Velvet Loveseat is first and the lamp is third. The tree still holds the old picks.",
-          tree: (s) => { s.live = true; s.at = "Lp"; },
-          front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
-          br: { url: "/lamps", title: "Lamps", e: "💡", evt: "🔀 Picks reshuffled: Velvet Loveseat is now first" } },
         { ph: "backtrack", t: "Backtrack, hop 1: checkpoint, check, replay",
           d: "The lamp was proposed on the picks page, which has no URL. A parallel tab jumps to the nearest checkpoint, the home page, then must replay “Show picks”. Before replaying it, the button and its surroundings are compared with the home page's snapshot: they match, so the click is replayed.",
           why: "Each replayed step is checked before it runs, not just the final page.",
-          tree: (s) => { s.live = true; s.replay = ["H", "Rc"]; s.ok.add("H"); s.at = "Lp"; },
+          tree: (s) => { s.replay = ["H", "Rc"]; s.ok.add("H"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next", "backtracking: hop 1 of 2"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
           br: { url: "/", title: "Parallel tab: hop 1", e: "↩", chk: "checked before replaying click [Show picks]", cmp: [["Show picks · Lamps · Search"], ["Show picks · Lamps · Search"], true] } },
         { ph: "validate", t: "Backtrack, hop 2: the picks changed, rejected",
-          d: "Now the tab is on the picks page. The recorded action is click('111'). Before running it, element 111 and its surroundings are compared with the picks snapshot: the first pick is now the Velvet Loveseat. The tab is closed before the click, and the agent stays on Lamps.",
+          d: "Now the tab is on the picks page, but the picks are reshuffled on every visit. The recorded action is click('111'). Before running it, element 111 and its surroundings are compared with the picks snapshot: the first pick is now the Velvet Loveseat. The tab is closed before the click, and the agent stays on Lamps.",
           why: "Clicking the same slot would open a different product.",
           tree: (s) => { s.live = true; s.replay = ["H", "Rc"]; s.bad.add("Rc"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "gone", "rejected at hop 2: the target changed"], ["search “arc floor lamp”", 0.60, "next"], ["click [Desk Lamp]", 0.30, "q"]],
@@ -1693,11 +1692,6 @@ function initHero() {
           tree: (s) => { s.replay = ["H"]; s.run.add("Lp"); s.add("Dk", "Lp"); s.at = "Lp"; },
           front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q new"]],
           br: { url: "/lamps", title: "Lamps", e: "💡" } },
-        { t: "Meanwhile, the picks are reshuffled",
-          d: "As in the WebOperator run, the Velvet Loveseat is now the first pick.",
-          tree: (s) => { s.live = true; s.at = "Lp"; },
-          front: [["click [Arc Floor Lamp]", 0.78, "next"], ["search “arc floor lamp”", 0.60, "q"], ["click [Desk Lamp]", 0.30, "q"]],
-          br: { url: "/lamps", title: "Lamps", e: "💡", evt: "🔀 Picks reshuffled: Velvet Loveseat is now first" } },
         { t: "No checks: restart, replay, click the first pick",
           d: "Naive search restarts, replays “Show picks”, and runs the action it recorded, click('111'): element 111 is the first pick, now the Velvet Loveseat. It records the page as the Arc Floor Lamp.",
           why: "WebOperator checked this hop against the picks snapshot and rejected it before clicking.",
@@ -1769,7 +1763,7 @@ function initHero() {
     const selectedBefore = prev2 && prev2[0] === pick[0] && (subSteps(i - 1) || []).some((c) => c.select && c.s.sel === pickNode);
     if (selectedBefore && pickNode && !p.run.has(pickNode)) return null;
     const t = clone(p);
-    t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.replay = null; t.reopen = null; t.live = s.live; // keeps the path just taken highlighted; the live card only if this step still shows it
+    t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.replay = null; t.reopen = null; t.live = s.live && p.live; // a change shows only once it has been seen // keeps the path just taken highlighted; the live card only if this step still shows it
     t.sel = p.nodes.find((n) => !p.run.has(n) && A[n] === pick[0]) || null;
     const why = mode === "naive" ? "the highest score in the frontier" : p.ghost.has(t.sel) ? "the deferred action, now the best option left" : "the best reversible score in the frontier";
     return { s: t, closed: true, select: true, br: { url: prev.br.url }, front: prev.front, def: prev.def,
@@ -1812,7 +1806,8 @@ function initHero() {
     const selNode = p.nodes.find((n) => !p.run.has(n) && A[n] === act) || null;
     const mk = (pos, o) => {
       const t = clone(p);
-      t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.live = s.live; t.reopen = null; t.sel = selNode;
+      t.ok.clear(); if (mode !== "naive") t.bad.clear(); t.reopen = null; t.sel = selNode;
+      t.live = s.live && (p.live || path.slice(0, pos + 1).includes((S().live || {}).of)); // seen once the replay reaches the changed page
       t.replay = path.slice(0, pos + 1);
       return { s: t, tab: path[pos], cap: o.cap, br: { url: st.br.url }, jump: o.jump, naive: true };
     };
@@ -1834,7 +1829,8 @@ function initHero() {
     const inProgress = !bad && !accepted, lastCheck = inProgress ? path.length - 2 : path.length - 1;
     const mk = (pos, o) => {
       const t = clone(p);
-      t.ok.clear(); t.bad.clear(); t.live = s.live; t.replay = null; t.reopen = null;
+      t.ok.clear(); t.bad.clear(); t.replay = null; t.reopen = null;
+      t.live = s.live && (p.live || path.slice(0, pos + 1).includes((S().live || {}).of)); // seen once the replay reaches the changed page
       if (pos > 0) t.replay = path.slice(0, pos + 1); else t.reopen = path[0];
       t.sel = selNode; // the selected action stays highlighted while the backtrack runs
       (o.ok || []).forEach((n) => t.ok.add(n)); (o.bad || []).forEach((n) => t.bad.add(n));
@@ -2225,7 +2221,11 @@ function initHero() {
     if (s.live && live) {
       // The live page after an outside change, beside the tree: the tree still holds the old snapshot.
       const [x, y] = [X[0], Y[0] - 22], [cx, cy] = N[live.of], g = el("g", { class: "pg-node pg-pop" }, gO); // a little above the top row, clear of the root's label
-      if (cx !== x) el("path", { d: `M${x + W / 2} ${y + 12} C${x + W / 2 + 16} ${y + 12} ${cx - W / 2 - 18} ${cy - Hh / 2 + 16} ${cx - W / 2} ${cy - Hh / 2 + 16}`, style: "fill:none;stroke:var(--danger);stroke-width:1.6;stroke-dasharray:2 4" }, g);
+      if (cx !== x) { // to the stored page: straight across where the two boxes overlap in height, else a right-angled run
+        const top = Math.max(y, cy) - Hh / 2, bot = Math.min(y, cy) + Hh / 2, x1 = x + W / 2, x2 = cx - W / 2, mx = (x1 + x2) / 2;
+        const d = top < bot - 8 ? `M${x1} ${(top + bot) / 2} L${x2} ${(top + bot) / 2}` : `M${x1} ${y} L${mx} ${y} L${mx} ${cy - Hh / 2 + 16} L${x2} ${cy - Hh / 2 + 16}`;
+        el("path", { d, style: "fill:none;stroke:var(--danger);stroke-width:1.6;stroke-dasharray:2 4" }, g);
+      }
       el("text", { x, y: y - Hh / 2 - 8, class: "pg-note", style: "fill:var(--danger);text-anchor:middle;font-size:11.5px" }, g).textContent = `⚠ ${pageTitle(live.title)}, live now`;
       drawLive(g, x, y, s);
     }
@@ -2598,6 +2598,7 @@ function initHero() {
       render();
     }));
   }
+  $("#pg-scen").value = scen; // browsers may restore a previous choice on reload: keep the field in step with the walkthrough
   $("#pg-scen").addEventListener("change", (e) => { stop(); unhold(); scen = e.target.value; k = 0; j = 0; render(); });
   // Full screen: the walkthrough covers the whole page (not the browser's full screen); the icon toggles back.
   // ?view=method (where /method leads) opens it this way, so the view can be shared.
