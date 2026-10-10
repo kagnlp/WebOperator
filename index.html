@@ -1279,7 +1279,7 @@ function initHero() {
         H: ["shophome", [["🪑", "Chairs"], ["🪵", "Tables"], ["💡", "Lamps"]], "Sale"],
         Tb: ["tiles", [["☕", "Coffee"], ["🖥️", "Desks"], ["🍽️", "Dining"]]],
         Dk: ["list", ["Oak Desk · $249", "Walnut Desk · $319", "Standing Desk · $399"]],
-        Od: ["product", "🖥️", "$249", "Buy now"], Wd: ["product", "🖥️", "$319", "Buy now"],
+        Od: ["product", "🖥️", "$249", "Buy now", "", "rating"], Wd: ["product", "🖥️", "$319", "Buy now", "", "rating"],
         Sc: ["details"], Rv: ["reviews"], N2: ["reviews"],
         Sp: ["rows", [["Size · 120 × 60 cm", 0], ["Solid oak, oiled", 0], ["Warranty · 5 years", 0]]],
         St: ["answer", ["The Oak Desk has", "a 5-year warranty."]],
@@ -1985,7 +1985,8 @@ function initHero() {
     if (kind === "list") a.forEach((t, i) => { el("rect", { x, y: y + i * 16, width: w, height: 13, rx: 3, class: "fld" }, g); txt(x + 4, y + i * 16 + 9.2, t, "tx", "font-size:7.5px"); });
     if (kind === "list" && b) txt(x + w, y - 6, b, "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:6.5px"); // a link at the top right, beside the title
     if (kind === "table") { for (let r = 0; r < 4; r++) for (let q = 0; q < 3; q++) el("rect", { x: x + q * (w / 3), y: y + r * 12, width: w / 3 - 3, height: 9, rx: 2, class: r ? "ln" : "im" }, g); txt(x + w, y - 6, "Sort ▾", "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:6.5px"); } // top right, beside the title
-    if (kind === "product") { pic(x, y, 40, a); txt(x + 46, y + 11, b, "tx", "font-weight:800;font-size:10px"); el("rect", { x: x + 46, y: y + 15, width: 40, height: 10, rx: 5, class: "ok" }, g); txt(x + 66, y + 22.4, "In stock", "otx"); btn(x + 46, y + 29, 52, c);  txt(x, y + 49, "★ 4.5 · Reviews ›", "tx", "fill:var(--accent);font-weight:600;font-size:7.5px"); if (look[4]) txt(x + w, y + 49, look[4], "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:7.5px"); }
+    if (kind === "product") { pic(x, y, 40, a); txt(x + 46, y + 11, b, "tx", "font-weight:800;font-size:10px"); el("rect", { x: x + 46, y: y + 15, width: 40, height: 10, rx: 5, class: "ok" }, g); txt(x + 66, y + 22.4, "In stock", "otx"); btn(x + 46, y + 29, 52, c);  if (look[5] === "rating") txt(x, y + 49, "★ 4.5", "tx", "fill:var(--muted);font-weight:600;font-size:7.5px"); // the reviews are linked further down the page
+      else txt(x, y + 49, "★ 4.5 · Reviews ›", "tx", "fill:var(--accent);font-weight:600;font-size:7.5px"); if (look[4]) txt(x + w, y + 49, look[4], "tx", "text-anchor:end;fill:var(--accent);font-weight:600;font-size:7.5px"); }
     if (kind === "checkout" && look[3]) { // the hero's cart/checkout: an item line, the total, the button
       el("rect", { x, y, width: w, height: 16, rx: 4, style: "fill:var(--surface);stroke:var(--line);stroke-width:1" }, g);
       txt(x + 4, y + 11, look[3], "em", "font-size:9px"); txt(x + 16, y + 10.5, "Modern Chair", "tx", "font-size:7px"); txt(x + w - 4, y + 10.5, a, "tx", "text-anchor:end;font-size:7px;font-weight:700");
