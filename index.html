@@ -590,6 +590,8 @@
       .pg-task .task-line { grid-column: 1 / -1; grid-row: 2; }
       .pg-task .top-fold { grid-column: 1 / -1; grid-row: 3; width: auto; margin-left: 0; }
       #pg-stats { display: none; } /* no room beside the agent toggle */
+      #pg-play .lbl { display: none; } /* the play/pause icon alone, centred in a square button */
+      #pg-play { width: 46px; padding: 0; justify-content: center; }
     }
   </style>
 </head>
@@ -751,7 +753,7 @@
               <button id="pg-reset" aria-label="Reset" title="Back to the first step"><i class="fa-solid fa-rotate-left"></i></button>
               <button id="pg-prev-big" aria-label="Previous action" title="Previous action, skipping the details (Shift+←)"><i class="fa-solid fa-backward-step"></i></button>
               <button id="pg-prev" aria-label="Previous step" title="Previous step (←)"><i class="fa-solid fa-backward"></i></button>
-              <button id="pg-play" class="go" aria-label="Play"><i class="fa-solid fa-play"></i> Play</button>
+              <button id="pg-play" class="go" aria-label="Play"><i class="fa-solid fa-play"></i><span class="lbl">Play</span></button>
               <button id="pg-next" aria-label="Next step" title="Next step (→)"><i class="fa-solid fa-forward"></i></button>
               <button id="pg-next-big" aria-label="Next action" title="Next action, skipping the details: run it and expand its page (Shift+→)"><i class="fa-solid fa-forward-step"></i></button>
               <span class="cnt" id="pg-cnt"></span>
@@ -2612,7 +2614,7 @@ function initHero() {
     if (k > 0) { k--; j = lastJ(k); } else j = 0;
     render(null);
   }
-  function stop() { clearInterval(timer); timer = null; $("#pg-play").innerHTML = '<i class="fa-solid fa-play"></i> Play'; $("#pg-play").classList.remove("paused"); }
+  function stop() { clearInterval(timer); timer = null; $("#pg-play").innerHTML = '<i class="fa-solid fa-play"></i><span class="lbl">Play</span>'; $("#pg-play").classList.remove("paused"); $("#pg-play").ariaLabel = "Play"; }
   // Scenario and strategy switches restart the walkthrough.
   function pick(sel, attr, set) {
     $$(`${sel} button`).forEach((b) => b.addEventListener("click", () => {
@@ -2642,7 +2644,7 @@ function initHero() {
   function play() {
     if (timer) return stop();
     if (atEnd()) go(0);
-    $("#pg-play").innerHTML = '<i class="fa-solid fa-pause"></i> Pause'; $("#pg-play").classList.add("paused");
+    $("#pg-play").innerHTML = '<i class="fa-solid fa-pause"></i><span class="lbl">Pause</span>'; $("#pg-play").classList.add("paused"); $("#pg-play").ariaLabel = "Pause";
     timer = setInterval(() => { if (atEnd()) return stop(); next(); }, 2400); // long enough for a click or URL animation to finish
   }
   $("#pg-next").addEventListener("click", () => { stop(); next(); });
