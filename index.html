@@ -592,6 +592,11 @@
       #pg-stats { display: none; } /* no room beside the agent toggle */
       #pg-play .lbl { display: none; } /* the play/pause icon alone, centred in a square button */
       #pg-play { width: 46px; padding: 0; justify-content: center; }
+      .pg-side .top-fold { position: relative; width: auto; font-size: 13px; font-weight: 500; } /* moved here on phones: under the snapshot check */
+      .pg-side .top-fold .fold-pop { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30; box-sizing: border-box; max-height: 60vh; overflow: auto; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.18); }
+      .pg-side .top-fold summary .side-h { flex: none; }
+      .pg-side .top-fold[open] summary { margin-bottom: 0; } /* opening it does not grow the panel */
+      .pg-side .top-fold summary::after { margin-left: auto; }
     }
   </style>
 </head>
@@ -2623,6 +2628,10 @@ function initHero() {
       render(); autoplay();
     }));
   }
+  // On phones the frontier sits under the browser and the snapshot check, above the tree; elsewhere in the top bar.
+  const phone = matchMedia("(max-width: 700px)"), fold = $(".top-fold");
+  const placeFold = () => { if (phone.matches) $(".pg-side").appendChild(fold); else $(".pg-task").insertBefore(fold, $("#pg-fs")); };
+  placeFold(); phone.addEventListener("change", placeFold);
   $("#pg-scen").value = scen; // browsers may restore a previous choice on reload: keep the field in step with the walkthrough
   $("#pg-scen").addEventListener("change", (e) => { stop(); unhold(); scen = e.target.value; k = 0; j = 0; render(); autoplay(); });
   // Full screen: the walkthrough covers the whole page (not the browser's full screen); the icon toggles back.
