@@ -307,6 +307,7 @@
     .play.naive #pg-def-sec, .play.naive .legend-row .wo-only, .play:not(.naive) .legend-row .naive-only { display: none; }
     .mini-br .chk { font-size: 10.5px; color: var(--muted); }
     #pg-check { min-height: 188px; } /* the height of a real comparison */
+    @media (max-width: 900px) { #pg-check { min-height: max(195px, calc(35vw + 69px)); } } /* one column: the comparison scales with the width */
     #pg-check .chk { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* one line, so the block keeps its height */
     #pg-check.empty { display: grid; place-items: center; background: transparent; border: 1.5px dashed color-mix(in srgb, var(--muted) 55%, transparent); }
     #pg-check .chk-empty { font: 500 12px/1.5 "Inter", sans-serif; color: var(--muted); text-align: center; padding: 0 18px; }
@@ -1828,7 +1829,7 @@ function initHero() {
     ex.nodes = ex.nodes.filter((n) => !drop.has(n)); ex.edges = ex.edges.filter((e) => !drop.has(e.b));
     const page = S().N[s.at] ? pageTitle(s.wrong.has(s.at) && (S().WRONG || {})[s.at] ? S().WRONG[s.at][0] : S().N[s.at][2]) : "the page";
     const expandCap = `Expand ${page}: the agent proposes actions for it, drops invalid or duplicate ones, scores the rest, and adds them to the frontier.`;
-    const expand = { s: build(i), final: true, expand: true, br: st.br, cap: i === 0 ? st.d : expandCap, front: st.front };
+    const expand = { s: build(i), final: true, expand: true, br: st.br, cap: i === 1 ? expandCap : st.d, front: st.front }; // the generic expansion text once (the first expansion); later ones keep the step's story
     const oldFront = (st.front || []).filter((x) => !x[2].includes("new"));
     if (base) {
       const last = base[base.length - 1];
@@ -2665,11 +2666,21 @@ function initHero() {
   }
   function stop() { clearInterval(timer); timer = null; $("#pg-play").innerHTML = '<i class="fa-solid fa-play"></i><span class="lbl">Play</span>'; $("#pg-play").classList.remove("paused"); $("#pg-play").ariaLabel = "Play"; }
   // Scenario and strategy switches restart the walkthrough.
+  // Each scenario × agent keeps its own place: the step, the sub-step and whether it was playing. Switching back
+  // resumes there; one not opened yet starts at the beginning and plays.
+  const saved = {};
+  function leave() { saved[scen + mode] = { k, j, playing: !!timer }; stop(); unhold(); }
+  function arrive() {
+    const m = saved[scen + mode];
+    if (m) { k = m.k; j = m.j; render(); if (m.playing) play(); }
+    else { k = 0; j = 0; render(); autoplay(); }
+  }
   function pick(sel, attr, set) {
     $$(`${sel} button`).forEach((b) => b.addEventListener("click", () => {
-      stop(); unhold(); set(b.dataset[attr]); k = 0; j = 0;
+      if (b.classList.contains("on")) return;
+      leave(); set(b.dataset[attr]);
       $$(`${sel} button`).forEach((x) => x.classList.toggle("on", x === b));
-      render(); autoplay();
+      arrive();
     }));
   }
   // On phones the frontier sits under the browser and the snapshot check, above the tree; elsewhere in the top bar.
@@ -2678,7 +2689,7 @@ function initHero() {
   placeFold(); phone.addEventListener("change", placeFold);
   $("#pg-ctx").addEventListener("click", () => { ctxOn = !ctxOn; $("#pg-ctx").setAttribute("aria-pressed", ctxOn); render(null); });
   $("#pg-scen").value = scen; // browsers may restore a previous choice on reload: keep the field in step with the walkthrough
-  $("#pg-scen").addEventListener("change", (e) => { stop(); unhold(); scen = e.target.value; k = 0; j = 0; render(); autoplay(); });
+  $("#pg-scen").addEventListener("change", (e) => { leave(); scen = e.target.value; arrive(); });
   // Full screen: the walkthrough covers the whole page (not the browser's full screen); the icon toggles back.
   // ?view=method (where /method leads) opens it this way, so the view can be shared.
   const maxed = (on) => {
