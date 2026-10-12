@@ -764,7 +764,7 @@
           </aside>
           <div class="pg-tree">
             <div class="pg-cap">
-              <div class="seg" id="pg-mode" role="group" aria-label="Search strategy"><button class="on" data-m="naive">Naive tree search</button><button data-m="wo">WebOperator</button></div>
+              <div class="seg" id="pg-mode" role="group" aria-label="Search strategy"><button data-m="wo">WebOperator</button><button class="on" data-m="naive">Naive tree search</button></div>
               <button class="ctx-btn" id="pg-ctx" type="button" aria-pressed="false" title="What the LLM sees when it proposes actions"><i class="fa-solid fa-eye"></i> LLM context</button>
             </div>
             <svg id="pg" viewBox="0 -24 1080 440" role="img" aria-label="WebOperator search tree for the current step"></svg>
@@ -1911,7 +1911,7 @@ function initHero() {
     return out;
   }
   const cur = () => { const ss = subSteps(k); return ss ? ss[Math.min(j, ss.length - 1)] : null; };
-  let scen = "browse", mode = "naive", k = 0, timer = null;
+  let scen = "undo", mode = "naive", k = 0, timer = null;
   const S = () => SCEN[scen];
   const steps = () => S()[mode];
   function fresh() {
