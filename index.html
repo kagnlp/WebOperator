@@ -559,7 +559,7 @@
     @media (max-width: 640px) { .traj form { margin-left: 0; } }
 
     /* WebReplayBench */
-    .wrb { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; margin-bottom: 22px; }
+    .wrb { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-bottom: 22px; } /* same columns as the cards below */
     .wrb > * { min-width: 0; }
     @media (max-width: 900px) { .wrb { grid-template-columns: 1fr; } }
     .wrb p { color: var(--text-2); margin: 0 0 12px; }
@@ -896,7 +896,7 @@
         </div>
         <div class="shot" id="wrb-shots">
           <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span id="wrb-url">acme-shop.example/</span>
-            <div class="nav"><button type="button" data-step="-1" aria-label="Previous screenshot"><i class="fa-solid fa-backward"></i></button><button type="button" data-step="1" aria-label="Next screenshot"><i class="fa-solid fa-forward"></i></button></div></div>
+            <div class="nav"><button type="button" data-step="-1" aria-label="Previous screenshot"><i class="fa-solid fa-chevron-left"></i></button><button type="button" data-step="1" aria-label="Next screenshot"><i class="fa-solid fa-chevron-right"></i></button></div></div>
           <div class="slides">
             <img src="assets/webreplaybench_home.png" alt="WebReplayBench home page" data-url="/" />
             <img src="assets/webreplaybench_products.png" alt="WebReplayBench product list" data-url="/products" loading="lazy" />
