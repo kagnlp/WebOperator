@@ -855,6 +855,7 @@
         <div class="panel">
           <div class="panel-head"><div><h3>Shorter, safer backtracks</h3><div class="sub">Actions replayed per completed backtrack · WebArena-lite</div></div>
             <div class="tools"><div class="seg" data-view="bt"><button class="on" data-v="chart">Chart</button><button data-v="table">Table</button></div></div></div>
+          <div class="legend"><span><i class="lg-sw" style="background:var(--s-other)"></i>actual replay</span><span><i class="lg-sw" style="width:18px;background:none;border:1.5px dashed var(--muted)"></i>the same backtracks replayed from the root</span><span style="color:var(--muted)">n = completed backtracks averaged</span></div>
           <div class="chart" id="ch-bt"></div>
           <div class="tblview" id="tb-bt"></div>
           <p class="note">With snapshot validation, 19 of 114 attempts (16.7%) were rejected because the rebuilt page no longer matched; the live environment was left unchanged.</p>
@@ -1019,11 +1020,11 @@ const ABL = [ // cumulative, WebArena-lite (155), gpt-4o
 ];
 const BT = [ // backtracking statistics
   { name: "Naive tree search", sr: 51.61, done: 70, rej: 0, replay: 7.47 },
-  { name: "+ Checkpoints", sr: 51.61, done: 70, rej: 0, replay: 2.83 },
-  { name: "+ Re-rooting", sr: 51.61, done: 83, rej: 0, replay: 1.47 },
-  { name: "+ Destruction deferral", sr: 56.77, done: 107, rej: 0, replay: 2.45 },
-  { name: "+ Termination handling", sr: 58.71, done: 116, rej: 0, replay: 2.44 },
-  { name: "+ Snapshot validation", sr: 60.00, done: 95, rej: 19, replay: 1.81, me: true },
+  { name: "+ Checkpoints", sr: 51.61, done: 70, rej: 0, replay: 2.83, root: 7.47 }, // the same backtracks as naive search
+  { name: "+ Re-rooting", sr: 51.61, done: 83, rej: 0, replay: 1.47, root: 4.76 }, // root: the same backtracks replayed from the root
+  { name: "+ Destruction deferral", sr: 56.77, done: 107, rej: 0, replay: 2.45, root: 4.57 },
+  { name: "+ Termination handling", sr: 58.71, done: 116, rej: 0, replay: 2.44, root: 4.76 },
+  { name: "+ Snapshot validation", sr: 60.00, done: 95, rej: 19, replay: 1.81, root: 5.40, me: true },
 ];
 const BACKBONES = [
   { name: "gpt-4o", overall: 60.00, acts: 31.34 },
@@ -2852,6 +2853,7 @@ function drawAbl() {
 }
 
 /* ===================================================================================================================== chart: replay length per backtrack */
+const i0 = (a) => (a.name === "Naive tree search" ? f2(a.replay) : "–"); // naive search already replays from the root
 function drawBT() {
   const box = $("#ch-bt"); box.innerHTML = "";
   const W = 520, rowH = 34, m = { l: 168, r: 70, t: 6, b: 34 }, H = m.t + m.b + rowH * BT.length;
@@ -2863,13 +2865,19 @@ function drawBT() {
   const tip = tipFor(box);
   BT.forEach((a, i) => {
     const y = m.t + i * rowH + 6, h = rowH - 12, g = el("g", {}, svg);
-    el("text", { x: m.l - 10, y: y + h / 2 + 4, "text-anchor": "end", class: a.me ? "dl" : "dl2" }, g).textContent = a.name;
+    el("text", { x: m.l - 10, y: y + h / 2 - 1, "text-anchor": "end", class: a.me ? "dl" : "dl2" }, g).textContent = a.name;
+    el("text", { x: m.l - 10, y: y + h / 2 + 11, "text-anchor": "end", class: "dl2", style: "font-size:10.5px;fill:var(--muted)" }, g).textContent = `n = ${a.done}`; // the backtracks averaged
+    // what the same backtracks would replay from the root: a dashed outline behind the bar
+    if (a.root) {
+      el("rect", { x: x(0), y: y + 0.75, width: x(a.root) - x(0), height: h - 1.5, rx: 4, style: "fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 4;opacity:.8" }, g);
+      el("text", { x: x(a.root) + 7, y: y + h / 2 + 4, class: "dl2", style: "fill:var(--muted)" }, g).textContent = f2(a.root);
+    }
     hbar(g, x(0), y, x(a.replay) - x(0), h, a.me ? "var(--s1)" : i === 0 ? "var(--s2)" : "var(--s-other)");
     el("text", { x: x(a.replay) + 7, y: y + h / 2 + 4, class: a.me ? "dl" : "dl2" }, g).textContent = f2(a.replay);
     const hit = el("rect", { x: 0, y: y - 6, width: W, height: rowH, fill: "transparent" }, g);
-    hover(hit, tip, box, svg, () => `<div class="tt">${a.name}</div><div class="row">Avg. replay<span class="v">${f2(a.replay)} actions</span></div><div class="row">Completed backtracks<span class="v">${a.done}</span></div><div class="row">Rejected<span class="v">${a.rej}</span></div><div class="row muted">Success<span class="v">${f2(a.sr)}%</span></div>`, () => x(a.replay), () => y);
+    hover(hit, tip, box, svg, () => `<div class="tt">${a.name}</div><div class="row">Avg. replay<span class="v">${f2(a.replay)} actions</span></div>${a.root ? `<div class="row muted">Replayed from the root<span class="v">${f2(a.root)} actions</span></div>` : ""}<div class="row">Completed backtracks<span class="v">${a.done}</span></div><div class="row">Rejected<span class="v">${a.rej}</span></div><div class="row muted">Success<span class="v">${f2(a.sr)}%</span></div>`, () => x(a.replay), () => y);
   });
-  $("#tb-bt").innerHTML = table(["Configuration", "SR %", "Completed", "Rejected", "Avg. replay"], BT.map((a) => [a.name, f2(a.sr), a.done, a.rej, f2(a.replay)]), BT.length - 1);
+  $("#tb-bt").innerHTML = table(["Configuration", "SR %", "Completed", "Rejected", "Avg. replay", "From root"], BT.map((a) => [a.name, f2(a.sr), a.done, a.rej, f2(a.replay), a.root ? f2(a.root) : i0(a)]), BT.length - 1);
 }
 
 /* ===================================================================================================================== chart: backbones / WebVoyager */
