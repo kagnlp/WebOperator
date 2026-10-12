@@ -3004,7 +3004,7 @@ segment($("#try-tabs"), "c", (v) => $$(".codeblock[data-c]").forEach((b) => (b.s
 $("#traj-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const id = Math.max(0, Math.min(811, Math.round(+$("#traj-id").value || 0)));
-  window.open(`https://mahirlabibdihan.github.io/WebOperator-Experiments/webarena/main/trajectories/html/task_${id}.html`, "_blank", "noopener");
+  window.open(`https://mahirlabibdihan.github.io/WebOperator-Experiments/webarena/main/tasks/task_${id}/trajectory.html`, "_blank", "noopener");
 });
 $$(".copy").forEach((b) => b.addEventListener("click", async () => {
   try { await navigator.clipboard.writeText($("pre", b.parentElement).innerText); b.textContent = "Copied"; } catch { b.textContent = "Select & copy"; }
