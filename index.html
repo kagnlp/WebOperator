@@ -1042,7 +1042,7 @@ const REPLAY = { naive: 50, parts: [
   { k: "Re-rooted: scenario never arises", n: 31, c: "var(--s1)" },
   { k: "Destructive action before the checkpoint", n: 5, c: "var(--s3)" },
   { k: "Stopped by snapshot validation", n: 12, c: "var(--s4)" },
-  { k: "Destructive action replayed", n: 2, c: "var(--s2)" },
+  { k: "Destructive action replayed", n: 2, c: "var(--danger)" }, // harm: red
 ] };
 const DETECT = [
   { name: "Pre-execution", detected: 21, false: 29, prec: 0.42, rec: 0.42 },
@@ -2940,7 +2940,7 @@ function drawReplay() {
   // naive
   let y = m.t + 14, g = el("g", {}, svg);
   el("text", { x: m.l - 10, y: y + h / 2 + 4, "text-anchor": "end", class: "dl2" }, g).textContent = "Naive tree search";
-  hbar(g, x(0), y, x(50) - x(0), h, "var(--s2)");
+  hbar(g, x(0), y, x(50) - x(0), h, "var(--danger)");
   el("text", { x: x(25), y: y + h / 2 + 4, "text-anchor": "middle", style: "font:700 12px Inter, sans-serif;fill:#fff" }, g).textContent = "50 replayed";
   hover(el("rect", { x: 0, y, width: W, height: h, fill: "transparent" }, g), tip, box, svg, () => `<div class="tt">Naive tree search</div><div class="row">Destructive action replayed<span class="v">50 / 50</span></div>`, () => x(50), () => y);
   // WebOperator, stacked with 2px gaps
@@ -2956,7 +2956,7 @@ function drawReplay() {
     hover(el("rect", { x: x0, y, width: Math.max(4, w), height: h, fill: "transparent" }, g), tip, box, svg, () => `<div class="tt">WebOperator</div><div class="row"><span class="sw" style="background:${p.c}"></span>${p.k}<span class="v">${p.n} / 50</span></div>`, () => x(mid), () => y);
     acc += p.n;
   });
-  el("text", { x: x(50) - 2, y: y + h + 14, "text-anchor": "end", class: "lbl-s", style: "fill:var(--s2);font-weight:700" }, svg).textContent = "2 replayed ↑";
+  el("text", { x: x(50) - 2, y: y + h + 14, "text-anchor": "end", class: "lbl-s", style: "fill:var(--danger);font-weight:700" }, svg).textContent = "2 replayed ↑";
   $("#lg-rs").innerHTML = REPLAY.parts.map((p) => `<span><i class="lg-sw" style="background:${p.c}"></i>${p.k}</span>`).join("");
   $("#tb-rs").innerHTML = table(["Search", "Outcome", "Actions (of 50)"], [["Naive tree search", "All replayed", 50], ...REPLAY.parts.map((p) => ["WebOperator", p.k, p.n])], [1, 2, 3, 4]);
 }
