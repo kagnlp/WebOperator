@@ -197,6 +197,7 @@ if __name__ == "__main__":
             if args.site is not None and args.site != task_config["sites"][0]:
                 print(f"Skipping task {task_id} as it is not for site {args.site}")
                 continue
+            
             print(f"Running task {task_id}")
             task_results_dir = f"{config['experiment']['results_dir']}/task_{task_id}"
 
@@ -224,7 +225,7 @@ if __name__ == "__main__":
             if config["env"]["task_type"] == "webarena":
                 for site in task_config["sites"]:
                     AccessControl.authorize(site, get_wa_site_url(site))
-                    if site in ["reddit", "shopping", "shopping_admin"]:
+                    if site in ["reddit", "shopping", "shopping_admin", "gitlab"]:
                         AccessControl.authenticate(site, get_wa_site_url(site))
                         
                 PromptDesigner.configure(
