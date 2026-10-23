@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>WebOperator</title>
+  <defs>
+    <linearGradient id="wo-loop" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5cb4f2"/>
+      <stop offset="1" stop-color="#a6d93a"/>
+    </linearGradient>
+    <radialGradient id="wo-glow" cx="0.5" cy="0.52" r="0.5">
+      <stop offset="0" stop-color="#5cb4f2" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#5cb4f2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0a0f16"/>
+  <circle cx="32" cy="33" r="22" fill="url(#wo-glow)"/>
+  <!-- ↺ go back: counter-clockwise from the top-left, round the bottom, up to the top-right -->
+  <path d="M22.5 16.55 A19 19 0 1 0 41.5 16.55" fill="none" stroke="url(#wo-loop)" stroke-width="5.5" stroke-linecap="round"/>
+  <!-- arrowhead, tangent to the loop, pointing back -->
+  <path d="M36.6 13.7 L46.1 13.1 L41.4 22.1 Z" fill="#a6d93a" stroke="#a6d93a" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- the agent's pointer -->
+  <path d="M25.5 21.5 L25.5 45 L31.2 39.8 L35.1 48.6 L39.3 46.8 L35.4 38.2 L42.8 37.9 Z" fill="#ffffff" stroke="#0a0f16" stroke-width="2.4" stroke-linejoin="round"/>
+</svg>
