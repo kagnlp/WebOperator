@@ -6,14 +6,16 @@
 <p align="center">
     <a href="https://kagnlp.github.io/WebOperator">🌐 Website</a> •
     <a href="https://arxiv.org/abs/2512.12692">📃 Paper</a> •
-    <a href="https://github.com/kagnlp/WebOperator">💻 Code</a>
+    <a href="https://github.com/kagnlp/WebOperator">💻 Code</a> •
+    <a href="https://huggingface.co/datasets/mahirlabibdihan/weboperator-experiments">🗂️ Trajectories</a> •
+    <a href="https://github.com/mahirlabibdihan/WebReplayBench">🧪 WebReplayBench</a>
 </p>
 
 ![WebOperator](assets/wo_banner.svg)
 
 ## 📖 Abstract
 
-LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content (e.g., DOM and UI elements)—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but existing approaches lack mechanisms for safe backtracking, making them prone to unintended side effects. They also assume that all actions are reversible, ignoring the presence of irreversible actions—limitations that reduce their effectiveness in realistic web tasks. To address these challenges, we introduce **WebOperator**, a tree-search framework that enables reliable backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward estimates and safety considerations, along with a robust backtracking mechanism that verifies the feasibility of previously visited paths before replaying them, preventing unintended side effects. To further guide exploration, WebOperator generates action candidates from multiple, varied reasoning contexts to ensure diverse and robust exploration, and subsequently curates a high-quality action set by filtering out invalid actions pre-execution and merging semantically equivalent ones. Experimental results on WebArena and WebVoyager demonstrate the effectiveness of WebOperator. On WebArena, WebOperator achieves a state-of-the-art **54.6%** success rate with gpt-4o, underscoring the critical advantage of integrating strategic foresight with safe execution.
+LLM-based agents often operate in a greedy, step-by-step manner, selecting actions solely based on the current observation without considering long-term consequences or alternative paths. This lack of foresight is particularly problematic in web environments, which are only partially observable—limited to browser-visible content (e.g., DOM and UI elements)—where a single misstep often requires complex and brittle navigation to undo. Without an explicit backtracking mechanism, agents struggle to correct errors or systematically explore alternative paths. Tree-search methods provide a principled framework for such structured exploration, but applying them to the web introduces two challenges: replaying an action sequence may not reconstruct the same page, and some actions may irreversibly change the website. To address these challenges, we introduce **WebOperator**, a tree-search framework that enables validated backtracking and strategic exploration. Our method incorporates a best-first search strategy that ranks actions by both reward and reversibility, along with a robust backtracking mechanism that verifies reconstructed pages before continuing from them. It prioritizes reversible actions, postpones potentially irreversible ones, and discards earlier branches when its post-execution heuristic flags a possible persistent change. Experiments on WebArena and WebVoyager demonstrate the effectiveness of the framework. On WebArena, it achieves **54.6%** task success with gpt-4o, outperforming all prior tree-search methods using the same backbone. Controlled ablations show that naive tree search can reduce performance, whereas action-aware selection and validated backtracking improve corrective search. We further introduce **WebReplayBench**, a web environment that records which actions actually change the website's state, to evaluate whether WebOperator detects irreversible actions and avoids repeating them during backtracking.
 
 ## 📊 Results on WebArena Benchmark
 
@@ -29,11 +31,11 @@ LLM-based agents often operate in a greedy, step-by-step manner, selecting actio
 | AgentSymbiotic | claude-3.5 | 52.1 | 66.0 | 51.0 | 48.0 | 49.0 | **60.0** | 29.0 |
 | ScribeAgent | gpt-4o | 53.0 | 73.7 | **59.7** | 45.8 | 37.9 | 56.3 | - |
 ||
-| **_WebOperator_** | gpt-4o | **54.56** | **76.42** | 52.78 | **49.20** | **54.95** | 55.24 | **31.25** |
+| **_WebOperator_** | gpt-4o | **54.56** | **76.42** | 52.78 | **49.20** | **54.95** | 55.05 | **31.25** |
 
-**Experimental trajectories:** 
-- [github](https://github.com/mahirlabibdihan/WebOperator-Experiments/tree/main/webarena/main/)
-- [huggingface](https://huggingface.co/datasets/mahirlabibdihan/weboperator-experiments/tree/main/webarena/main)
+**Experimental trajectories:** run logs, search trees and step-by-step viewers for every task.
+- WebArena (812 tasks): [Hugging Face](https://huggingface.co/datasets/mahirlabibdihan/weboperator-experiments/tree/main/webarena/main) · [GitHub](https://github.com/mahirlabibdihan/WebOperator-Experiments/tree/main/webarena/main/) · viewer, e.g. [task 421](https://mahirlabibdihan.github.io/WebOperator-Experiments/webarena/main/tasks/task_421/trajectory.html)
+- WebArena-lite ablations (155 tasks, one run per ablation row, with scripts that recompute the tables): [Hugging Face](https://huggingface.co/datasets/mahirlabibdihan/weboperator-experiments/tree/main/webarena-lite)
 
 
 ## 📂 Project Structure
@@ -41,10 +43,17 @@ LLM-based agents often operate in a greedy, step-by-step manner, selecting actio
 ```bash
 .
 ├── weboperator/                 # Source code for the web agent
+│   └── configs/                 # Agent configurations (demo, WebArena, WebVoyager)
 ├── webshepherd/                 # Source code for the Process Reward Model
 ├── browsergym/                  # Source code for the web environment simulator
 ├── gobrowse/                    # Source code for the experience retrieval module
+├── webarena/, webvoyager/       # Benchmark task files and evaluation code
+├── webreplaybench_eval/         # Harness that runs WebOperator on WebReplayBench
+├── utils/                       # Scripts that collect runs and compute benchmark scores
+├── run.py, demo.py              # Entry points
 └── README.md
+
+# The project page lives on the gh-pages branch.
 ```
 
 ## ⚙️ Installation
@@ -203,6 +212,18 @@ Move the inference outputs and compute benchmark scores.
   python -m utils.move_exp --src_dir results/webvoyager/gpt-4o --dst_dir experiments/webvoyager/gpt-4o
   python -m utils.eval_exp --results_dir experiments/webvoyager/gpt-4o --task_type webvoyager 
   ```
+
+### WebReplayBench
+
+WebReplayBench is a separate benchmark: a website whose database records every
+persistent change, with backtracking scenarios as a JSON dataset. The harness in
+[`webreplaybench_eval/`](webreplaybench_eval/README.md) runs WebOperator on it, to
+measure how often backtracking replays destructive actions, from naive replay up to
+full WebOperator. With WebReplayBench cloned next to this repository, on a Docker host:
+
+```bash
+bash webreplaybench_eval/run_ladder.sh 8
+```
 
 ## ⚙️ Agent Configuration Explanation
 
